@@ -21,6 +21,7 @@ public class Drive180 extends CommandBase {
 	@Override
 	public void initialize() {
 		drive.setRot();
+    drive.resetPID();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

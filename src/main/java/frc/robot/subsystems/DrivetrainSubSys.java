@@ -46,7 +46,8 @@ public class DrivetrainSubSys extends SubsystemBase {
 
 	public void drive() {
 		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
-		speed *= 0.4;
+		// speed *= 0.5;
+		speed *= 0.5;
 		drv(speed, Constants.xbox.getLeftX()*0.6);
 	}
 	
@@ -88,7 +89,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	double spinTarget;
 	public boolean spun = false;
 	Timer spintime = new Timer();
-	double kp=0.4,ki=0.0,kd=0.08;
+	double kp=0.4,ki=0.0,kd=0.097;
 	PIDController spinner = new PIDController(kp,ki,kd);
 	
 	public void setRot(){
@@ -103,8 +104,26 @@ public class DrivetrainSubSys extends SubsystemBase {
 		ki = SmartDashboard.getNumber("ki", ki);
 		kd = SmartDashboard.getNumber("kd", kd);
 		spinner.setPID(kp, ki, kd);
+		spinner.setTolerance(5);
 	}
 	
+	double[] errors = new double[10];
+	int count = 0;
+
+	public void resetPID(){
+		// for (int i = 0; i < errors.length; i++){
+		// 	errors[i] = 999;
+		// }
+	}
+
+	public double average(double[] arr){
+		double avg = 0;
+		for (int i = 0; i < arr.length; i++){
+			avg += Math.abs(arr[i]/arr.length);
+		}
+		return avg;
+	}
+
 	public void spin(){
 		double livepos = ahrs.getYaw();
 		if (livepos<0){
@@ -115,6 +134,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 		double maxspeed = 0.6;
 		double turn;
 		double error = spinTarget-livepos;
+		// errors[count] = error;
+		// count++;
+		// if (count >= errors.length){
+		// 	count = 0;
+		// }
 		turn = spinner.calculate(-error);
 		turn = Constants.clamp(turn, -maxspeed, maxspeed);
 		drv(0, turn);
@@ -123,7 +147,9 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// SmartDashboard.putString("spintarget", spinTarget+"");
 		// SmartDashboard.putString("error", error+"");
 		// System.out.println(ahrs.getYaw());
-		if (Math.abs(error) < 5 || spintime.hasElapsed(2)){
+		// if (spintime.hasElapsed(1)){
+		// if (Math.abs(error) < 1 || spintime.hasElapsed(2)){
+		if (spinner.atSetpoint() || spintime.hasElapsed(10)){
 			spun = true;
 			// System.out.println("fin");
 		}
