@@ -1,3 +1,15 @@
+/*
+Pre match checklist
+Falcon shafts collars tight
+angler left right
+check bearings dont fall into water cut plate when resting down
+check barstock bend
+
+
+TODO
+check 775 going too fast
+*/
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -5,34 +17,136 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.subsystems.AngleSubSys;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
 	public static final XboxController xbox = new XboxController(0);
+	public static final XboxController opxbox = new XboxController(1);
 	public static final Joystick xboxjoystick = new Joystick(0);
-	public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3);
-	public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 4);
-	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 2);
+	public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3); // X
+	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y
+	public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 2); // B
+	public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
+	public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
 	public static final AnalogInput ultra = new AnalogInput(2);
-	public static double getUltra(){
-		return (ultra.getVoltage()*1000)/9.77;
+	private static double targetAngle = 0;
+	public static double distance(){
+		return 15*12.0/39.37;
 	}
-	public static double clamp(double inp, double min, double max){
-		if (inp > max){
+	public static void setAngle(double angle) {
+		targetAngle = angle;
+	}
+
+	public static double getTarAngle() {
+		return targetAngle;
+	}
+
+	public static double getAngle() {
+		return AngleSubSys.getAngle();
+	}
+
+	public static double getUltra() {
+		return 10;
+		// double dist = (ultra.getVoltage()*1000)/9.77;
+		// SmartDashboard.putNumber("ultrasonic", dist);
+		// return dist;
+	}
+
+	public static double clamp(double inp, double min, double max) {
+		if (inp > max) {
 			inp = max;
 		}
-		if (inp < min){
+		if (inp < min) {
 			inp = min;
 		}
 		return inp;
 	}
+
+	// private static final WPI_TalonSRX flashlight = new WPI_TalonSRX(2);
+	private static boolean initFlash = false;
+
+	public static void initFlash() {
+		// flashlight.configContinuousCurrentLimit(1);
+		// flashlight.configPeakCurrentLimit(1);
+		// flashlight.enableCurrentLimit(true);
+		// initFlash=true;
+
+		// System.out.println("INIT");
+	}
+
+	public static void onFlash() {
+		// System.out.println("ON");
+		if (!initFlash) {
+			initFlash();
+			// System.out.println("ON FAIL");
+		}
+
+		// System.out.println("ON SUCCESS");
+		// flashlight.set((5.0/RobotController.getBatteryVoltage()));
+		// flashlight.set(0.4);
+	}
+
+	public static void offFlash() {
+		// System.out.println("OFF");
+		if (!initFlash) {
+			initFlash();
+			// System.out.println("OFF FAIL");
+		}
+		// flashlight.set(0);
+		// System.out.println("OFF SUCCESS");
+	}
+
+	public static double getFlash() {
+		// return flashlight.get();
+		return 0;
+	}
+
+	//BELOW HERE is copied from falcon ex code
+	/**
+	 * Which PID slot to pull gains from. Starting 2018, you can choose from
+	 * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
+	 * configuration.
+	 */
+	public static final int kSlotIdx = 0;
+
+	/**
+	 * Talon FX supports multiple (cascaded) PID loops. For
+	 * now we just want the primary one.
+	 */
+	public static final int kPIDLoopIdx = 0;
+
+	/**
+	 * Set to zero to skip waiting for confirmation, set to nonzero to wait and
+	 * report to DS if action fails.
+	 */
+	public static final int kTimeoutMs = 30;
+
+	/**
+	 * PID Gains may have to be adjusted based on the responsiveness of control
+	 * loop.
+	 * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity
+	 * units at 100% output
+	 * 
+	 * kP kI kD kF Iz PeakOut
+	 */
+	public final static Gains kGains_Velocit = new Gains(0.1, 0.001, 10, 1023.0 / 20660.0, 300, 1.00);
 }

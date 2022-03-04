@@ -4,15 +4,23 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.robot.commands.Angle;
 import frc.robot.commands.Drive180;
 import frc.robot.commands.DriveAuto;
+import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Drivetrain;
 import frc.robot.commands.DriveReset;
+import frc.robot.commands.DriveStop;
 import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.AngleSubSys;
+import static frc.robot.Constants.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,6 +33,39 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer m_robotContainer;
 
+
+	
+	NetworkTable table;
+	NetworkTableEntry tx;
+	NetworkTableEntry ty;
+	NetworkTableEntry ta;
+	boolean networkInit = false;
+
+	public void networkInit(){
+		// if (!networkInit){
+		if (true){
+			try{
+				NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+				NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+				
+				NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
+				NetworkTableEntry ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
+				NetworkTableEntry ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
+				networkInit = true;
+			}catch (Exception e){
+				System.out.println("Network init fail");
+			}
+		}
+	}
+
+	public void on(){
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+	}
+	public void off(){
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+	}
+
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -34,6 +75,10 @@ public class Robot extends TimedRobot {
 		// Instantiate our RobotContainer.  This will perform all our button bindings, and put our
 		// autonomous chooser on the dashboard.
 		m_robotContainer = new RobotContainer();
+		initFlash();
+		AngleSubSys.init();
+		networkInit();
+		off();
 	}
 
 	/**
@@ -56,10 +101,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		DrivetrainSubSys.stopDrive();
+		offFlash();
+		networkInit();
+		off();
 	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+
+	}
 
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
@@ -70,6 +120,9 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.schedule();
 		}
+		
+		networkInit();
+		on();
 	}
 
 	/** This function is called periodically during autonomous. */
@@ -85,24 +138,49 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-		Constants.autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
-		Constants.resetDriveButton.whenPressed(new DriveReset(new DrivetrainSubSys()));
-		Constants.spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+		
+		networkInit();
+		on();
+
+		/* photon vision temp comment
+		autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
+		resetDriveButton.whenPressed(new DriveReset(new DrivetrainSubSys()));
+		stopDriveButton.whenPressed(new DriveStop(new DrivetrainSubSys()));
+		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+		
+		driveDriveButton.whenPressed(new DriveDistance(new DrivetrainSubSys(),20));
+		*/
+		
+		// onFlash();
+		
+		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+	}
+
+	public double getX(){
+		return(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
+	}
+
+	public void autoSchedule(Command comm){
+		if (!comm.isScheduled()){
+			comm.schedule();
+		}
 	}
 
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-		// System.out.println(Constants.autoDriveButton.get());
-		if (!Constants.autoDriveButton.get()){
-			if (!RobotContainer.drivetrain.isScheduled()){
-				RobotContainer.drivetrain.schedule();
-			}
-		} else {
+		// System.out.println("teleop");
+
+		// System.out.println(autoDriveButton.get());
+		if (!autoDriveButton.get()){
+			autoSchedule(RobotContainer.drivetrain);
+		} else { 
 			// RobotContainer.drivetrain.end(false);
 			RobotContainer.drivetrain.cancel();
 		}
 		
+		autoSchedule(RobotContainer.shooter);
+		autoSchedule(RobotContainer.angle);
 	}
 
 	@Override

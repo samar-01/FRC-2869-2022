@@ -14,7 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -23,7 +23,7 @@ import org.opencv.core.Mat;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
+import static frc.robot.Constants.*;
 import com.kauailabs.navx.frc.AHRS;
 // not necessary but if something breaks uncomment below
 // import frc.robot.commands.Shoot;
@@ -31,24 +31,36 @@ import com.kauailabs.navx.frc.AHRS;
 // import frc.robot.subsystems.IntakeSubSys;
 
 public class DrivetrainSubSys extends SubsystemBase {
-	public static final CANSparkMax right1 = new CANSparkMax(1, MotorType.kBrushless);
-	public static final CANSparkMax right2 = new CANSparkMax(2, MotorType.kBrushless);
-	public static final CANSparkMax left1 = new CANSparkMax(3, MotorType.kBrushless);
-	public static final CANSparkMax left2 = new CANSparkMax(4, MotorType.kBrushless);
+	private static final CANSparkMax right1 = new CANSparkMax(1, MotorType.kBrushless);
+	private static final CANSparkMax right2 = new CANSparkMax(2, MotorType.kBrushless);
+	private static final CANSparkMax left1 = new CANSparkMax(3, MotorType.kBrushless);
+	private static final CANSparkMax left2 = new CANSparkMax(4, MotorType.kBrushless);
 	private static final MotorControllerGroup right = new MotorControllerGroup(right1, right2);
 	private static final MotorControllerGroup left = new MotorControllerGroup(left1, left2);
 	private static final DifferentialDrive difDrive = new DifferentialDrive(left, right);
-	private static final XboxController xbox = Constants.xbox;
 	private static final AHRS ahrs = new AHRS(SPI.Port.kMXP);
+
 	public DrivetrainSubSys() {
 		
 	}
 
+
+	public static void drv(double speed, double turn){
+		difDrive.arcadeDrive(turn, speed);
+	}
+
 	public void drive() {
-		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
-		// speed *= 0.5;
-		speed *= 0.5;
-		drv(speed, Constants.xbox.getLeftX()*0.6);
+		// double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
+		// speed *= 0.35;
+		// drv(speed, xbox.getLeftX()*0.3);
+
+		// drv(0,0);
+		if (opxbox.getAButton()){
+			drv(0,LimelightSubSys.getX()/20);
+		}
+		// System.out.println(LimelightSubSys.getX());
+		SmartDashboard.putNumber("x", LimelightSubSys.getX());
+
 	}
 	
 	boolean start = true;
@@ -65,31 +77,28 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// if (xbox.getYButton()){
 		// 	resetEncoders();
 		// 	start = false;
-		// 	target = Constants.getUltra();
+		// 	target = getUltra();
 		// }
 	}
 
 	public void autodrv(){
-		double pos = Constants.getUltra();
 		// double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		// speed *= 0.4;
-		double turn = Constants.xbox.getLeftX()*0.5;
-		double kp = 0.3;
-		double speed = kp * (pos - target);
-		double maxspeed = 0.3;
-		speed = Constants.clamp(speed, -maxspeed, maxspeed);
-		drv(speed, turn);
-	}
 
-	public static void drv(double speed, double turn){
-		difDrive.arcadeDrive(turn, speed);
+		// double pos = getUltra();
+		// double turn = xbox.getLeftX()*0.5;
+		// double kp = 0.3;
+		// double speed = kp * (pos - target);
+		// double maxspeed = 0.3;
+		// speed = clamp(speed, -maxspeed, maxspeed);
+		// drv(speed, turn);
 	}
 	
 	double pos;
 	double spinTarget;
 	public boolean spun = false;
 	Timer spintime = new Timer();
-	double kp=0.4,ki=0.0,kd=0.097;
+	double kp=0.4,ki=0.0,kd=0.1;
 	PIDController spinner = new PIDController(kp,ki,kd);
 	
 	public void setRot(){
@@ -105,6 +114,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		kd = SmartDashboard.getNumber("kd", kd);
 		spinner.setPID(kp, ki, kd);
 		spinner.setTolerance(5);
+		// spinner.enableContinuousInput(-180, 180);
 	}
 	
 	double[] errors = new double[10];
@@ -140,8 +150,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// 	count = 0;
 		// }
 		turn = spinner.calculate(-error);
-		turn = Constants.clamp(turn, -maxspeed, maxspeed);
-		drv(0, turn);
+		turn = clamp(turn, -maxspeed, maxspeed);
+		if(ahrs.isConnected())
+			drv(0, turn);
+		else
+			spun=true;
 		// SmartDashboard.putString("livepos", livepos+"");
 		// SmartDashboard.putString("pos", pos+"");
 		// SmartDashboard.putString("spintarget", spinTarget+"");
@@ -151,10 +164,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// if (Math.abs(error) < 1 || spintime.hasElapsed(2)){
 		if (spinner.atSetpoint() || spintime.hasElapsed(10)){
 			spun = true;
-			// System.out.println("fin");
+			System.out.println("fin");
 		}
 	}
-
+	
 	public void stop() {
 		stopDrive();
 	}
@@ -173,12 +186,52 @@ public class DrivetrainSubSys extends SubsystemBase {
 		right1.getEncoder().setPositionConversionFactor(1);
 		right2.getEncoder().setPositionConversionFactor(1);
 		ahrs.reset();
-		target = Constants.getUltra();
+		target = getUltra();
 		System.out.println("RESET");
 	}
+
 
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
 	}
+
+	double posD;
+	double driveTarget;
+	public boolean drove = false;
+	Timer drivetime = new Timer();
+	double kpd=0.4,kid=0.0,kdd=0.1;
+	PIDController driver = new PIDController(kp,ki,kd);
+	
+	public void setDrivePID(double distance){
+		drove = false;
+		resetEncoders();
+		posD = left1.getEncoder().getPosition();
+		driveTarget = posD+distance;
+		drivetime.reset();
+		drivetime.start();
+		driver.reset();
+		kpd = SmartDashboard.getNumber("kp", kp);
+		kid = SmartDashboard.getNumber("ki", ki);
+		kdd = SmartDashboard.getNumber("kd", kd);
+		driver.setPID(kpd, kid, kdd);
+		driver.setTolerance(5);
+	}
+	
+	double[] errorsD = new double[10];
+	int countD = 0;
+	public void drivePID(){
+		double livepos = left1.getEncoder().getPosition();
+		double maxspeed = 0.6;
+		double speed;
+		double error = spinTarget-livepos;
+		speed = driver.calculate(-error);
+		speed = clamp(speed, -maxspeed, maxspeed);
+		drv(speed,0);
+		if (driver.atSetpoint() || spintime.hasElapsed(10)){
+			drove = true;
+			System.out.println("fin");
+		}
+	}
+
 }
