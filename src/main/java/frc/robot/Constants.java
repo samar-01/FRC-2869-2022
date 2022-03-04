@@ -19,6 +19,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -119,6 +121,38 @@ public final class Constants {
 		// return flashlight.get();
 		return 0;
 	}
+
+	
+	static NetworkTable table;
+	static NetworkTableEntry tx;
+	static NetworkTableEntry ty;
+	static NetworkTableEntry ta;
+	static boolean networkInit = false;
+	public static void networkInit(){
+		// if (!networkInit){
+		if (true){
+			try{
+				NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+				NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+				
+				NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
+				NetworkTableEntry ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
+				NetworkTableEntry ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
+				networkInit = true;
+			}catch (Exception e){
+				System.out.println("Network init fail");
+			}
+		}
+	}
+
+	public static void onLime(){
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+	}
+	public static void offLime(){
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+	}
+
 
 	//BELOW HERE is copied from falcon ex code
 	/**

@@ -33,39 +33,6 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer m_robotContainer;
 
-
-	
-	NetworkTable table;
-	NetworkTableEntry tx;
-	NetworkTableEntry ty;
-	NetworkTableEntry ta;
-	boolean networkInit = false;
-
-	public void networkInit(){
-		// if (!networkInit){
-		if (true){
-			try{
-				NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-				NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-				
-				NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
-				NetworkTableEntry ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
-				NetworkTableEntry ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
-				networkInit = true;
-			}catch (Exception e){
-				System.out.println("Network init fail");
-			}
-		}
-	}
-
-	public void on(){
-		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-	}
-	public void off(){
-		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-	}
-
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -78,7 +45,7 @@ public class Robot extends TimedRobot {
 		initFlash();
 		AngleSubSys.init();
 		networkInit();
-		off();
+		offLime();
 	}
 
 	/**
@@ -103,7 +70,7 @@ public class Robot extends TimedRobot {
 		DrivetrainSubSys.stopDrive();
 		offFlash();
 		networkInit();
-		off();
+		offLime();
 	}
 
 	@Override
@@ -122,7 +89,7 @@ public class Robot extends TimedRobot {
 		}
 		
 		networkInit();
-		on();
+		onLime();
 	}
 
 	/** This function is called periodically during autonomous. */
@@ -140,7 +107,7 @@ public class Robot extends TimedRobot {
 		}
 		
 		networkInit();
-		on();
+		onLime();
 
 		/* photon vision temp comment
 		autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
@@ -154,10 +121,6 @@ public class Robot extends TimedRobot {
 		// onFlash();
 		
 		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
-	}
-
-	public double getX(){
-		return(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
 	}
 
 	public void autoSchedule(Command comm){
