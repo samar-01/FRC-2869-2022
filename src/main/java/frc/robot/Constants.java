@@ -190,5 +190,5 @@ public final class Constants {
 	 * 
 	 * kP kI kD kF Iz PeakOut
 	 */
-	public final static Gains kGains_Velocit = new Gains(0.1, 0.001, 10, 1023.0 / 20660.0, 300, 1.00);
+	public final static Gains falconGains = new Gains(0.1, 0.001, 10, 1023.0 / 20660.0, 300, 1.00);
 }
