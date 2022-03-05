@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class Drive180 extends CommandBase {
-	
+
 	private final DrivetrainSubSys drive;
+
 	/** Creates a new Drivetrain. */
 	public Drive180(DrivetrainSubSys drive) {
 		this.drive = drive;
@@ -20,7 +21,7 @@ public class Drive180 extends CommandBase {
 	@Override
 	public void initialize() {
 		drive.setRot();
-    drive.resetPID();
+		drive.resetPID();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -38,10 +39,10 @@ public class Drive180 extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-    if (drive.spun){
-      drive.spun = false;
-      return true;
-    }
+		if (drive.spun) {
+			drive.spun = false;
+			return true;
+		}
 		return false;
 	}
 }

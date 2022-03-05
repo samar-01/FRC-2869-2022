@@ -5,46 +5,38 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.AngleSubSys;
 
-public class DriveStop extends CommandBase {
+public class AutoLift extends CommandBase {
 
-	private final DrivetrainSubSys drive;
-	private boolean stopped;
+	private final AngleSubSys angleSubSys;
 
-	/** Creates a new Drivetrain. */
-	public DriveStop(DrivetrainSubSys drive) {
-		this.drive = drive;
-		addRequirements(drive);
+	/** Creates a new Angle. */
+	public AutoLift(AngleSubSys angleSubSys) {
+		this.angleSubSys = angleSubSys;
+		addRequirements(angleSubSys);
+		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		stopped = false;
-		// drive.resetEncoders();
+		// angleSubSys.init();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		RobotContainer.drive180.cancel();
-		RobotContainer.driveauto.cancel();
-		RobotContainer.drivetrain.cancel();
-		drive.stop();
-		stopped = true;
-		// drive.autoDrive();
+		angleSubSys.lift();
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {
-	}
+	public void end(boolean interrupted) {}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return stopped;
+		return false;
 	}
 }

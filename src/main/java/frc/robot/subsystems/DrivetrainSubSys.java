@@ -49,20 +49,34 @@ public class DrivetrainSubSys extends SubsystemBase {
 		difDrive.arcadeDrive(turn, speed);
 	}
 
+
+	PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
 	public void drive() {
 		// double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		// speed *= 0.35;
 		// drv(speed, xbox.getLeftX()*0.3);
 
 		// drv(0,0);
+		if (opxbox.getAButtonPressed()){
+			limeturn.reset();
+		}
 		if (opxbox.getAButton()){
-			drv(0,LimelightSubSys.getX()/20);
+			System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
+			drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
 		}
 		// System.out.println(LimelightSubSys.getX());
-		SmartDashboard.putNumber("x", LimelightSubSys.getX());
+		SmartDashboard.putNumber("x", LimelightSubSys.getLimeX());
 
 	}
 	
+	public void point(){
+		drv(0,LimelightSubSys.getLimeX()/20);
+	}
+
+	public boolean pointed(){
+		return (LimelightSubSys.getLimeX()/20 < 0.1);
+	}
+
 	boolean start = true;
 	public static double target = 0;
 

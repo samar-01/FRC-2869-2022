@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class DriveReset extends CommandBase {
-	
+
 	private final DrivetrainSubSys drive;
 
 	/** Creates a new Drivetrain. */

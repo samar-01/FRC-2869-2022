@@ -8,6 +8,7 @@ check barstock bend
 
 TODO
 check 775 going too fast
+battery voltage affecting shoot constant
 */
 
 // Copyright (c) FIRST and other WPILib contributors.
@@ -26,6 +27,8 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.LimelightSubSys;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
@@ -51,8 +54,10 @@ public final class Constants {
 	public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
+
 	public static double distance(){
-		return 15*12.0/39.37;
+		// return 18*12.0/39.37;
+		return LimelightSubSys.getDistance();
 	}
 	public static void setAngle(double angle) {
 		targetAngle = angle;
@@ -64,6 +69,9 @@ public final class Constants {
 
 	public static double getAngle() {
 		return AngleSubSys.getAngle();
+	}
+	public static double ang2Enc(double theta){
+		return AngleSubSys.ang2Enc(theta);
 	}
 
 	public static double getUltra() {

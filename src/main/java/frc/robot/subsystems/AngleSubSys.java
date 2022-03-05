@@ -24,20 +24,22 @@ public class AngleSubSys extends SubsystemBase {
 	static final double armlim = 0.4;
 	static final CANSparkMax arm = new CANSparkMax(5, MotorType.kBrushless);
 	static final double ratio = 5 * 4 * 3 * 4;
-	static double kp = 0.01, ki = 0.001, kd = 0.005, tolerance = 10;
+	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
 	static PIDController armPID = new PIDController(kp, ki, kd);
-	static final double target = 120, limit = 135;
+	static double target = 70, limit = 80;
+	//set target to real target - 10
+	static boolean past = false;
 	public static void init() {
 		arm.getEncoder().setPosition(0);
 		armPID.reset();
 		armPID.setPID(kp, ki, kd);
-		armPID.setTolerance(1);
+		armPID.setTolerance(tolerance);
 	}
 
 	public void run() {
-		if (getEncAngle() > limit){
+		if (getAngle() > limit){
 			arm.set(0);
-		} else if (getEncAngle() < -2){
+		} else if (getAngle() < -36){
 			arm.set(0);
 			// TODO it is on brake mode so it will stay in teh rubber so moe code is needed
 		} else {
@@ -46,7 +48,13 @@ public class AngleSubSys extends SubsystemBase {
 				// arm.set(armlim * (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis()));
 				armPID.reset();
 			} else {
-				double error = target - getEncAngle();
+				// if (getAngle() > target && !past){
+				// 	target += 10;
+				// 	past = true;
+				// } else if (getAngle() < 0){
+				// 	past = false;
+				// }
+				double error = target - getAngle();
 				double power = armPID.calculate(-error);
 				power = clamp(power, -armlim, armlim);
 				// System.out.println(power);
@@ -59,6 +67,20 @@ public class AngleSubSys extends SubsystemBase {
 		// SmartDashboard.putNumber("angle", arm.getEncoder().getPosition());
 	}
 
+
+	public void lift(){
+		double target = 120;
+		double error = target - getEncAngle();
+		double power = armPID.calculate(-error);
+		power = clamp(power, -armlim, armlim);
+		// System.out.println(power);
+		arm.set(power);
+	}
+
+	public boolean isLifted(){
+		return (Math.abs(target - getEncAngle()) < 1);
+	}
+
 	public static double getAngle() {
 		return arm.getEncoder().getPosition()*0.72340426-34;
 		// return 60;
@@ -66,7 +88,9 @@ public class AngleSubSys extends SubsystemBase {
 	public static double getEncAngle() {
 		return arm.getEncoder().getPosition();
 	}
-	
+	public static double ang2Enc(double theta){
+		return (theta+34)/0.72340426;
+	}
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run

@@ -103,7 +103,14 @@ public class ShooterSubSys extends SubsystemBase {
 	static final double falconlim = 0.25;
 	static double falconfast = 0.6;
 
-	public static void run() {
+	static void PIDSpeed(double speed){
+		double targetVelocity_UnitsPer100ms = speed;
+		/* 2000 RPM in either direction */
+		leftfal.set(TalonFXControlMode.Velocity, -targetVelocity_UnitsPer100ms);
+		rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
+	}
+
+	public void run() {
 		//Gets the value from the SmartDashboard
 		SmartDashboard.getNumber("falcpower", falconfast);
 		// SmartDashboard.getNumber("vel", calcVel(560, 60));
@@ -139,18 +146,19 @@ public class ShooterSubSys extends SubsystemBase {
 			
 			//gives the target velocity from the Function
 			// double targetVelocity_UnitsPer100ms = calcVel(distance(), getAngle()) * 2048.0 / 600.0;
-			double targetVelocity_UnitsPer100ms = calcVel(distance(), getAngle());
-			/* 2000 RPM in either direction */
-			leftfal.set(TalonFXControlMode.Velocity, -targetVelocity_UnitsPer100ms);
-			rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
-			// rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
+
+			// double targetVelocity_UnitsPer100ms = calcVel(distance(), getAngle());
+			// /* 2000 RPM in either direction */
+			// leftfal.set(TalonFXControlMode.Velocity, -targetVelocity_UnitsPer100ms);
+			// rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);\
+			PIDSpeed(calcVel(distance(), getAngle()));
 
 			SmartDashboard.putBoolean("revup", true);
 			if (xbox.getBButton()) {
 				// left775.set(TalonSRXControlMode.PercentOutput, -1);
 				// right775.set(TalonSRXControlMode.PercentOutput, 1);
-				left775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY()*0.25);
-				right775.set(TalonSRXControlMode.PercentOutput, -xbox.getLeftY()*0.25);
+				left775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY());
+				right775.set(TalonSRXControlMode.PercentOutput, -xbox.getLeftY());
 				// leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getLeftY());
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
@@ -220,9 +228,20 @@ public class ShooterSubSys extends SubsystemBase {
 		vel /= (2*Math.PI);
 		vel *= 60;
 		//correct for real life;
-		vel *= 7.9;
+		vel *= 7.5;
+		// 7.5 for 12.3v standby
+		// 8.36 for 11.4v standy
 		// System.out.println(vel);
 		return vel;
+	}
+
+	double baseline = 2000;
+	public void autoShootSpeed(AngleSubSys angleSubSys){
+		if (angleSubSys.isLifted()){
+			calcVel(distance(), getAngle());
+		} else {
+			PIDSpeed(baseline);
+		}
 	}
 
 	@Override

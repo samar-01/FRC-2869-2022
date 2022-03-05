@@ -5,16 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 
-public class DriveStop extends CommandBase {
+public class AutoPoint extends CommandBase {
 
 	private final DrivetrainSubSys drive;
-	private boolean stopped;
 
 	/** Creates a new Drivetrain. */
-	public DriveStop(DrivetrainSubSys drive) {
+	public AutoPoint(DrivetrainSubSys drive) {
 		this.drive = drive;
 		addRequirements(drive);
 	}
@@ -22,29 +20,23 @@ public class DriveStop extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		stopped = false;
-		// drive.resetEncoders();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		RobotContainer.drive180.cancel();
-		RobotContainer.driveauto.cancel();
-		RobotContainer.drivetrain.cancel();
-		drive.stop();
-		stopped = true;
-		// drive.autoDrive();
+		drive.point();
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
+		// drive.stop();
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return stopped;
+		return drive.pointed();
 	}
 }
