@@ -19,6 +19,7 @@ import frc.robot.commands.Shooter;
 import frc.robot.subsystems.AngleSubSys;
 // import frc.robot.subsystems.AutomaticSubSys;
 import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.LimelightSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -37,10 +38,11 @@ public class RobotContainer {
 	public static final DriveAuto driveauto = new DriveAuto(drivetrainSubSys);
 	public static final DriveReset drivereset = new DriveReset(drivetrainSubSys);
 	public static final Drive180 drive180 = new Drive180(drivetrainSubSys);
-	public static final AutoPoint point = new AutoPoint(drivetrainSubSys);
+	public static final LimelightSubSys limelightSubSys = new LimelightSubSys();
 	public static final ShooterSubSys shooterSubSys = new ShooterSubSys();
 	public static final Shooter shooter = new Shooter(shooterSubSys);
 	public static final AngleSubSys angleSubSys = new AngleSubSys();
+	public static final AutoPoint point = new AutoPoint(drivetrainSubSys, angleSubSys, limelightSubSys);
 	public static final Angle angle = new Angle(angleSubSys);
 	// public static final AutoLift lift = new AutoLift(angleSubSys);
 	// public static final AutomaticSubSys automaticSubSys = new AutomaticSubSys(angleSubSys, drivetrainSubSys, point, lift);

@@ -24,7 +24,7 @@ public class AngleSubSys extends SubsystemBase {
 	static final double armlim = 0.4;
 	static final CANSparkMax arm = new CANSparkMax(5, MotorType.kBrushless);
 	static final double ratio = 5 * 4 * 3 * 4;
-	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
+	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 0.5;
 	static PIDController armPID = new PIDController(kp, ki, kd);
 	static double target = 70, limit = 80;
 	//set target to real target - 10
@@ -67,7 +67,7 @@ public class AngleSubSys extends SubsystemBase {
 		// SmartDashboard.putNumber("angle", arm.getEncoder().getPosition());
 	}
 
-
+	double autoTolerance = 2.5;
 	public void lift(){
 		double target = 120;
 		double error = target - getEncAngle();
@@ -78,7 +78,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	public boolean isLifted(){
-		return (Math.abs(target - getEncAngle()) < 1);
+		return (Math.abs(target - getEncAngle()) < autoTolerance);
 	}
 
 	public static double getAngle() {

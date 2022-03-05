@@ -204,19 +204,28 @@ public class ShooterSubSys extends SubsystemBase {
 	}
 
 	double baseline = 2000;
-	Timer pidready = new Timer();
-
-	public void autoShootSpeed(AngleSubSys angleSubSys) {
-		if (angleSubSys.isLifted()) {
+	Timer PIDReadyTimer = new Timer();
+	Timer shotTimer = new Timer();
+	public void autoShootSpeed(AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys) {
+		if (angleSubSys.isLifted() && drivetrainSubSys.finishPoint()) {
 			ramp();
-			if (pidready.get() == 0 && isRightSpeed()){
-				pidready.start();
-			} else if (pidready.hasElapsed(1) && isRightSpeed()){
+			if (PIDReadyTimer.get() == 0 && isRightSpeed()){
+				PIDReadyTimer.start();
+			} else if (PIDReadyTimer.hasElapsed(1) && isRightSpeed()){
 				shoot775();
+				if (shotTimer.get() == 0){
+					shotTimer.start();
+				}
 			}
 		} else {
 			PIDSpeed(baseline);
+			PIDReadyTimer.reset();
+			shotTimer.reset();
 		}
+	}
+
+	public boolean isAutoShootSpeedFinish(){
+		return shotTimer.hasElapsed(0.5);
 	}
 
 	@Override

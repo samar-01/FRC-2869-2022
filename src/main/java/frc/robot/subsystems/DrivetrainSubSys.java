@@ -69,12 +69,25 @@ public class DrivetrainSubSys extends SubsystemBase {
 
 	}
 	
-	public void point(){
-		drv(0,LimelightSubSys.getLimeX()/20);
+	Timer pointTimer = new Timer();
+
+	public void point(AngleSubSys angleSubSys, LimelightSubSys limelightSubSys){
+		if (angleSubSys.isLifted()){	
+			drv(0, limelightSubSys.getLimeX()/20);
+			if (pointTimer.get() == 0){
+				pointTimer.start();
+			}
+		} else {
+			pointTimer.reset();
+		}
 	}
 
-	public boolean pointed(){
-		return (LimelightSubSys.getLimeX()/20 < 0.1);
+	public boolean pointed(AngleSubSys angleSubSys, LimelightSubSys limelightSubSys){
+		return angleSubSys.isLifted() && limeturn.atSetpoint();
+	}
+
+	public boolean finishPoint(){
+		return pointTimer.hasElapsed(1);
 	}
 
 	boolean start = true;

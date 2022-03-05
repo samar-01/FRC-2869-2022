@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Angle;
 import frc.robot.commands.AutoPoint;
+import frc.robot.commands.Drive180;
 import frc.robot.commands.DriveAuto;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Drivetrain;
@@ -121,7 +122,7 @@ public class Robot extends TimedRobot {
 		
 		// onFlash();
 		
-		spinDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
 	}
 
 	public void autoSchedule(Command comm){

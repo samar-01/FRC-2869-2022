@@ -47,26 +47,19 @@ public final class Constants {
 	public static final XboxController xbox = new XboxController(0);
 	public static final XboxController opxbox = new XboxController(1);
 	public static final Joystick xboxjoystick = new Joystick(0);
+	public static final Joystick opxboxjoystick = new Joystick(1);
 	public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3); // X
-	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y
+	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y USED
+	public static final JoystickButton autoShootButton = new JoystickButton(xboxjoystick, 3); // X USED
 	public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 2); // B
 	public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
 	public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
 	public static final AnalogInput ultra = new AnalogInput(2);
-	private static double targetAngle = 0;
 
 	public static double distance(){
-		// return 18*12.0/39.37;
 		return LimelightSubSys.getDistance();
 	}
-	public static void setAngle(double angle) {
-		targetAngle = angle;
-	}
-
-	public static double getTarAngle() {
-		return targetAngle;
-	}
-
+	
 	public static double getAngle() {
 		return AngleSubSys.getAngle();
 	}

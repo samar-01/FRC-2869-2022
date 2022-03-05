@@ -9,6 +9,7 @@ import org.opencv.core.Point;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.AngleSubSys;
 import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.LimelightSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 // import frc.robot.commands.*;
 
@@ -18,9 +19,9 @@ import frc.robot.subsystems.ShooterSubSys;
 public class AutoShoot extends ParallelCommandGroup {
 
 	/** Creates a new AutoShoot. */
-	public AutoShoot(ShooterSubSys shooterSubSys, DrivetrainSubSys drivetrainSubSys, AngleSubSys angleSubSys) {
+	public AutoShoot(ShooterSubSys shooterSubSys, DrivetrainSubSys drivetrainSubSys, AngleSubSys angleSubSys, LimelightSubSys limelightSubSys) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoShootSpeed(shooterSubSys, angleSubSys), new AutoPoint(drivetrainSubSys), new AutoLift(angleSubSys));
+		addCommands(new AutoLift(angleSubSys), new AutoPoint(drivetrainSubSys, angleSubSys, limelightSubSys), new AutoShootSpeed(shooterSubSys, angleSubSys, drivetrainSubSys));
 	}
 }

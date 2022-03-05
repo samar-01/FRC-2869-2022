@@ -68,6 +68,10 @@ public class LimelightSubSys extends SubsystemBase {
 		return dist;
 	}
 
+	public boolean ready(){
+		return false;
+	}
+
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run

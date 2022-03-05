@@ -6,16 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.LimelightSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 
 public class AutoShootSpeed extends CommandBase {
 	ShooterSubSys shooterSubSys;
 	AngleSubSys angleSubSys;
+	DrivetrainSubSys drivetrainSubSys;
 	/** Creates a new AutoShootSpeed. */
-	public AutoShootSpeed(ShooterSubSys shooterSubSys, AngleSubSys angleSubSys) {
+	public AutoShootSpeed(ShooterSubSys shooterSubSys, AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys) {
 		this.shooterSubSys = shooterSubSys;
 		this.angleSubSys = angleSubSys;
-		addRequirements(shooterSubSys, angleSubSys);
+		this.drivetrainSubSys = drivetrainSubSys;
+		addRequirements(shooterSubSys, angleSubSys, drivetrainSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
@@ -27,7 +31,7 @@ public class AutoShootSpeed extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		shooterSubSys.autoShootSpeed(angleSubSys);
+		shooterSubSys.autoShootSpeed(angleSubSys, drivetrainSubSys);
 	}
 
 	// Called once the command ends or is interrupted.
@@ -38,6 +42,6 @@ public class AutoShootSpeed extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return shooterSubSys.isAutoShootSpeedFinish();
 	}
 }

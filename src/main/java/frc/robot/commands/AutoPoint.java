@@ -5,16 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.AngleSubSys;
 import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.LimelightSubSys;
 
 public class AutoPoint extends CommandBase {
 
-	private final DrivetrainSubSys drive;
-
+	DrivetrainSubSys drive;
+	AngleSubSys angleSubSys;
+	LimelightSubSys limelightSubSys;
 	/** Creates a new Drivetrain. */
-	public AutoPoint(DrivetrainSubSys drive) {
-		this.drive = drive;
-		addRequirements(drive);
+	public AutoPoint(DrivetrainSubSys drivetrainSubSys, AngleSubSys angle, LimelightSubSys limelightSubSys) {
+		this.drive = drivetrainSubSys;
+		this.angleSubSys = angleSubSys;
+		this.limelightSubSys = limelightSubSys;
+		addRequirements(drivetrainSubSys, limelightSubSys, angleSubSys);
 	}
 
 	// Called when the command is initially scheduled.
@@ -25,7 +30,7 @@ public class AutoPoint extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.point();
+		drive.point(angleSubSys, limelightSubSys);
 	}
 
 	// Called once the command ends or is interrupted.
@@ -37,6 +42,6 @@ public class AutoPoint extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return drive.pointed();
+		return drive.finishPoint();
 	}
 }
