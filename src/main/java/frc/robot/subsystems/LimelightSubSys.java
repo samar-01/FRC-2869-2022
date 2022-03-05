@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LimelightSubSys extends SubsystemBase {
 	/** Creates a new LimelightSubSys. */
 	public LimelightSubSys() {
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
 
 	public static double getLimeDouble(String str) {
