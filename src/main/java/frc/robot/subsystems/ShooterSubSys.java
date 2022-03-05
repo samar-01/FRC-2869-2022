@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
@@ -30,7 +31,6 @@ public class ShooterSubSys extends SubsystemBase {
 	private static final WPI_TalonFX rightfal = new WPI_TalonFX(7);
 	private static final WPI_TalonSRX left775 = new WPI_TalonSRX(10);
 	private static final WPI_TalonSRX right775 = new WPI_TalonSRX(9);
-	static final double tarspeed = 10000;
 
 	/**
 	 * Sets up the PID Controllers on the Falcon
@@ -85,13 +85,13 @@ public class ShooterSubSys extends SubsystemBase {
 		// rpid.setTolerance(100);
 	}
 
-	private static void setFalc(double speed) {
+	private static void setFalcPID(double speed) {
 		leftfal.set(TalonFXControlMode.Velocity, speed);
 		rightfal.set(TalonFXControlMode.Velocity, speed);
 	}
 
 	public static void stop() {
-		setFalc(0);
+		setFalcPID(0);
 	}
 
 	static final double lim775 = 0.15;
@@ -104,11 +104,16 @@ public class ShooterSubSys extends SubsystemBase {
 		rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
 	}
 
-	public void run() {
-		// Gets the value from the SmartDashboard
-		SmartDashboard.getNumber("falcpower", falconFastLim);
-		// SmartDashboard.getNumber("vel", calcVel(560, 60));
+	void ramp(){
+		PIDSpeed(calcVel(distance(), getAngle()));
+	}
 
+	void shoot775(){
+		left775.set(TalonSRXControlMode.PercentOutput, 9.0 / RobotController.getBatteryVoltage());
+		right775.set(TalonSRXControlMode.PercentOutput, 9.0 / RobotController.getBatteryVoltage());
+	}
+
+	public void run() {
 		// If A is pressed INTAKE
 		if (xbox.getAButton()) {
 			// Set all motors to the intake speed
@@ -118,19 +123,19 @@ public class ShooterSubSys extends SubsystemBase {
 			rightfal.set(ControlMode.PercentOutput, -falconInLim);
 			SmartDashboard.putBoolean("revup", false);
 		} else if (xbox.getXButton()) {
-			PIDSpeed(calcVel(distance(), getAngle()));
+			ramp();
 			SmartDashboard.putBoolean("revup", true);
 			if (xbox.getBButton()) {
-				left775.set(TalonSRXControlMode.PercentOutput, 9.0 / RobotController.getBatteryVoltage());
-				right775.set(TalonSRXControlMode.PercentOutput, 9.0 / RobotController.getBatteryVoltage());
+				shoot775();
 			}
 		} else {
 			SmartDashboard.putBoolean("revup", false);
-			left775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY() * 0.5);
-			right775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY() * 0.5);
-			leftfal.set(ControlMode.PercentOutput, falconFastLim * xbox.getLeftY());
-			rightfal.set(ControlMode.PercentOutput, falconFastLim * xbox.getLeftY());
+			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY() * 0.5);
+			right775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY() * 0.5);
+			leftfal.set(ControlMode.PercentOutput, falconFastLim * xbox.getRightY());
+			rightfal.set(ControlMode.PercentOutput, falconFastLim * xbox.getRightY());
 		}
+		SmartDashboard.putBoolean("ready to shoot", isRightSpeed());
 		SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
 		SmartDashboard.putNumber("rightfalconspeed", rightfal.getSensorCollection().getIntegratedSensorVelocity());
 		SmartDashboard.putNumber("target speed", (calcVel(distance(), getAngle())));
@@ -167,7 +172,7 @@ public class ShooterSubSys extends SubsystemBase {
 	/**
 	 * @param d     in m
 	 * @param theta in degrees
-	 * @return rpm
+	 * @return encoder per 100ms
 	 */
 	public static double calcVel(double d, double theta) {
 		// tinyurl.com/projmath
@@ -192,11 +197,23 @@ public class ShooterSubSys extends SubsystemBase {
 		return vel;
 	}
 
+	double speedTol = 100;
+	boolean isRightSpeed() {
+		return Math.abs(calcVel(distance(), getAngle()) - leftfal.getSensorCollection().getIntegratedSensorVelocity()) <= speedTol
+			&& Math.abs(calcVel(distance(), getAngle()) - rightfal.getSensorCollection().getIntegratedSensorVelocity()) <= speedTol;
+	}
+
 	double baseline = 2000;
+	Timer pidready = new Timer();
 
 	public void autoShootSpeed(AngleSubSys angleSubSys) {
 		if (angleSubSys.isLifted()) {
-			calcVel(distance(), getAngle());
+			ramp();
+			if (pidready.get() == 0 && isRightSpeed()){
+				pidready.start();
+			} else if (pidready.hasElapsed(1) && isRightSpeed()){
+				shoot775();
+			}
 		} else {
 			PIDSpeed(baseline);
 		}
