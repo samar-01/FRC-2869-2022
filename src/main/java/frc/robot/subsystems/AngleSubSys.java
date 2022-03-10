@@ -29,53 +29,66 @@ public class AngleSubSys extends SubsystemBase {
 	static double base = -34, max = target, mid = 45;
 	// set target to real target - 10
 	static boolean past = false;
-
+	static boolean init = false;
 	public static void init() {
-		arm.getEncoder().setPosition(0);
-		armPID.reset();
-		armPID.setPID(kp, ki, kd);
-		armPID.setTolerance(tolerance);
+		if (!init){
+			arm.getEncoder().setPosition(0);
+			armPID.reset();
+			armPID.setPID(kp, ki, kd);
+			armPID.setTolerance(tolerance);
+			init = true;
+		}
 	}
 
 	public void run() {
-		if (getAngle() > limit) {
-			arm.set(0);
-		} else if (getAngle() < -36) {
-			arm.set(0);
-			// TODO it is on brake mode so it will stay in teh rubber so moe code is needed
+		if (opxbox.getStartButton()){
+			arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
+			armPID.reset();
+		} else if (xbox.getStartButtonReleased()){
+			arm.getEncoder().setPosition(0);
 		} else {
-			if (!opxbox.getAButton() && !opxbox.getYButton() && !opxbox.getBButton()) {
-				arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
-				// arm.set(armlim * (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis()));
-				armPID.reset();
+			if (getAngle() > limit) {
+				// arm.set(0);
+				target = mid;
+			} else if (getAngle() < -36) {
+				// arm.set(0);
+				target = mid;
+				// TODO it is on brake mode so it will stay in teh rubber so moe code is needed
 			} else {
-				if (opxbox.getAButton()) {
-					// if (getAngle() > target && !past){
-					// target += 10;
-					// past = true;
-					// } else if (getAngle() < 0){
-					// past = false;
-					// }
-					target = max;
-				} else if (opxbox.getYButton()){
-					target = mid;
-				} else if (opxbox.getBButton()){
-					target = base;
+				if (!opxbox.getAButton() && !opxbox.getYButton() && !opxbox.getBButton()) {
+					arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
+					// arm.set(armlim * (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis()));
+					armPID.reset();
+				} else {
+					if (opxbox.getAButton()) {
+						// if (getAngle() > target && !past){
+						// target += 10;
+						// past = true;
+						// } else if (getAngle() < 0){
+						// past = false;
+						// }
+						target = max;
+					} else if (opxbox.getYButton()){
+						target = mid;
+					} else if (opxbox.getBButton()){
+						target = base;
+					}
+					double error = target - getAngle();
+					double power = armPID.calculate(-error);
+					power = clamp(power, -armlim, armlim);
+					// System.out.println(power);
+					arm.set(power);
 				}
-				double error = target - getAngle();
-				double power = armPID.calculate(-error);
-				power = clamp(power, -armlim, armlim);
-				// System.out.println(power);
-				arm.set(power);
 			}
 		}
 
 		SmartDashboard.putNumber("angle", getAngle());
 		SmartDashboard.putNumber("encangle", getEncAngle());
+		// System.out.println(opxbox.getStartButton());
 		// SmartDashboard.putNumber("angle", arm.getEncoder().getPosition());
 	}
 
-	public void lift() {
+	public static void lift() {
 		double target = 120;
 		double error = target - getEncAngle();
 		double power = armPID.calculate(-error);
@@ -84,7 +97,7 @@ public class AngleSubSys extends SubsystemBase {
 		arm.set(power);
 	}
 
-	public boolean isLifted() {
+	public static boolean isLifted() {
 		return (Math.abs(target - getEncAngle()) < 1);
 	}
 

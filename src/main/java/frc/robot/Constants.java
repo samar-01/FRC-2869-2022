@@ -50,6 +50,8 @@ y low goal
 b lower arm
 rt up angle
 lt down angle
+lb eject
+rb force in
 */
 
 /**

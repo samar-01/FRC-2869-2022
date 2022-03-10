@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
@@ -18,10 +19,12 @@ import frc.robot.commands.Drive180;
 import frc.robot.commands.DriveAuto;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Drivetrain;
+import frc.robot.commands.Shooter;
 import frc.robot.commands.DriveReset;
 import frc.robot.commands.DriveStop;
 import frc.robot.subsystems.DrivetrainSubSys;
 import frc.robot.subsystems.LimelightSubSys;
+import frc.robot.subsystems.ShooterSubSys;
 import frc.robot.subsystems.AngleSubSys;
 import static frc.robot.Constants.*;
 
@@ -81,6 +84,7 @@ public class Robot extends TimedRobot {
 
 	}
 
+	Timer autodrive = new Timer();
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
 	public void autonomousInit() {
@@ -91,14 +95,26 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.schedule();
 		}
 		
-		networkInit();
-		onLime();
+		initLime();
+		autodrive.reset();
+		autodrive.start();
+		// AngleSubSys.init();
 	}
-
+	double backup = 5;
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
-		
+		if (!autodrive.hasElapsed(backup)){
+			DrivetrainSubSys.drv(-0.40, 0);
+		} else {
+			DrivetrainSubSys.stopDrive();
+		}
+		// if (autodrive.hasElapsed(backup+0.2)){
+		// 	AngleSubSys.lift();
+		// }
+		// if (autodrive.hasElapsed(backup+0.2) && AngleSubSys.isLifted()){
+		// 	ShooterSubSys.revup();
+		// }
 	}
 
 	@Override
@@ -110,9 +126,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-		
-		networkInit();
-		onLime();
+		initLime();
 
 		/* photon vision temp comment
 		autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
@@ -127,6 +141,11 @@ public class Robot extends TimedRobot {
 		// onFlash();
 		
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+	}
+
+	public void initLime(){
+		networkInit();
+		onLime();
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
 

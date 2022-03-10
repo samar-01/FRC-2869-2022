@@ -50,7 +50,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		difDrive.arcadeDrive(turn, speed);
 	}
 
-	PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
+	static PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
 	// PhotonCamera photoncam = new PhotonCamera("photonvision");
 	public void drive() {
 		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
@@ -81,6 +81,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// System.out.println(LimelightSubSys.getX());
 		SmartDashboard.putNumber("x", LimelightSubSys.getLimeX());
 
+	}
+
+	public static void limeturn(){
+		drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
 	}
 	
 	public void point(){

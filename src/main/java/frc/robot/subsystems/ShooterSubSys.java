@@ -20,10 +20,14 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
+
+import java.sql.Time;
+
 import frc.robot.Constants;
 
 public class ShooterSubSys extends SubsystemBase {
@@ -112,6 +116,26 @@ public class ShooterSubSys extends SubsystemBase {
 		rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
 	}
 
+	static Timer revtimer = new Timer();
+	public static void revup(){
+		if (revtimer.get() == 0){
+			revtimer.start();
+			PIDSpeed(calcVel());
+		}
+		if (revtimer.hasElapsed(0.2) && !revtimer.hasElapsed(4)){
+			DrivetrainSubSys.limeturn();
+		}
+		if (revtimer.hasElapsed(4)){
+			left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
+			right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
+		}
+		if (revtimer.hasElapsed(6)){
+			PIDSpeed(0);
+			left775.set(TalonSRXControlMode.PercentOutput, 0);
+			right775.set(TalonSRXControlMode.PercentOutput, 0);
+		}
+	}
+
 	public void run() {
 		//Gets the value from the SmartDashboard
 		SmartDashboard.getNumber("falcpower", falconfast);
@@ -153,7 +177,7 @@ public class ShooterSubSys extends SubsystemBase {
 			// /* 2000 RPM in either direction */
 			// leftfal.set(TalonFXControlMode.Velocity, -targetVelocity_UnitsPer100ms);
 			// rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);\
-			PIDSpeed(calcVel(distance(), getAngle()));
+			PIDSpeed(calcVel());
 
 			SmartDashboard.putBoolean("revup", true);
 			if (xbox.getBButton()) {
@@ -164,6 +188,16 @@ public class ShooterSubSys extends SubsystemBase {
 				// leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getLeftY());
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
+		} else if (opxbox.getRightBumper()){
+			left775.set(TalonSRXControlMode.PercentOutput, 1);
+			right775.set(TalonSRXControlMode.PercentOutput, -1);
+			leftfal.set(ControlMode.PercentOutput, 1);
+			rightfal.set(ControlMode.PercentOutput, -1);
+		} else if (opxbox.getLeftBumper()){
+			left775.set(TalonSRXControlMode.PercentOutput, -1);
+			right775.set(TalonSRXControlMode.PercentOutput, 1);
+			leftfal.set(ControlMode.PercentOutput, -1);
+			rightfal.set(ControlMode.PercentOutput, 1);
 		} else {
 			SmartDashboard.putBoolean("revup", false);
 			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*0.5);
@@ -176,7 +210,7 @@ public class ShooterSubSys extends SubsystemBase {
 		// SmartDashboard.putNumber("leftfalconpos",
 		// leftfal.getSensorCollection().getIntegratedSensorPosition());
 		// SmartDashboard.putNumber("target speed", 10*(calcVel(distance(), getAngle()) *  600.0 / 2048.0));
-		SmartDashboard.putNumber("target speed1", (calcVel(distance(), getAngle())));
+		SmartDashboard.putNumber("target speed1", (calcVel()));
 		SmartDashboard.putNumber("lfalctemp", leftfal.getTemperature());
 		SmartDashboard.putNumber("rfalctemp", rightfal.getTemperature());
 		// rightfal.getSensorCollection().getIntegratedSensorPosition());
@@ -216,9 +250,11 @@ public class ShooterSubSys extends SubsystemBase {
 	 * @param theta in degrees
 	 * @return rpm
 	 */
-	public static double calcVel(double d, double theta){
+	public static double calcVel(){
 		// tinyurl.com/projmath
 		//setup numbers
+		double d = distance();
+		double theta = getAngle();
 		theta = Math.toRadians(theta);
 		double h1 = h + r * Math.sin(theta);
 		double dx = d - r * Math.cos(theta);
@@ -246,7 +282,7 @@ public class ShooterSubSys extends SubsystemBase {
 	double baseline = 2000;
 	public void autoShootSpeed(AngleSubSys angleSubSys){
 		if (angleSubSys.isLifted()){
-			calcVel(distance(), getAngle());
+			calcVel();
 		} else {
 			PIDSpeed(baseline);
 		}
