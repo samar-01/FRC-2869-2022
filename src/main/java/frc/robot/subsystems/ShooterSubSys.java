@@ -19,6 +19,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 // import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
@@ -99,9 +101,9 @@ public class ShooterSubSys extends SubsystemBase {
 		setFalc(0);
 	}
 
-	static final double lim775 = 0.15;
-	static final double falconlim = 0.25;
-	static double falconfast = 0.6;
+	static final double lim775 = 0.30;
+	static final double falconInLim = 0.25;
+	static double falconfast = 0.2;
 
 	static void PIDSpeed(double speed){
 		double targetVelocity_UnitsPer100ms = speed;
@@ -116,12 +118,12 @@ public class ShooterSubSys extends SubsystemBase {
 		// SmartDashboard.getNumber("vel", calcVel(560, 60));
 
 		//If A is pressed INTAKE
-		if (xbox.getAButton()) {
+		if (opxbox.getXButton() || xbox.getAButton()) {
 			//Set all motors to the intake speed
 			left775.set(TalonSRXControlMode.PercentOutput, lim775);
 			right775.set(TalonSRXControlMode.PercentOutput, -lim775);
-			leftfal.set(ControlMode.PercentOutput, falconlim);
-			rightfal.set(ControlMode.PercentOutput, -falconlim);
+			leftfal.set(ControlMode.PercentOutput, falconInLim);
+			rightfal.set(ControlMode.PercentOutput, -falconInLim);
 			SmartDashboard.putBoolean("revup", false);
 		} else if (xbox.getXButton()) {
 			//If X is pressed Set Falcons to shooting speed
@@ -157,17 +159,17 @@ public class ShooterSubSys extends SubsystemBase {
 			if (xbox.getBButton()) {
 				// left775.set(TalonSRXControlMode.PercentOutput, -1);
 				// right775.set(TalonSRXControlMode.PercentOutput, 1);
-				left775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY());
-				right775.set(TalonSRXControlMode.PercentOutput, -xbox.getLeftY());
+				left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
+				right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
 				// leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getLeftY());
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
 		} else {
 			SmartDashboard.putBoolean("revup", false);
-			left775.set(TalonSRXControlMode.PercentOutput, xbox.getLeftY()*0.5);
-			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getLeftY()*0.5);
-			leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getLeftY());
-			rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());
+			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*0.5);
+			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getRightY()*0.5);
+			leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getRightY());
+			rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getRightY());
 		}
 		SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
 		SmartDashboard.putNumber("rightfalconspeed", rightfal.getSensorCollection().getIntegratedSensorVelocity());
@@ -175,6 +177,8 @@ public class ShooterSubSys extends SubsystemBase {
 		// leftfal.getSensorCollection().getIntegratedSensorPosition());
 		// SmartDashboard.putNumber("target speed", 10*(calcVel(distance(), getAngle()) *  600.0 / 2048.0));
 		SmartDashboard.putNumber("target speed1", (calcVel(distance(), getAngle())));
+		SmartDashboard.putNumber("lfalctemp", leftfal.getTemperature());
+		SmartDashboard.putNumber("rfalctemp", rightfal.getTemperature());
 		// rightfal.getSensorCollection().getIntegratedSensorPosition());
 		
 		// System.out.println(calcVel(distance(), 47));
@@ -228,7 +232,11 @@ public class ShooterSubSys extends SubsystemBase {
 		vel /= (2*Math.PI);
 		vel *= 60;
 		//correct for real life;
-		vel *= 7.5;
+		// double thing = 7.2;
+		// vel *= SmartDashboard.getNumber("velconstant", 7.2);
+		vel *= 7.2;
+		// 9v constant - 
+
 		// 7.5 for 12.3v standby
 		// 8.36 for 11.4v standy
 		// System.out.println(vel);

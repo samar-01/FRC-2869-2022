@@ -7,12 +7,14 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Angle;
 import frc.robot.commands.AutoPoint;
+import frc.robot.commands.Drive180;
 import frc.robot.commands.DriveAuto;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Drivetrain;
@@ -95,7 +97,9 @@ public class Robot extends TimedRobot {
 
 	/** This function is called periodically during autonomous. */
 	@Override
-	public void autonomousPeriodic() {}
+	public void autonomousPeriodic() {
+		
+	}
 
 	@Override
 	public void teleopInit() {
@@ -114,14 +118,16 @@ public class Robot extends TimedRobot {
 		autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
 		resetDriveButton.whenPressed(new DriveReset(new DrivetrainSubSys()));
 		stopDriveButton.whenPressed(new DriveStop(new DrivetrainSubSys()));
-		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
 		
 		driveDriveButton.whenPressed(new DriveDistance(new DrivetrainSubSys(),20));
 		*/
 		
+		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+		
 		// onFlash();
 		
-		spinDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
 
 	public void autoSchedule(Command comm){
@@ -136,13 +142,14 @@ public class Robot extends TimedRobot {
 		// System.out.println("teleop");
 
 		// System.out.println(autoDriveButton.get());
-		if (!autoDriveButton.get()){
+		if (!RobotContainer.drive180.isScheduled()){
 			autoSchedule(RobotContainer.drivetrain);
-		} else { 
+		} else {
 			// RobotContainer.drivetrain.end(false);
 			RobotContainer.drivetrain.cancel();
 		}
-		
+
+		// autoSchedule(RobotContainer.drivetrain);
 		autoSchedule(RobotContainer.shooter);
 		autoSchedule(RobotContainer.angle);
 		

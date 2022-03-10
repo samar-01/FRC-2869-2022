@@ -4,7 +4,7 @@ Falcon shafts collars tight
 angler left right
 check bearings dont fall into water cut plate when resting down
 check barstock bend
-
+missing churro on right side
 
 TODO
 check 775 going too fast
@@ -31,6 +31,27 @@ import frc.robot.subsystems.LimelightSubSys;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+/*
+Driver
+rt forward
+lt backwards
+l stick x 
+rb boost
+y align
+x ramp
+b shoot (x and b need to be held together to be shot)
+r stick manual control / low goal
+when hub is fully in view then low goal can be shot at full power
+
+Operator
+a high goal
+x intake
+y low goal
+b lower arm
+rt up angle
+lt down angle
+*/
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -47,11 +68,12 @@ public final class Constants {
 	public static final XboxController xbox = new XboxController(0);
 	public static final XboxController opxbox = new XboxController(1);
 	public static final Joystick xboxjoystick = new Joystick(0);
-	public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3); // X
-	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y
-	public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 2); // B
-	public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
-	public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
+	// public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3); // X
+	// public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y
+	// public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 2); // B
+	// public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
+	// public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
+	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 

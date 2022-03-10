@@ -20,6 +20,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.opencv.core.Mat;
+// import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,21 +50,34 @@ public class DrivetrainSubSys extends SubsystemBase {
 		difDrive.arcadeDrive(turn, speed);
 	}
 
-
 	PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
+	// PhotonCamera photoncam = new PhotonCamera("photonvision");
 	public void drive() {
-		// double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
-		// speed *= 0.35;
-		// drv(speed, xbox.getLeftX()*0.3);
-
+		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
+		if (xbox.getRightBumper()){
+			speed *= 0.7;
+		} else {
+			speed *= 0.45;
+		}
+		drv(speed, xbox.getLeftX()*0.5);
+		
 		// drv(0,0);
-		if (opxbox.getAButtonPressed()){
+		if (xbox.getYButtonPressed()){
 			limeturn.reset();
 		}
-		if (opxbox.getAButton()){
-			System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
+		if (xbox.getYButton()){
+			// System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
 			drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
 		}
+		// if (xbox.getLeftBumperPressed()){
+		// 	limeturn.reset();
+		// }
+		// if (xbox.getLeftBumper()){
+		// 	if (photoncam.getLatestResult().hasTargets()){
+		// 		double dist = photoncam.getLatestResult().getBestTarget().getYaw();
+		// 		drv(0,clamp(limeturn.calculate(dist/1),-0.5,0.5));
+		// 	}
+		// }
 		// System.out.println(LimelightSubSys.getX());
 		SmartDashboard.putNumber("x", LimelightSubSys.getLimeX());
 
@@ -123,9 +137,9 @@ public class DrivetrainSubSys extends SubsystemBase {
 		spintime.reset();
 		spintime.start();
 		spinner.reset();
-		kp = SmartDashboard.getNumber("kp", kp);
-		ki = SmartDashboard.getNumber("ki", ki);
-		kd = SmartDashboard.getNumber("kd", kd);
+		// kp = SmartDashboard.getNumber("kp", kp);
+		// ki = SmartDashboard.getNumber("ki", ki);
+		// kd = SmartDashboard.getNumber("kd", kd);
 		spinner.setPID(kp, ki, kd);
 		spinner.setTolerance(5);
 		// spinner.enableContinuousInput(-180, 180);
