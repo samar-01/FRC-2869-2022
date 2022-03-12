@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Angle;
 import frc.robot.commands.Drive180;
 import frc.robot.commands.AutoPoint;
+import frc.robot.commands.Autonomous;
 import frc.robot.commands.DriveAuto;
 import frc.robot.commands.DriveReset;
 import frc.robot.commands.Drivetrain;
@@ -42,6 +43,8 @@ public class RobotContainer {
 	public static final Shooter shooter = new Shooter(shooterSubSys);
 	public static final AngleSubSys angleSubSys = new AngleSubSys();
 	public static final Angle angle = new Angle(angleSubSys);
+	public static final AutoLift autolift = new AutoLift(angleSubSys);
+	public static final Autonomous autonomous = new Autonomous(drivetrainSubSys, angleSubSys, shooterSubSys);
 	// public static final AutoLift lift = new AutoLift(angleSubSys);
 	// public static final AutomaticSubSys automaticSubSys = new AutomaticSubSys(angleSubSys, drivetrainSubSys, point, lift);
 	// public static final Automatic automatic = new Automatic(automaticSubSys);

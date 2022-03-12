@@ -25,8 +25,8 @@ public class AngleSubSys extends SubsystemBase {
 	static final double ratio = 5 * 4 * 3 * 4;
 	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
 	static PIDController armPID = new PIDController(kp, ki, kd);
-	static double target = 70, limit = 80;
-	static double base = -34, max = target, mid = 45;
+	public static double target = 70, limit = 80;
+	public static double base = -34, max = target, mid = 45;
 	// set target to real target - 10
 	static boolean past = false;
 	static boolean init = false;
@@ -73,11 +73,7 @@ public class AngleSubSys extends SubsystemBase {
 					} else if (opxbox.getBButton()){
 						target = base;
 					}
-					double error = target - getAngle();
-					double power = armPID.calculate(-error);
-					power = clamp(power, -armlim, armlim);
-					// System.out.println(power);
-					arm.set(power);
+					pidmove();
 				}
 			}
 		}
@@ -88,17 +84,27 @@ public class AngleSubSys extends SubsystemBase {
 		// SmartDashboard.putNumber("angle", arm.getEncoder().getPosition());
 	}
 
-	public static void lift() {
-		double target = 120;
-		double error = target - getEncAngle();
+	public void pidmove(){
+		double error = target - getAngle();
 		double power = armPID.calculate(-error);
 		power = clamp(power, -armlim, armlim);
 		// System.out.println(power);
 		arm.set(power);
 	}
 
-	public static boolean isLifted() {
-		return (Math.abs(target - getEncAngle()) < 1);
+	public void lift() {
+		double target = max;
+		pidmove();
+	}
+
+	public void descend() {
+		double target = base;
+		pidmove();
+	}
+
+	double liftTolerance = 5;
+	public boolean isLifted() {
+		return (Math.abs(target - getAngle()) < liftTolerance);
 	}
 
 	public static double getAngle() {

@@ -50,8 +50,30 @@ public class DrivetrainSubSys extends SubsystemBase {
 		difDrive.arcadeDrive(turn, speed);
 	}
 
+	public void autoInit(){
+		left1.getEncoder().setPosition(0);
+	}
+
+	public double getEncDistance(){
+		return left1.getEncoder().getPosition();
+	}
+
+	public static double autospeed = 0.3;
+
+
+
+	public void auto(){
+		// SmartDashboard.putNumber("test", getEncDistance());
+		drv(-autospeed, 0);
+	}
+
 	static PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
 	// PhotonCamera photoncam = new PhotonCamera("photonvision");
+	
+	public void align(){
+		drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
+	}
+
 	public void drive() {
 		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		if (xbox.getRightBumper()){
@@ -61,14 +83,16 @@ public class DrivetrainSubSys extends SubsystemBase {
 		}
 		drv(speed, xbox.getLeftX()*0.5);
 		
-		// drv(0,0);
 		if (xbox.getYButtonPressed()){
 			limeturn.reset();
 		}
 		if (xbox.getYButton()){
 			// System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
-			drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
+			align();
 		}
+
+		// drv(0,0);
+
 		// if (xbox.getLeftBumperPressed()){
 		// 	limeturn.reset();
 		// }

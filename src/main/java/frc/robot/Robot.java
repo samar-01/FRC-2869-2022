@@ -36,7 +36,6 @@ import static frc.robot.Constants.*;
  */
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
-
 	private RobotContainer m_robotContainer;
 
 	/**
@@ -84,7 +83,7 @@ public class Robot extends TimedRobot {
 
 	}
 
-	Timer autodrive = new Timer();
+	// Timer autodrive = new Timer();
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
 	public void autonomousInit() {
@@ -96,19 +95,22 @@ public class Robot extends TimedRobot {
 		}
 		
 		initLime();
-		autodrive.reset();
-		autodrive.start();
+		RobotContainer.drivetrainSubSys.autoInit();
+		// autodrive.reset();
+		// autodrive.start();
 		// AngleSubSys.init();
 	}
 	double backup = 5;
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
-		if (!autodrive.hasElapsed(backup)){
-			DrivetrainSubSys.drv(-0.40, 0);
-		} else {
-			DrivetrainSubSys.stopDrive();
-		}
+		autoSchedule(RobotContainer.autonomous);
+		// if (!autodrive.hasElapsed(backup)){
+		// 	DrivetrainSubSys.drv(-0.40, 0);
+		// } else {
+		// 	DrivetrainSubSys.stopDrive();
+		// }
+		
 		// if (autodrive.hasElapsed(backup+0.2)){
 		// 	AngleSubSys.lift();
 		// }
@@ -149,11 +151,6 @@ public class Robot extends TimedRobot {
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
 
-	public void autoSchedule(Command comm){
-		if (!comm.isScheduled()){
-			comm.schedule();
-		}
-	}
 
 	/** This function is called periodically during operator control. */
 	@Override

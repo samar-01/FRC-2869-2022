@@ -80,6 +80,7 @@ public class ShooterSubSys extends SubsystemBase {
 	}
 
 	public static void init() {
+		SmartDashboard.putNumber("velconstant", thing);
 		initfalc(leftfal);
 		initfalc(rightfal);
 		System.out.println("INIT");
@@ -96,13 +97,14 @@ public class ShooterSubSys extends SubsystemBase {
 	}
 
 	private static void setFalc(double speed) {
-		// leftfal.set(TalonFXControlMode.Velocity, speed);
-		// rightfal.set(TalonFXControlMode.Velocity, speed);
-
+		leftfal.set(TalonFXControlMode.Velocity, speed);
+		rightfal.set(TalonFXControlMode.Velocity, speed);
 	}
 
-	public static void stop() {
+	public void stop() {
 		setFalc(0);
+		left775.set(ControlMode.PercentOutput, 0);
+		right775.set(ControlMode.PercentOutput, 0);
 	}
 
 	static final double lim775 = 0.30;
@@ -116,24 +118,17 @@ public class ShooterSubSys extends SubsystemBase {
 		rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);
 	}
 
-	static Timer revtimer = new Timer();
-	public static void revup(){
-		if (revtimer.get() == 0){
-			revtimer.start();
-			PIDSpeed(calcVel());
-		}
-		if (revtimer.hasElapsed(0.2) && !revtimer.hasElapsed(4)){
-			DrivetrainSubSys.limeturn();
-		}
-		if (revtimer.hasElapsed(4)){
-			left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
-			right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
-		}
-		if (revtimer.hasElapsed(6)){
-			PIDSpeed(0);
-			left775.set(TalonSRXControlMode.PercentOutput, 0);
-			right775.set(TalonSRXControlMode.PercentOutput, 0);
-		}
+	public static void rev(){
+		PIDSpeed(3000);
+	}
+
+	public void autoRev(){
+		PIDSpeed(calcVel());
+	}
+
+	public void shoot(){
+		left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
+		right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
 	}
 
 	public void run() {
@@ -159,7 +154,7 @@ public class ShooterSubSys extends SubsystemBase {
 			// leftfal.set(ControlMode.PercentOutput, clamp(lpid.calculate(lerror), -falconfast, falconfast));
 			// double rerror = tarspeed - rightfal.getSensorCollection().getIntegratedSensorVelocity();
 			// rightfal.set(ControlMode.PercentOutput, clamp(rpid.calculate(-rerror), -falconfast, falconfast));
-
+			// shoot();
 			// leftfal.set(ControlMode.PercentOutput, xbox.getLeftY());
 			// rightfal.set(ControlMode.PercentOutput, -xbox.getLeftY());
 
@@ -177,14 +172,13 @@ public class ShooterSubSys extends SubsystemBase {
 			// /* 2000 RPM in either direction */
 			// leftfal.set(TalonFXControlMode.Velocity, -targetVelocity_UnitsPer100ms);
 			// rightfal.set(TalonFXControlMode.Velocity, targetVelocity_UnitsPer100ms);\
-			PIDSpeed(calcVel());
+			autoRev();
 
 			SmartDashboard.putBoolean("revup", true);
 			if (xbox.getBButton()) {
 				// left775.set(TalonSRXControlMode.PercentOutput, -1);
 				// right775.set(TalonSRXControlMode.PercentOutput, 1);
-				left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
-				right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
+				shoot();
 				// leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getLeftY());
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
@@ -245,6 +239,7 @@ public class ShooterSubSys extends SubsystemBase {
 		return vel;
 	}
 
+	static double thing = 7.77;
 	/**
 	 * @param d in m
 	 * @param theta in degrees
@@ -268,9 +263,9 @@ public class ShooterSubSys extends SubsystemBase {
 		vel /= (2*Math.PI);
 		vel *= 60;
 		//correct for real life;
-		// double thing = 7.2;
-		// vel *= SmartDashboard.getNumber("velconstant", 7.2);
-		vel *= 7.2;
+		// thing = SmartDashboard.getNumber("velconstant", 7.2);
+		thing = SmartDashboard.getNumber("velconstant", thing);
+		vel *= thing;
 		// 9v constant - 
 
 		// 7.5 for 12.3v standby
