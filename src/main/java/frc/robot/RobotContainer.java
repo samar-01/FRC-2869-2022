@@ -8,19 +8,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.Angle;
-import frc.robot.commands.Drive180;
-import frc.robot.commands.AutoPoint;
-import frc.robot.commands.Autonomous;
-import frc.robot.commands.DriveAuto;
-import frc.robot.commands.DriveReset;
-import frc.robot.commands.Drivetrain;
-import frc.robot.commands.AutoLift;
-import frc.robot.commands.Shooter;
-import frc.robot.subsystems.AngleSubSys;
-// import frc.robot.subsystems.AutomaticSubSys;
-import frc.robot.subsystems.DrivetrainSubSys;
-import frc.robot.subsystems.ShooterSubSys;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -30,9 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-	// The robot's subsystems and commands are defined here...
-	// public static final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-	// public static final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 	public static final DrivetrainSubSys drivetrainSubSys = new DrivetrainSubSys();
 	public static final Drivetrain drivetrain = new Drivetrain(drivetrainSubSys);
 	public static final DriveAuto driveauto = new DriveAuto(drivetrainSubSys);
@@ -43,12 +29,7 @@ public class RobotContainer {
 	public static final Shooter shooter = new Shooter(shooterSubSys);
 	public static final AngleSubSys angleSubSys = new AngleSubSys();
 	public static final Angle angle = new Angle(angleSubSys);
-	public static final AutoLift autolift = new AutoLift(angleSubSys);
 	public static final Autonomous autonomous = new Autonomous(drivetrainSubSys, angleSubSys, shooterSubSys);
-	// public static final AutoLift lift = new AutoLift(angleSubSys);
-	// public static final AutomaticSubSys automaticSubSys = new AutomaticSubSys(angleSubSys, drivetrainSubSys, point, lift);
-	// public static final Automatic automatic = new Automatic(automaticSubSys);
-
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
 	public RobotContainer() {
 		// Configure the button bindings
