@@ -4,12 +4,31 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.RobotContainer;
+import frc.robot.commands.Angle;
+import frc.robot.commands.AutoPoint;
+import frc.robot.commands.Climber;
+import frc.robot.commands.Drive180;
+import frc.robot.commands.DriveAuto;
+import frc.robot.commands.DriveDistance;
+import frc.robot.commands.Drivetrain;
+import frc.robot.commands.Shooter;
+import frc.robot.commands.DriveReset;
+import frc.robot.commands.DriveStop;
+import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.LimelightSubSys;
+import frc.robot.subsystems.ShooterSubSys;
+import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.ClimberSubSys;
+
 import static frc.robot.Constants.*;
 
 /**
@@ -33,6 +52,7 @@ public class Robot extends TimedRobot {
 		m_robotContainer = new RobotContainer();
 		initFlash();
 		AngleSubSys.init();
+		RobotContainer.climberSubSys.init();
 		networkInit();
 		offLime();
 	}
@@ -80,12 +100,27 @@ public class Robot extends TimedRobot {
 		
 		initLime();
 		RobotContainer.drivetrainSubSys.autoInit();
+		// autodrive.reset();
+		// autodrive.start();
+		// AngleSubSys.init();
 	}
 	double backup = 5;
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
 		autoSchedule(RobotContainer.autonomous);
+		// if (!autodrive.hasElapsed(backup)){
+		// 	DrivetrainSubSys.drv(-0.40, 0);
+		// } else {
+		// 	DrivetrainSubSys.stopDrive();
+		// }
+		
+		// if (autodrive.hasElapsed(backup+0.2)){
+		// 	AngleSubSys.lift();
+		// }
+		// if (autodrive.hasElapsed(backup+0.2) && AngleSubSys.isLifted()){
+		// 	ShooterSubSys.revup();
+		// }
 	}
 
 	@Override
@@ -98,8 +133,20 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 		initLime();
-		onFlash();
+
+		/* photon vision temp comment
+		autoDriveButton.whenPressed(new DriveAuto(new DrivetrainSubSys()));
+		resetDriveButton.whenPressed(new DriveReset(new DrivetrainSubSys()));
+		stopDriveButton.whenPressed(new DriveStop(new DrivetrainSubSys()));
+		
+		driveDriveButton.whenPressed(new DriveDistance(new DrivetrainSubSys(),20));
+		*/
+		
 		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+		
+		onFlash();
+		
+		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
 	}
 
 	public void initLime(){
@@ -112,15 +159,28 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
+		// System.out.println("teleop");
+
+		// System.out.println(autoDriveButton.get());
 		if (!RobotContainer.drive180.isScheduled()){
 			autoSchedule(RobotContainer.drivetrain);
 		} else {
+			// RobotContainer.drivetrain.end(false);
 			RobotContainer.drivetrain.cancel();
 		}
 
+		// autoSchedule(RobotContainer.drivetrain);
 		autoSchedule(RobotContainer.shooter);
 		autoSchedule(RobotContainer.angle);
+		autoSchedule(RobotContainer.climber);
+
+		// if (!RobotContainer.calibClimb.isScheduled()){
+		// 	autoSchedule(RobotContainer.climber);
+		// } else {
+		// 	RobotContainer.climber.cancel();
+		// }
 		
+		LimelightSubSys.getDistance();
 	}
 
 	@Override

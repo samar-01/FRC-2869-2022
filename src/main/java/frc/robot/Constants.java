@@ -1,17 +1,20 @@
 /*
-Pre match checklist:
+Pre match checklist
 Falcon shafts collars tight
-falcon shaft tight
 angler left right
 check bearings dont fall into water cut plate when resting down
 check barstock bend
 missing churro on right side
+grease chain
+
+TODO
+check 775 going too fast
+battery voltage affecting shoot constant
 */
 
-/*
-TODO
-Auto
-*/
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
@@ -19,44 +22,38 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import java.util.logging.*;
-import java.util.logging.FileHandler;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.LimelightSubSys;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /*
 Driver
-rt - forward
-lt - backwards
-l stick - turn left and right 
-lb - 180 (NOT GOOD DONT USE)
-rb - boost
-y - align
-x - ramp
-b - shoot (x and b need to be held together to be shot)
-r stick - manual control / low goal
-when hub is fully in view of photonvision then low goal can be shot at full power
-start reset angle (ONLY FOR EMERGENCIES)
+rt forward
+lt backwards
+l stick x 
+rb boost
+y align
+x ramp
+b shoot (x and b need to be held together to be shot)
+r stick manual control / low goal
+when hub is fully in view then low goal can be shot at full power
 
 Operator
-a - high goal
-x - intake
-y - low goal
-b - lower arm
-rt - up angle
-lt - down angle
-lb - eject
-rb - force in
-start - full manual control of angle (NO SAFETY SO EMERGENCY ONLY)
+a high goal
+x intake
+y low goal
+b lower arm
+rt up angle
+lt down angle
+lb eject
+rb force in
 */
 
 /**
@@ -72,60 +69,28 @@ start - full manual control of angle (NO SAFETY SO EMERGENCY ONLY)
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-	public static final String logfile = "/home/lvuser/Logs/log";
-	public static FileHandler logFile;
-	public static Logger logger = Logger.getGlobal();
-
-	void initLogger(String startFileName) {
-		if (startFileName == null) {
-			startFileName = "./log0";
-		}
-		java.util.Date today = new java.util.Date();
-		String filename = startFileName + today.getDay() + "-" + today.getHours() + "-" + today.getMinutes();
-		try {
-			logFile = new FileHandler(filename);
-			logFile.setFormatter(new SimpleFormatter());
-			logger = Logger.getGlobal();
-			logger.addHandler(logFile);
-			logger.setLevel(Level.INFO);
-			logger.log(Level.INFO, "Logging Messages:");
-
-		} catch (Exception e) {
-			System.out.println("Unable to init log file:" + filename);
-			System.out.println(e);
-		}
-
-	}
-
-	public static void log(Level l, String s) {
-		logger.log(l, s);
-	}
-
-	public static void log(String s) {
-		logger.log(Level.INFO, s);
-	}
-
 	public static final XboxController xbox = new XboxController(0);
 	public static final XboxController opxbox = new XboxController(1);
 	public static final Joystick xboxjoystick = new Joystick(0);
-	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	// public static final JoystickButton autoDriveButton = new JoystickButton(xboxjoystick, 3); // X
+	// public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 4); // Y
 	// public static final JoystickButton resetDriveButton = new JoystickButton(xboxjoystick, 2); // B
 	// public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
 	// public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
+	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 
-	public static void autoSchedule(Command comm) {
-		if (!comm.isScheduled()) {
+	public static void autoSchedule(Command comm){
+		if (!comm.isScheduled()){
 			comm.schedule();
 		}
 	}
 
-	public static double distance() {
+	public static double distance(){
+		// return 18*12.0/39.37;
 		return LimelightSubSys.getDistance();
 	}
-
 	public static void setAngle(double angle) {
 		targetAngle = angle;
 	}
@@ -137,15 +102,15 @@ public final class Constants {
 	public static double getAngle() {
 		return AngleSubSys.getAngle();
 	}
-
-	public static double ang2Enc(double theta) {
+	public static double ang2Enc(double theta){
 		return AngleSubSys.ang2Enc(theta);
 	}
 
 	public static double getUltra() {
-		double dist = (ultra.getVoltage() * 1000) / 9.77;
-		SmartDashboard.putNumber("ultrasonic", dist);
-		return dist;
+		return 10;
+		// double dist = (ultra.getVoltage()*1000)/9.77;
+		// SmartDashboard.putNumber("ultrasonic", dist);
+		// return dist;
 	}
 
 	public static double clamp(double inp, double min, double max) {
@@ -158,71 +123,78 @@ public final class Constants {
 		return inp;
 	}
 
-	private static final WPI_TalonSRX flashlight = new WPI_TalonSRX(2);
+	private static final WPI_TalonSRX flashlight = new WPI_TalonSRX(20);
 	private static boolean initFlash = false;
 
 	public static void initFlash() {
 		flashlight.configContinuousCurrentLimit(1);
 		flashlight.configPeakCurrentLimit(1);
 		flashlight.enableCurrentLimit(true);
-		initFlash = true;
+		initFlash=true;
 
 		// System.out.println("INIT");
 	}
 
 	public static void onFlash() {
+		// System.out.println("ON");
 		if (!initFlash) {
 			initFlash();
+			// System.out.println("ON FAIL");
 		}
 
-		flashlight.set((5.0 / RobotController.getBatteryVoltage()));
+		// System.out.println("ON SUCCESS");
+		// flashlight.set((5.0/RobotController.getBatteryVoltage()));
 		// flashlight.set(0.4);
 	}
 
 	public static void offFlash() {
+		// System.out.println("OFF");
 		if (!initFlash) {
 			initFlash();
+			// System.out.println("OFF FAIL");
 		}
 		flashlight.set(0);
+		// System.out.println("OFF SUCCESS");
 	}
 
 	public static double getFlash() {
 		return flashlight.get();
+		// return 0;
 	}
 
-	public static NetworkTable table;
-	public static NetworkTableEntry tx;
-	public static NetworkTableEntry ty;
-	// public static NetworkTableEntry ta;
-	public static boolean networkInit = false;
-
-	public static void networkInit() {
-		if (!networkInit) {
-			try {
-				table = NetworkTableInstance.getDefault().getTable("limelight");
+	
+	static NetworkTable table;
+	static NetworkTableEntry tx;
+	static NetworkTableEntry ty;
+	static NetworkTableEntry ta;
+	static boolean networkInit = false;
+	public static void networkInit(){
+		// if (!networkInit){
+		if (true){
+			try{
+				NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
 				NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-
-				tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
-				ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
-				// NetworkTableEntry ta =
-				// NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
+				
+				NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
+				NetworkTableEntry ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
+				NetworkTableEntry ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
 				networkInit = true;
-			} catch (Exception e) {
-				System.out.println("Limelight network init fail");
+			}catch (Exception e){
+				System.out.println("Network init fail");
 			}
 		}
 	}
 
-	public static void onLime() {
+	public static void onLime(){
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 	}
-
-	public static void offLime() {
+	public static void offLime(){
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
 	}
 
-	// BELOW HERE is copied from falcon ex code
+
+	//BELOW HERE is copied from falcon ex code
 	/**
 	 * Which PID slot to pull gains from. Starting 2018, you can choose from
 	 * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
