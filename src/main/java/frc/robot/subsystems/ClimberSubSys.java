@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
-import javax.lang.model.util.ElementScanner8;
-
 public class ClimberSubSys extends SubsystemBase {
 	CANSparkMax left = new CANSparkMax(6, MotorType.kBrushless);
 	CANSparkMax right = new CANSparkMax(11, MotorType.kBrushless);
@@ -63,6 +61,18 @@ public class ClimberSubSys extends SubsystemBase {
 			right.setInverted(true);
 			init = true;
 		}
+	}
+
+	public void moveUp(){
+		set(1);
+	}
+
+	public void moveDown(){
+		set(-1);
+	}
+
+	public boolean isCalib(){
+		return !leftswitch.get() && !rightswitch.get();
 	}
 
 	void set(double speed){
@@ -123,7 +133,7 @@ public class ClimberSubSys extends SubsystemBase {
 					left.set(0.1);
 					right.set(0.1);
 				} else {
-					set(1);
+					moveUp();
 				}
 			}
 			if (pov == 180){
@@ -131,7 +141,7 @@ public class ClimberSubSys extends SubsystemBase {
 					left.set(-0.1);
 					right.set(-0.1);
 				} else {
-					set(-1);
+					moveDown();
 				}
 			}
 		} else {
