@@ -12,6 +12,7 @@ import frc.robot.commands.Angle;
 import frc.robot.commands.Drive180;
 import frc.robot.commands.AutoPoint;
 import frc.robot.commands.Autonomous;
+import frc.robot.commands.BallTrack;
 import frc.robot.commands.CalibClimb;
 import frc.robot.commands.Climber;
 import frc.robot.commands.DriveAuto;
@@ -41,6 +42,7 @@ public class RobotContainer {
 	public static final DriveAuto driveauto = new DriveAuto(drivetrainSubSys);
 	public static final DriveReset drivereset = new DriveReset(drivetrainSubSys);
 	public static final Drive180 drive180 = new Drive180(drivetrainSubSys);
+	public static final BallTrack ballTrack = new BallTrack(drivetrainSubSys);
 	public static final AutoPoint point = new AutoPoint(drivetrainSubSys);
 	public static final ShooterSubSys shooterSubSys = new ShooterSubSys();
 	public static final Shooter shooter = new Shooter(shooterSubSys);

@@ -70,7 +70,7 @@ public class Autonomous extends CommandBase {
 			// System.out.println("lifting");
 		else if (!revup.hasElapsed(revtime)){
 			shooterSubSys.autoRev();
-			drivetrainSubSys.align();
+			drivetrainSubSys.limeTurn();
 			SmartDashboard.putString("auto state", "rev/align");
 
 		}else if (!revup.hasElapsed(finaltime)){

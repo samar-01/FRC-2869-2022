@@ -25,6 +25,7 @@ import org.opencv.core.Mat;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.*;
+import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 // not necessary but if something breaks uncomment below
 // import frc.robot.commands.Shoot;
@@ -52,26 +53,48 @@ public class DrivetrainSubSys extends SubsystemBase {
 
 	public void autoInit(){
 		left1.getEncoder().setPosition(0);
+		left2.getEncoder().setPosition(0);
+		right1.getEncoder().setPosition(0);
+		right2.getEncoder().setPosition(0);
 	}
 
 	public double getEncDistance(){
-		return left1.getEncoder().getPosition();
+		// return left1.getEncoder().getPosition();
+		double encoders[] = {left1.getEncoder().getPosition(), left2.getEncoder().getPosition(), -right1.getEncoder().getPosition(), -right2.getEncoder().getPosition()};
+		return average(encoders);
 	}
 
-	public static double autospeed = 0.3;
-
-
+	public static double autospeed = 0.5;
 
 	public void auto(){
 		// SmartDashboard.putNumber("test", getEncDistance());
 		drv(-autospeed, 0);
 	}
 
-	static PIDController limeturn = new PIDController(0.8, 0.5, 0.07);
+	static PIDController pidturn = new PIDController(0.8, 0.5, 0.07);
 	// PhotonCamera photoncam = new PhotonCamera("photonvision");
 	
-	public void align(){
-		drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
+	void autoTurn(double d){
+		drv(0,clamp(pidturn.calculate(d)/10,-0.5,0.5));
+	}
+
+	public void limeTurn(){
+		// drv(0,clamp(pidturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
+		autoTurn(-LimelightSubSys.getLimeX());
+	}
+
+	public void resetTurn(){
+		pidturn.reset();
+	}
+
+	boolean isBallTurn = false;
+	
+	public void ballTurn(){
+		if (!isBallTurn){
+			isBallTurn = true;
+			pidturn.reset();
+		}
+		autoTurn(-pTrack());
 	}
 
 	public void drive() {
@@ -84,11 +107,17 @@ public class DrivetrainSubSys extends SubsystemBase {
 		drv(speed, xbox.getLeftX()*0.5);
 		
 		if (xbox.getYButtonPressed()){
-			limeturn.reset();
+			resetTurn();
 		}
 		if (xbox.getYButton()){
 			// System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
-			align();
+			limeTurn();
+		}
+
+		if (xbox.getPOV() == 270){
+			ballTurn();
+		} else {
+			isBallTurn = false;
 		}
 
 		// drv(0,0);
@@ -108,7 +137,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	}
 
 	public static void limeturn(){
-		drv(0,clamp(limeturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
+		drv(0,clamp(pidturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
 	}
 	
 	public void point(){
@@ -183,11 +212,16 @@ public class DrivetrainSubSys extends SubsystemBase {
 	}
 
 	public double average(double[] arr){
-		double avg = 0;
+		// double avg = 0;
+		// for (int i = 0; i < arr.length; i++){
+		// 	avg += Math.abs(arr[i]/arr.length);
+		// }
+		// return avg;
+		double sum = 0;
 		for (int i = 0; i < arr.length; i++){
-			avg += Math.abs(arr[i]/arr.length);
+			sum += arr[i];
 		}
-		return avg;
+		return sum/arr.length;
 	}
 
 	public void spin(){

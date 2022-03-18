@@ -26,9 +26,14 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.*;
+import org.photonvision.*;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -79,6 +84,43 @@ public final class Constants {
 	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
+
+	public static final PhotonCamera photon = new PhotonCamera("photonvision");
+
+	public void initPhoton(){
+		if (DriverStation.getAlliance() == Alliance.Blue){
+			photon.setPipelineIndex(0);
+		} else if (DriverStation.getAlliance() == Alliance.Red){
+			photon.setPipelineIndex(1);
+		} else {
+			photon.setPipelineIndex(2);
+		}	
+	}
+	/**
+	 * 
+	 * @return best target or null if not found
+	 */
+	static PhotonTrackedTarget pTarget(){
+		PhotonPipelineResult result = photon.getLatestResult();
+		if(result.hasTargets()){
+			return result.getBestTarget();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 
+	 * @returns yaw of best ball or 0 if none found
+	 */
+	public static double pTrack(){
+		PhotonTrackedTarget target = pTarget();
+		if (target != null){
+			return target.getYaw();
+		} else {
+			return 0;
+		}
+	}
 
 	public static void autoSchedule(Command comm){
 		if (!comm.isScheduled()){
