@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Angle;
-import frc.robot.commands.AutoPoint;
+import frc.robot.commands.AutoPointGoal;
+import frc.robot.commands.Autonomous;
 import frc.robot.commands.Climber;
 import frc.robot.commands.Drive180;
 import frc.robot.commands.DriveAuto;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Drivetrain;
+import frc.robot.commands.PreRev;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.DriveReset;
 import frc.robot.commands.DriveStop;
@@ -91,10 +93,11 @@ public class Robot extends TimedRobot {
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		m_autonomousCommand = new Autonomous();
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
+			System.out.println("auto scheduled");
 			m_autonomousCommand.schedule();
 		}
 		
@@ -108,10 +111,10 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
-		autoSchedule(RobotContainer.autonomous);
+		// autoSchedule(RobotContainer.autonomous);
 		// if (!autodrive.hasElapsed(backup)){
-		// 	DrivetrainSubSys.drv(-0.40, 0);
-		// } else {
+			// 	DrivetrainSubSys.drv(-0.40, 0);
+			// } else {
 		// 	DrivetrainSubSys.stopDrive();
 		// }
 		
@@ -142,43 +145,57 @@ public class Robot extends TimedRobot {
 		driveDriveButton.whenPressed(new DriveDistance(new DrivetrainSubSys(),20));
 		*/
 		
-		spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
+		// spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
 		
+		// offFlash();
 		onFlash();
-		
+		onLime();
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+
 	}
 
 	public void initLime(){
 		networkInit();
-		onLime();
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
-
-
+	
+	
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-		// System.out.println("teleop");
 
-		// System.out.println(autoDriveButton.get());
-		if (!RobotContainer.drive180.isScheduled()){
-			autoSchedule(RobotContainer.drivetrain);
+		System.out.println(ShooterSubSys.isIntakeEmpty());
+
+		if (!RobotContainer.pointIntake.isScheduled()){
+			if (xbox.getPOV() == 90 && !RobotContainer.pointIntake.isScheduled()){
+				autoSchedule(RobotContainer.pointIntake);
+			} else {
+				autoSchedule(RobotContainer.drivetrain);
+				autoSchedule(RobotContainer.shooter);
+			}
 		} else {
-			// RobotContainer.drivetrain.end(false);
 			RobotContainer.drivetrain.cancel();
+			RobotContainer.shooter.cancel();
 		}
 
-		// autoSchedule(RobotContainer.drivetrain);
-		autoSchedule(RobotContainer.shooter);
-		autoSchedule(RobotContainer.angle);
-		autoSchedule(RobotContainer.climber);
+		if (xbox.getPOV() == 270){
+			RobotContainer.pointIntake.cancel();
+		}
 
-		// if (!RobotContainer.calibClimb.isScheduled()){
-		// 	autoSchedule(RobotContainer.climber);
-		// } else {
-		// 	RobotContainer.climber.cancel();
-		// }
+		autoSchedule(RobotContainer.climber);
+		if (opxbox.getAButton()){
+			// RobotContainer.shooterSubSys.rev();
+			autoSchedule(RobotContainer.autoLift);
+		} else if (opxbox.getBButton()){
+			// RobotContainer.shooterSubSys.rev();
+			autoSchedule(RobotContainer.autoDown);
+		} else if (opxbox.getYButton()){
+			// RobotContainer.shooterSubSys.rev();
+			autoSchedule(RobotContainer.autoMid);
+		} else if (!RobotContainer.pointIntake.isScheduled() && !RobotContainer.autoLift.isScheduled() && !RobotContainer.autoDown.isScheduled() && !RobotContainer.autoMid.isScheduled()){
+			autoSchedule(RobotContainer.shooter);
+			autoSchedule(RobotContainer.angle);
+		}
 		
 		LimelightSubSys.getDistance();
 	}

@@ -43,7 +43,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	private static final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
 	public DrivetrainSubSys() {
-		
+		difDrive.setSafetyEnabled(false);
 	}
 
 
@@ -78,6 +78,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 		drv(0,clamp(pidturn.calculate(d)/10,-0.5,0.5));
 	}
 
+	void autoTurn(double d, double speed){
+		drv(speed,clamp(pidturn.calculate(d)/10,-0.5,0.5));
+	}
+
 	public void limeTurn(){
 		// drv(0,clamp(pidturn.calculate(-LimelightSubSys.getLimeX())/10,-0.5,0.5));
 		autoTurn(-LimelightSubSys.getLimeX());
@@ -94,7 +98,26 @@ public class DrivetrainSubSys extends SubsystemBase {
 			isBallTurn = true;
 			pidturn.reset();
 		}
-		autoTurn(-pTrack());
+		double track = -pTrack();
+		if (track != Double.POSITIVE_INFINITY){
+			autoTurn(track);
+		}
+	}
+
+	public void ballTurnDrive(){
+		if (!isBallTurn){
+			isBallTurn = true;
+			pidturn.reset();
+		}
+		double track = -pTrack();
+		if (track != Double.POSITIVE_INFINITY){
+			autoTurn(track,0.6);
+		}
+	}
+
+	public boolean isBallPointed(){
+		return (pTrack() != Double.POSITIVE_INFINITY && Math.abs(pTrack()) < 2);
+		// return false;
 	}
 
 	public void drive() {
@@ -114,11 +137,16 @@ public class DrivetrainSubSys extends SubsystemBase {
 			limeTurn();
 		}
 
-		if (xbox.getPOV() == 270){
-			ballTurn();
-		} else {
-			isBallTurn = false;
-		}
+		// if (xbox.getPOV() == 270){
+		// 	photonBlue();
+		// 	ballTurn();
+		// } else if (xbox.getPOV() == 90){
+		// 	photonRed();
+		// 	ballTurn();
+		// } else {
+		// 	offFlash();
+		// 	isBallTurn = false;
+		// }
 
 		// drv(0,0);
 
@@ -144,7 +172,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		drv(0,LimelightSubSys.getLimeX()/20);
 	}
 
-	public boolean pointed(){
+	public boolean isLimePointed(){
 		return (LimelightSubSys.getLimeX()/20 < 0.1);
 	}
 
@@ -206,6 +234,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	int count = 0;
 
 	public void resetPID(){
+		resetTurn();
 		// for (int i = 0; i < errors.length; i++){
 		// 	errors[i] = 999;
 		// }

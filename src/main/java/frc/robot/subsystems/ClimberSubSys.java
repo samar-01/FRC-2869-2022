@@ -69,9 +69,11 @@ public class ClimberSubSys extends SubsystemBase {
 
 	public void moveDown(){
 		set(-1);
+		resetOnSwitch();
 	}
 
 	public boolean isCalib(){
+		resetOnSwitch();
 		return !leftswitch.get() && !rightswitch.get();
 	}
 
@@ -148,7 +150,7 @@ public class ClimberSubSys extends SubsystemBase {
 			set(0);
 		}
 
-		resetOnSwitch();
+		// resetOnSwitch();
 	}
 
 	void resetOnSwitch(){

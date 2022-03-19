@@ -5,38 +5,38 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.DrivetrainSubSys;
 
-public class Angle extends CommandBase {
+public class AutoPointGoal extends CommandBase {
 
-	private final AngleSubSys angleSubSys;
+	private final DrivetrainSubSys drive;
 
-	/** Creates a new Angle. */
-	public Angle(AngleSubSys angleSubSys) {
-		this.angleSubSys = angleSubSys;
-		addRequirements(angleSubSys);
-		// Use addRequirements() here to declare subsystem dependencies.
+	/** Creates a new Drivetrain. */
+	public AutoPointGoal(DrivetrainSubSys drive) {
+		this.drive = drive;
+		addRequirements(drive);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		AngleSubSys.init();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		angleSubSys.run();
+		drive.point();
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		// drive.stop();
+	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return drive.isLimePointed();
 	}
 }

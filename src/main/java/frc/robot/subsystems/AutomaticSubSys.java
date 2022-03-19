@@ -12,10 +12,10 @@ import static frc.robot.Constants.*;
 public class AutomaticSubSys extends SubsystemBase {
 	AngleSubSys angleSubSys;
 	DrivetrainSubSys drivetrainSubSys;
-	AutoPoint point;
+	AutoPointGoal point;
 	AutoLift lift;
 	/** Creates a new Automatic. */
-	public AutomaticSubSys(AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys, AutoPoint point, AutoLift lift) {
+	public AutomaticSubSys(AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys, AutoPointGoal point, AutoLift lift) {
 		this.angleSubSys = angleSubSys;
 		this.drivetrainSubSys = drivetrainSubSys;
 		this.point = point;

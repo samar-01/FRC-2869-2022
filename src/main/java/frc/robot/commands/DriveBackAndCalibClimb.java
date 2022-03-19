@@ -4,20 +4,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.*;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Autonomous extends SequentialCommandGroup {
-	/** Creates a new Autonomous. */
-	public Autonomous() {
-		
-		// Add your commands in the addCommands() call, e.g.
-		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot());
-		// addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10));
-	}
+public class DriveBackAndCalibClimb extends ParallelCommandGroup {
+  /** Creates a new DriveBackAndCalibClimb. */
+  public DriveBackAndCalibClimb() {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10), new CalibClimb(RobotContainer.climberSubSys));
+  }
 }

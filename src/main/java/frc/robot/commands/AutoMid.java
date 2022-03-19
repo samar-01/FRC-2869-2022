@@ -5,29 +5,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.AngleSubSys;
-
-public class Angle extends CommandBase {
+import frc.robot.subsystems.ShooterSubSys;
+/**
+ * lifts and revs
+ */
+public class AutoMid extends CommandBase {
 
 	private final AngleSubSys angleSubSys;
+	private final ShooterSubSys shooterSubSys;
 
 	/** Creates a new Angle. */
-	public Angle(AngleSubSys angleSubSys) {
+	public AutoMid(AngleSubSys angleSubSys, ShooterSubSys shooterSubSys) {
 		this.angleSubSys = angleSubSys;
-		addRequirements(angleSubSys);
+		this.shooterSubSys = shooterSubSys;
+		addRequirements(angleSubSys, shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		AngleSubSys.init();
+		angleSubSys.init();
+		angleSubSys.resetPID();
+		shooterSubSys.stop();
+		angleSubSys.setTargetMid();
 	}
+
+//arsh is epic
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		angleSubSys.run();
+		angleSubSys.pidmove();
+		// angleSubSys.lift();
 	}
 
 	// Called once the command ends or is interrupted.
@@ -37,6 +49,9 @@ public class Angle extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		if (angleSubSys.isLifted()){
+			angleSubSys.stop();
+		}
+		return angleSubSys.isLifted();
 	}
 }

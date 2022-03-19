@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.*;
 import org.photonvision.*;
@@ -48,6 +49,9 @@ x ramp
 b shoot (x and b need to be held together to be shot)
 r stick manual control / low goal
 when hub is fully in view then low goal can be shot at full power
+dpad up down pid climber up down
+dpad left blue ball track
+dpad right red ball track
 
 Operator
 a high goal
@@ -58,6 +62,7 @@ rt up angle
 lt down angle
 lb eject
 rb force in
+dpad up down move climber
 */
 
 /**
@@ -87,15 +92,26 @@ public final class Constants {
 
 	public static final PhotonCamera photon = new PhotonCamera("photonvision");
 
-	public void initPhoton(){
+	public static void initPhoton(){
+		photonResetPipe();
+	}
+
+	public static void photonBlue(){
+		photon.setPipelineIndex(1);
+	}
+	public static void photonRed(){
+		photon.setPipelineIndex(0);
+	}
+	public static void photonResetPipe(){
 		if (DriverStation.getAlliance() == Alliance.Blue){
-			photon.setPipelineIndex(0);
+			photonBlue();
 		} else if (DriverStation.getAlliance() == Alliance.Red){
-			photon.setPipelineIndex(1);
+			photonRed();
 		} else {
 			photon.setPipelineIndex(2);
-		}	
+		}
 	}
+
 	/**
 	 * 
 	 * @return best target or null if not found
@@ -103,10 +119,14 @@ public final class Constants {
 	static PhotonTrackedTarget pTarget(){
 		PhotonPipelineResult result = photon.getLatestResult();
 		if(result.hasTargets()){
-			return result.getBestTarget();
-		} else {
-			return null;
+			for (int i = 0; i < result.targets.size(); i++){
+				if (result.targets.get(i).getPitch() > -15){
+					return result.targets.get(i);
+				}
+			}
+			// return result.getBestTarget();
 		}
+		return null;
 	}
 
 	/**
@@ -114,11 +134,12 @@ public final class Constants {
 	 * @returns yaw of best ball or 0 if none found
 	 */
 	public static double pTrack(){
+		onFlash();
 		PhotonTrackedTarget target = pTarget();
 		if (target != null){
 			return target.getYaw();
 		} else {
-			return 0;
+			return Double.POSITIVE_INFINITY;
 		}
 	}
 
@@ -185,11 +206,11 @@ public final class Constants {
 
 		// System.out.println("ON SUCCESS");
 		// flashlight.set((5.0/RobotController.getBatteryVoltage()));
-		// flashlight.set(0.4);
+		flashlight.set(0.4);
 	}
 
 	public static void offFlash() {
-		// System.out.println("OFF");
+		System.out.println("OFF");
 		if (!initFlash) {
 			initFlash();
 			// System.out.println("OFF FAIL");
@@ -200,6 +221,15 @@ public final class Constants {
 
 	public static double getFlash() {
 		return flashlight.get();
+		// return 0;
+	}
+
+	public static final PowerDistribution pdp = new PowerDistribution();
+
+	public static double getFlashCurrent() {
+		// return flashlight.getOutputCurrent();
+		return flashlight.getSupplyCurrent();
+		// return pdp.getCurrent(9);
 		// return 0;
 	}
 

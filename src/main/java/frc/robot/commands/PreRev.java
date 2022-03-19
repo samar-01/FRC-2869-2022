@@ -5,30 +5,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.AngleSubSys;
+import frc.robot.subsystems.ShooterSubSys;
 
-public class Angle extends CommandBase {
-
-	private final AngleSubSys angleSubSys;
-
-	/** Creates a new Angle. */
-	public Angle(AngleSubSys angleSubSys) {
-		this.angleSubSys = angleSubSys;
-		addRequirements(angleSubSys);
+public class PreRev extends CommandBase {
+	ShooterSubSys shooterSubSys;
+	/** Creates a new PreRev. */
+	public PreRev(ShooterSubSys shooterSubSys) {
+		this.shooterSubSys = shooterSubSys;
+		addRequirements(shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
+	boolean done = false;
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		AngleSubSys.init();
+		System.out.println("prerev");
+		shooterSubSys.init();
+		shooterSubSys.rev();
+		done = true;
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
-	public void execute() {
-		angleSubSys.run();
-	}
+	public void execute() {}
 
 	// Called once the command ends or is interrupted.
 	@Override
@@ -37,6 +37,6 @@ public class Angle extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return done;
 	}
 }

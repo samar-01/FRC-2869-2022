@@ -21,6 +21,6 @@ public class AutoShoot extends ParallelCommandGroup {
 	public AutoShoot(ShooterSubSys shooterSubSys, DrivetrainSubSys drivetrainSubSys, AngleSubSys angleSubSys) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoShootSpeed(shooterSubSys, angleSubSys), new AutoPoint(drivetrainSubSys), new AutoLift(angleSubSys));
+		addCommands(new AutoShootSpeed(shooterSubSys, angleSubSys), new AutoPointGoal(drivetrainSubSys), new AutoLift(angleSubSys, shooterSubSys));
 	}
 }
