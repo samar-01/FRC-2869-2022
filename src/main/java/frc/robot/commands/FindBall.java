@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubSys;
+import frc.robot.subsystems.DrivetrainSubSys;
+import static frc.robot.Constants.*;
 
-public class ShootSpeed extends CommandBase {
-	ShooterSubSys shooterSubSys;
-	/** Creates a new ShootSpeed. */
-	public ShootSpeed(ShooterSubSys shooterSubSys) {
-		this.shooterSubSys = shooterSubSys;
-		addRequirements(shooterSubSys);
+public class FindBall extends CommandBase {
+	DrivetrainSubSys drivetrainSubSys;
+	/** Creates a new FindBall. */
+	public FindBall(DrivetrainSubSys drivetrainSubSys) {
+		this.drivetrainSubSys = drivetrainSubSys;
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
@@ -20,10 +20,15 @@ public class ShootSpeed extends CommandBase {
 	@Override
 	public void initialize() {}
 
+	boolean done = false;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		
+		if (pTrack() != Double.POSITIVE_INFINITY){
+			done = true;
+		} else {
+			drivetrainSubSys.drv(0, 0.3);
+		}
 	}
 
 	// Called once the command ends or is interrupted.
@@ -33,6 +38,6 @@ public class ShootSpeed extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return done;
 	}
 }

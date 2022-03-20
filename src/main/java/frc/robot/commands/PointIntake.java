@@ -36,7 +36,6 @@ public class PointIntake extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		// System.out.println("pointed" + interrupted);
 		drive.stop();
 		drive.resetPID();
 	}
@@ -44,7 +43,6 @@ public class PointIntake extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		// return drive.isBallPointed();
-		// System.out.println(!shooterSubSys.isIntakeEmpty());
 		return !shooterSubSys.isIntakeEmpty();
 		// return false;
 	}

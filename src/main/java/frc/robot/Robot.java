@@ -10,6 +10,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
@@ -42,7 +45,9 @@ import static frc.robot.Constants.*;
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 	private RobotContainer m_robotContainer;
-
+	double autorotate = 120;
+	ShuffleboardTab auto = Shuffleboard.getTab("Auto");
+	ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -57,6 +62,8 @@ public class Robot extends TimedRobot {
 		RobotContainer.climberSubSys.init();
 		networkInit();
 		offLime();
+		Shuffleboard.selectTab("Auto");
+		SmartDashboard.putNumber("autorotate", autorotate);
 	}
 
 	/**
@@ -93,7 +100,10 @@ public class Robot extends TimedRobot {
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = new Autonomous();
+		photonResetPipe();
+		Shuffleboard.selectTab("Auto");
+		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
+		m_autonomousCommand = new Autonomous(autorotate);
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -128,6 +138,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		Shuffleboard.selectTab("Teleop");
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -164,7 +175,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 
-		System.out.println(ShooterSubSys.isIntakeEmpty());
+		// System.out.println(ShooterSubSys.isIntakeEmpty());
 
 		if (!RobotContainer.pointIntake.isScheduled()){
 			if (xbox.getPOV() == 90 && !RobotContainer.pointIntake.isScheduled()){

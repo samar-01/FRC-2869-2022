@@ -131,7 +131,7 @@ public final class Constants {
 
 	/**
 	 * 
-	 * @returns yaw of best ball or 0 if none found
+	 * @returns yaw of best ball or Double.POSITIVE_INFINITY if none found
 	 */
 	public static double pTrack(){
 		onFlash();
@@ -210,7 +210,7 @@ public final class Constants {
 	}
 
 	public static void offFlash() {
-		System.out.println("OFF");
+		// System.out.println("OFF");
 		if (!initFlash) {
 			initFlash();
 			// System.out.println("OFF FAIL");

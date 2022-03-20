@@ -4,23 +4,47 @@
 
 package frc.robot.commands;
 
-import org.opencv.core.Point;
-
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.AngleSubSys;
-import frc.robot.subsystems.DrivetrainSubSys;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubSys;
-// import frc.robot.commands.*;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoShoot extends ParallelCommandGroup {
-
+public class AutoShoot extends CommandBase {
+	ShooterSubSys shooterSubSys;
 	/** Creates a new AutoShoot. */
-	public AutoShoot(ShooterSubSys shooterSubSys, DrivetrainSubSys drivetrainSubSys, AngleSubSys angleSubSys) {
-		// Add your commands in the addCommands() call, e.g.
-		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoShootSpeed(shooterSubSys, angleSubSys), new AutoPointGoal(drivetrainSubSys), new AutoLift(angleSubSys, shooterSubSys));
+	public AutoShoot(ShooterSubSys shooterSubSys) {
+		this.shooterSubSys = shooterSubSys;
+		addRequirements(shooterSubSys);
+		// Use addRequirements() here to declare subsystem dependencies.
+	}
+
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+		shooterSubSys.autoRev();
+	}
+
+	boolean done = false;
+	Timer timer = new Timer();
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
+		if (shooterSubSys.isAtSpeed() && timer.get() == 0){
+			timer.start();
+			shooterSubSys.shoot();
+		} else if (timer.hasElapsed(1)){
+			done = true;
+		}
+	}
+
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+		shooterSubSys.stop();
+	}
+
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		return done;
 	}
 }

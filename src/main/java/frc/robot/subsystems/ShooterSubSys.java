@@ -43,7 +43,6 @@ public class ShooterSubSys extends SubsystemBase {
 	static final double kp = 0.001, ki = 0.0000, kd = 0.00001;
 	private static final PIDController lpid = new PIDController(kp, ki, kd);
 	private static final PIDController rpid = new PIDController(kp, ki, kd);
-	static final double tarspeed = 10000;
 
 	/**
 	 * Sets up the PID Controllers on the Falcon
@@ -87,7 +86,7 @@ public class ShooterSubSys extends SubsystemBase {
 			SmartDashboard.putNumber("velconstant", thing);
 			initfalc(leftfal);
 			initfalc(rightfal);
-			System.out.println("INIT");
+			// System.out.println("INIT");
 			init = true;
 		}
 		// leftfal.set(ControlMode.PercentOutput, 0);
@@ -102,23 +101,33 @@ public class ShooterSubSys extends SubsystemBase {
 		// rightfal.setNeutralMode(NeutralMode.Coast);
 	}
 
-	private static void setFalc(double speed) {
-		leftfal.set(TalonFXControlMode.Velocity, speed);
-		rightfal.set(TalonFXControlMode.Velocity, speed);
-	}
-
+	/**
+	 * stop all shooter motors
+	 */
 	public void stop() {
-		setFalc(0);
+		PIDSpeed(0);
 		left775.set(ControlMode.PercentOutput, 0);
 		right775.set(ControlMode.PercentOutput, 0);
+	}
+
+	/**
+	 * @return if falcons are at the pid speed
+	 */
+	public static boolean isAtSpeed(){
+		return Math.abs((-leftfal.getSensorCollection().getIntegratedSensorVelocity() + rightfal.getSensorCollection().getIntegratedSensorVelocity())/2 - tarspeed) < 100;
 	}
 
 	static final double lim775 = 0.30;
 	static final double falconInLim = 0.25;
 	static double falconfast = 0.2;
+	static double tarspeed = 0;
 
-	static void PIDSpeed(double speed){
-		double tarspeed = speed;
+	public static double getPIDSpeed(){
+		return tarspeed;
+	}
+
+	public static void PIDSpeed(double speed){
+		tarspeed = speed;
 		leftfal.set(TalonFXControlMode.Velocity, -tarspeed);
 		rightfal.set(TalonFXControlMode.Velocity, tarspeed);
 	}

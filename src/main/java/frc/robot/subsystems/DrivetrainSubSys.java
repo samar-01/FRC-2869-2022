@@ -214,11 +214,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 	double kp=0.4,ki=0.0,kd=0.1;
 	PIDController spinner = new PIDController(kp,ki,kd);
 	
-	public void setRot(){
+	public void setRot(double angle){
 		spun = false;
 		ahrs.reset();
 		pos = ahrs.getYaw();
-		spinTarget = pos+180;
+		spinTarget = pos+angle;
 		spintime.reset();
 		spintime.start();
 		spinner.reset();
@@ -306,7 +306,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		right2.getEncoder().setPositionConversionFactor(1);
 		ahrs.reset();
 		target = getUltra();
-		System.out.println("RESET");
+		// System.out.println("RESET");
 	}
 
 
@@ -325,7 +325,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	public void setDrivePID(double distance){
 		drove = false;
 		resetEncoders();
-		posD = left1.getEncoder().getPosition();
+		posD = getEncDistance();
 		driveTarget = posD+distance;
 		drivetime.reset();
 		drivetime.start();

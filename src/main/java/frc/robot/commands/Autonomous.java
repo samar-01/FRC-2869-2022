@@ -13,11 +13,11 @@ import frc.robot.subsystems.*;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Autonomous extends SequentialCommandGroup {
 	/** Creates a new Autonomous. */
-	public Autonomous() {
+	public Autonomous(double autorotate) {
 		
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot());
+		addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate), new FindBallShoot());
 		// addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10));
 	}
 }

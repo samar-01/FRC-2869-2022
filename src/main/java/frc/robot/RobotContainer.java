@@ -61,8 +61,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {}
 
-	Autonomous auto = new Autonomous();
-	DriveBack driveBack = new DriveBack(drivetrainSubSys);
+	// Autonomous auto = new Autonomous();
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -72,6 +71,6 @@ public class RobotContainer {
 	public Command getAutonomousCommand() {
 		// An ExampleCommand will run in autonomous
 		// return m_autoCommand;
-		return driveBack;
+		return null;
 	}
 }

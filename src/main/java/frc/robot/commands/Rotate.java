@@ -5,37 +5,44 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubSys;
+import frc.robot.subsystems.DrivetrainSubSys;
 
-public class PreRev extends CommandBase {
-	ShooterSubSys shooterSubSys;
-	/** Creates a new PreRev. */
-	public PreRev(ShooterSubSys shooterSubSys) {
-		this.shooterSubSys = shooterSubSys;
-		addRequirements(shooterSubSys);
-		// Use addRequirements() here to declare subsystem dependencies.
+public class Rotate extends CommandBase {
+	DrivetrainSubSys drive;
+	double angle;
+	/** Creates a new Drivetrain. */
+	public Rotate(DrivetrainSubSys drive, double angle) {
+		this.drive = drive;
+		this.angle = angle;
+		addRequirements(drive);
 	}
 
-	boolean done = false;
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		shooterSubSys.init();
-		shooterSubSys.rev();
-		done = true;
+		drive.setRot(angle);
+		drive.resetPID();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
-	public void execute() {}
+	public void execute() {
+		drive.spin();
+	}
 
 	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		// drive.stop();
+	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return done;
+		if (drive.spun) {
+			drive.spun = false;
+			return true;
+		}
+		return false;
 	}
 }
