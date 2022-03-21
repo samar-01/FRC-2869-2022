@@ -6,10 +6,8 @@ check bearings dont fall into water cut plate when resting down
 check barstock bend
 missing churro on right side
 grease chain
+shuffleboard values ok
 
-TODO
-check 775 going too fast
-battery voltage affecting shoot constant
 */
 
 // Copyright (c) FIRST and other WPILib contributors.
@@ -89,6 +87,24 @@ public final class Constants {
 	public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
+	public static NetworkTableEntry distanceEntry;
+	public static NetworkTableEntry autorotateEntry;
+	public static NetworkTableEntry ballinEntry;
+	public static NetworkTableEntry revedEntry;
+	public static NetworkTableEntry velconstantEntry;
+	public static NetworkTableEntry angleEntry;
+	public static NetworkTableEntry angleEntryT;
+	public static NetworkTableEntry angleEntryA;
+	public static NetworkTableEntry leftFalEntry;
+	public static NetworkTableEntry rightFalEntry;
+	public static NetworkTableEntry tarSpeedEntry;
+	public static NetworkTableEntry batVoltageEntry;
+	public static NetworkTableEntry batVoltageEntryT;
+	public static NetworkTableEntry batVoltageEntryA;
+	public static NetworkTableEntry time;
+	public static NetworkTableEntry timeT;
+	public static NetworkTableEntry timeA;
+
 
 	public static final PhotonCamera photon = new PhotonCamera("photonvision");
 
@@ -169,10 +185,11 @@ public final class Constants {
 	}
 
 	public static double getUltra() {
-		return 10;
-		// double dist = (ultra.getVoltage()*1000)/9.77;
 		// SmartDashboard.putNumber("ultrasonic", dist);
+		// double dist = (ultra.getVoltage()*1000)/9.77;
 		// return dist;
+
+		return 10; // if no ultrasonic
 	}
 
 	public static double clamp(double inp, double min, double max) {

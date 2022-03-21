@@ -83,7 +83,7 @@ public class ShooterSubSys extends SubsystemBase {
 
 	public static void init() {
 		if (!init){
-			SmartDashboard.putNumber("velconstant", thing);
+			// Shuffleboard.getTab("Teleop").addPersistent("velconstant", 7.77);
 			initfalc(leftfal);
 			initfalc(rightfal);
 			// System.out.println("INIT");
@@ -159,6 +159,7 @@ public class ShooterSubSys extends SubsystemBase {
 	}
 
 	public void run() {
+		revedEntry.setBoolean(isAtSpeed());
 		//Gets the value from the SmartDashboard
 		SmartDashboard.getNumber("falcpower", falconfast);
 		// SmartDashboard.putBoolean("intaked", !intake.get());
@@ -172,8 +173,6 @@ public class ShooterSubSys extends SubsystemBase {
 			intake();
 		} else if (xbox.getXButton()) {
 			autoRev();
-
-			SmartDashboard.putBoolean("revup", true);
 			if (xbox.getBButton()) {
 				// left775.set(TalonSRXControlMode.PercentOutput, -1);
 				// right775.set(TalonSRXControlMode.PercentOutput, 1);
@@ -193,7 +192,6 @@ public class ShooterSubSys extends SubsystemBase {
 			leftfal.set(ControlMode.PercentOutput, -1);
 			rightfal.set(ControlMode.PercentOutput, 1);
 		} else {
-			SmartDashboard.putBoolean("revup", false);
 			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*1);
 			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getRightY()*1);
 			leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getRightY());
@@ -205,14 +203,17 @@ public class ShooterSubSys extends SubsystemBase {
 		else if (opxbox.getPOV() == 270){
 			onFlash();
 		}
-		SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
-		SmartDashboard.putNumber("rightfalconspeed", rightfal.getSensorCollection().getIntegratedSensorVelocity());
+		leftFalEntry.setNumber(leftfal.getSensorCollection().getIntegratedSensorVelocity());
+		rightFalEntry.setNumber(rightfal.getSensorCollection().getIntegratedSensorVelocity());
+		tarSpeedEntry.setNumber(calcVel());
+		// SmartDashboard.putNumber("target speed1", (calcVel()));
+		// SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
+		// SmartDashboard.putNumber("rightfalconspeed", rightfal.getSensorCollection().getIntegratedSensorVelocity());
 		// SmartDashboard.putNumber("leftfalconpos",
 		// leftfal.getSensorCollection().getIntegratedSensorPosition());
 		// SmartDashboard.putNumber("target speed", 10*(calcVel(distance(), getAngle()) *  600.0 / 2048.0));
-		SmartDashboard.putNumber("target speed1", (calcVel()));
-		SmartDashboard.putNumber("lfalctemp", leftfal.getTemperature());
-		SmartDashboard.putNumber("rfalctemp", rightfal.getTemperature());
+		// SmartDashboard.putNumber("lfalctemp", leftfal.getTemperature());
+		// SmartDashboard.putNumber("rfalctemp", rightfal.getTemperature());
 		// rightfal.getSensorCollection().getIntegratedSensorPosition());
 		
 		// System.out.println(calcVel(distance(), 47));

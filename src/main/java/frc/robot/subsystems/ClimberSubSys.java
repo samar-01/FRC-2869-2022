@@ -104,8 +104,8 @@ public class ClimberSubSys extends SubsystemBase {
 	}
 
 	public void run(){
-		SmartDashboard.putNumber("leftclimb", left.getEncoder().getPosition());
-		SmartDashboard.putNumber("rightclimb", right.getEncoder().getPosition());
+		// SmartDashboard.putNumber("leftclimb", left.getEncoder().getPosition());
+		// SmartDashboard.putNumber("rightclimb", right.getEncoder().getPosition());
 		// System.out.println(opxbox.getPOV());
 		
 		// if (xbox.getRightStickButtonPressed()){

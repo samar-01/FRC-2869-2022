@@ -7,9 +7,11 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +37,8 @@ import frc.robot.subsystems.AngleSubSys;
 import frc.robot.subsystems.ClimberSubSys;
 
 import static frc.robot.Constants.*;
+
+import java.util.Map;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -62,8 +66,30 @@ public class Robot extends TimedRobot {
 		RobotContainer.climberSubSys.init();
 		networkInit();
 		offLime();
+
+		ShuffleboardTab auto = Shuffleboard.getTab("Auto");
+		autorotateEntry = auto.add("autorotate", autorotate).withPosition(0, 0).withSize(1, 1).getEntry();
+		angleEntryA = auto.add("Angle", -34).withPosition(1, 0).withSize(1, 1).getEntry();
+		batVoltageEntryA = auto.add("Voltage", 0).withPosition(0, 1).withSize(1, 1).getEntry();
+		timeA = auto.add("time", 0).withPosition(1, 1).getEntry();
+
+		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
+		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
+		velconstantEntry = teleop.addPersistent("velconstant", 7.77).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 6, "max", 10)).withPosition(0,1).withSize(3, 1).getEntry();
+		ballinEntry = teleop.add("BallIn", false).withPosition(0, 2).withSize(1, 1).getEntry();
+		revedEntry = teleop.add("Reved", false).withPosition(1, 2).withSize(1, 1).getEntry();
+		angleEntryT = teleop.add("Angle", -34).withPosition(2, 2).getEntry();
+		leftFalEntry = teleop.add("lfalc", 0).withPosition(0, 3).getEntry();
+		rightFalEntry = teleop.add("rfalc", 0).withPosition(1, 3).getEntry();
+		tarSpeedEntry = teleop.add("target", 0).withPosition(2, 3).getEntry();
+		batVoltageEntryT = teleop.add("battery",0).withPosition(0, 4).getEntry();
+		timeT = teleop.add("time", 0).withPosition(1, 4).getEntry();
+		
 		Shuffleboard.selectTab("Auto");
-		SmartDashboard.putNumber("autorotate", autorotate);
+
+		batVoltageEntry = batVoltageEntryA;
+		angleEntry = angleEntryA;
+		time = timeA;
 	}
 
 	/**
@@ -80,6 +106,8 @@ public class Robot extends TimedRobot {
 		// and running subsystem periodic() methods.  This must be called from the robot's periodic
 		// block in order for anything in the Command-based framework to work.
 		CommandScheduler.getInstance().run();
+		batVoltageEntry.setNumber(RobotController.getBatteryVoltage());
+		time.setNumber(Timer.getMatchTime());
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
@@ -96,10 +124,21 @@ public class Robot extends TimedRobot {
 
 	}
 
+	// void addData(String tab, String label, Sendable sendable){
+	// 	try {
+	// 		Shuffleboard.getTab(tab).add(label, sendable);
+	// 	} catch (IllegalArgumentException e){
+			
+	// 	}
+	// }
+
 	// Timer autodrive = new Timer();
 	/** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
 	@Override
 	public void autonomousInit() {
+		batVoltageEntry = batVoltageEntryA;
+		angleEntry = angleEntryA;
+		time = timeA;
 		photonResetPipe();
 		Shuffleboard.selectTab("Auto");
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
@@ -138,6 +177,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		batVoltageEntry = batVoltageEntryT;
+		angleEntry = angleEntryT;
+		time = timeT;
 		Shuffleboard.selectTab("Teleop");
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -174,7 +216,7 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-
+		// System.out.println(velconstantEntry.getNumber(0));
 		// System.out.println(ShooterSubSys.isIntakeEmpty());
 
 		if (!RobotContainer.pointIntake.isScheduled()){

@@ -94,10 +94,7 @@ public class AngleSubSys extends SubsystemBase {
 			}
 		}
 
-		SmartDashboard.putNumber("angle", getAngle());
-		SmartDashboard.putNumber("encangle", getEncAngle());
-		// System.out.println(opxbox.getStartButton());
-		// SmartDashboard.putNumber("angle", arm.getEncoder().getPosition());
+		angleEntry.setNumber(getAngle());
 	}
 
 	public void pidmove(){
