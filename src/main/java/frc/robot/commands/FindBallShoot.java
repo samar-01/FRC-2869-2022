@@ -15,6 +15,6 @@ public class FindBallShoot extends SequentialCommandGroup {
 	public FindBallShoot() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new FindBall(RobotContainer.drivetrainSubSys), new PointIntake(RobotContainer.drivetrainSubSys, RobotContainer.shooterSubSys));
+		addCommands(new FindBall(RobotContainer.drivetrainSubSys), new PointIntakeDrive(RobotContainer.drivetrainSubSys, RobotContainer.shooterSubSys));
 	}
 }

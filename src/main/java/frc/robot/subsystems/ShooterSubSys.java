@@ -160,6 +160,7 @@ public class ShooterSubSys extends SubsystemBase {
 
 	public void run() {
 		revedEntry.setBoolean(isAtSpeed());
+		ballinEntry.setBoolean(!isIntakeEmpty());
 		//Gets the value from the SmartDashboard
 		SmartDashboard.getNumber("falcpower", falconfast);
 		// SmartDashboard.putBoolean("intaked", !intake.get());
@@ -254,11 +255,17 @@ public class ShooterSubSys extends SubsystemBase {
 	 * @return rpm
 	 */
 	public static double calcVel(){
+		// if (tarspeedthing.getDouble(7000) != 7000){
+		// 	return tarspeedthing.getDouble(7000);
+		// }
+		// launchpad is 7805
+
+		if (opxbox.getPOV() == 90){
+			return 7860;
+		}
+
 		// tinyurl.com/projmath
 		//setup numbers
-		if (xbox.getPOV() == 90){
-			return 7000; // TODO fix for launchpad speed
-		}
 		double d = distance();
 		double theta = getAngle();
 		theta = Math.toRadians(theta);

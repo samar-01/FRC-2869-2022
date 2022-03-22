@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 
-public class PointIntake extends CommandBase {
+public class PointIntakeDrive extends CommandBase {
 	DrivetrainSubSys drive;
 	ShooterSubSys shooterSubSys;
 	/** Creates a new PointIntake. */
-	public PointIntake(DrivetrainSubSys drive, ShooterSubSys shooterSubSys) {
+	public PointIntakeDrive(DrivetrainSubSys drive, ShooterSubSys shooterSubSys) {
 		this.drive = drive;
 		this.shooterSubSys = shooterSubSys;
 		addRequirements(drive, shooterSubSys);

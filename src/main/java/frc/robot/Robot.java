@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -52,6 +53,9 @@ public class Robot extends TimedRobot {
 	double autorotate = 120;
 	ShuffleboardTab auto = Shuffleboard.getTab("Auto");
 	ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
+
+	public static SendableChooser autopicker = new SendableChooser();
+
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -68,10 +72,15 @@ public class Robot extends TimedRobot {
 		offLime();
 
 		ShuffleboardTab auto = Shuffleboard.getTab("Auto");
-		autorotateEntry = auto.add("autorotate", autorotate).withPosition(0, 0).withSize(1, 1).getEntry();
-		angleEntryA = auto.add("Angle", -34).withPosition(1, 0).withSize(1, 1).getEntry();
-		batVoltageEntryA = auto.add("Voltage", 0).withPosition(0, 1).withSize(1, 1).getEntry();
-		timeA = auto.add("time", 0).withPosition(1, 1).getEntry();
+		// autorotateEntry = auto.add("autorotate", autorotate).withPosition(0, 0).withSize(1, 1).getEntry();
+		angleEntryA = auto.add("Angle", -34).withPosition(0, 1).withSize(1, 1).getEntry();
+		batVoltageEntryA = auto.add("Voltage", 0).withPosition(1, 1).withSize(1, 1).getEntry();
+		timeA = auto.add("time", 0).withPosition(2, 1).getEntry();
+		autopicker.setDefaultOption("backup shoot", automodes.backupShoot);
+		autopicker.addOption("backup only", automodes.backupOnly);
+		autopicker.addOption("2 ball right", automodes.backupShootTurnRight);
+		// auto.add("autopicker", autopicker).withPosition(0, 0).withSize(3, 1);
+		autoPickerEntry = auto.add("autoselector", 0).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
 
 		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
@@ -84,7 +93,7 @@ public class Robot extends TimedRobot {
 		tarSpeedEntry = teleop.add("target", 0).withPosition(2, 3).getEntry();
 		batVoltageEntryT = teleop.add("battery",0).withPosition(0, 4).getEntry();
 		timeT = teleop.add("time", 0).withPosition(1, 4).getEntry();
-		
+		// tarspeedthing = teleop.add("tarspeedthing", 7000).withPosition(4, 4).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 7000, "max", 9000)).withSize(3, 1).getEntry();
 		Shuffleboard.selectTab("Auto");
 
 		batVoltageEntry = batVoltageEntryA;
@@ -142,6 +151,8 @@ public class Robot extends TimedRobot {
 		photonResetPipe();
 		Shuffleboard.selectTab("Auto");
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
+		RobotContainer.drivetrainSubSys.autoInit();
+
 		m_autonomousCommand = new Autonomous(autorotate);
 
 		// schedule the autonomous command (example)
@@ -151,7 +162,6 @@ public class Robot extends TimedRobot {
 		}
 		
 		initLime();
-		RobotContainer.drivetrainSubSys.autoInit();
 		// autodrive.reset();
 		// autodrive.start();
 		// AngleSubSys.init();
@@ -218,6 +228,14 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		// System.out.println(velconstantEntry.getNumber(0));
 		// System.out.println(ShooterSubSys.isIntakeEmpty());
+
+		if (opxbox.getRightStickButtonPressed()){
+			if (getFlash() > 0){
+				offFlash();
+			} else {
+				onFlash();
+			}
+		}
 
 		if (!RobotContainer.pointIntake.isScheduled()){
 			if (xbox.getPOV() == 90 && !RobotContainer.pointIntake.isScheduled()){

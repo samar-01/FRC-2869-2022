@@ -39,7 +39,7 @@ public class RobotContainer {
 	// public static final Autonomous autonomous = new Autonomous(drivetrainSubSys, angleSubSys, shooterSubSys);
 	// public static final DriveDistance driveBack = new DriveDistance(drivetrainSubSys, -10);
 	// public static final Autonomous autonomous = new Autonomous();
-	public static final PointIntake pointIntake = new PointIntake(drivetrainSubSys, shooterSubSys);
+	public static final PointIntakeDrive pointIntake = new PointIntakeDrive(drivetrainSubSys, shooterSubSys);
 	public static final ClimberSubSys climberSubSys= new ClimberSubSys();
 	public static final Climber climber = new Climber(climberSubSys);
 	public static final CalibClimb calibClimb = new CalibClimb(climberSubSys);

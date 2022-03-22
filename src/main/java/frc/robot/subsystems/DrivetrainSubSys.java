@@ -91,8 +91,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 		pidturn.reset();
 	}
 
-	boolean isBallTurn = false;
-	
+	boolean isBallTurn = false; //checks if first time running ballturndrive and resets pid
+	/**
+	 * turns towards ball
+	 * */	
 	public void ballTurn(){
 		if (!isBallTurn){
 			isBallTurn = true;
@@ -103,15 +105,18 @@ public class DrivetrainSubSys extends SubsystemBase {
 			autoTurn(track);
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public void ballTurnDrive(){
 		if (!isBallTurn){
 			isBallTurn = true;
 			pidturn.reset();
 		}
 		double track = -pTrack();
+		// System.out.println(track);
 		if (track != Double.POSITIVE_INFINITY){
-			autoTurn(track,0.6);
+			autoTurn(track,0.4);
 		}
 	}
 

@@ -102,7 +102,7 @@ public class ClimberSubSys extends SubsystemBase {
 	double getPos(CANSparkMax motor){
 		return motor.getEncoder().getPosition();
 	}
-
+ 
 	public void run(){
 		// SmartDashboard.putNumber("leftclimb", left.getEncoder().getPosition());
 		// SmartDashboard.putNumber("rightclimb", right.getEncoder().getPosition());

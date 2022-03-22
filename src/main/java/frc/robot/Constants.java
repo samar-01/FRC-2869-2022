@@ -17,6 +17,7 @@ shuffleboard values ok
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -88,7 +89,7 @@ public final class Constants {
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 	public static NetworkTableEntry distanceEntry;
-	public static NetworkTableEntry autorotateEntry;
+	// public static NetworkTableEntry autorotateEntry;
 	public static NetworkTableEntry ballinEntry;
 	public static NetworkTableEntry revedEntry;
 	public static NetworkTableEntry velconstantEntry;
@@ -104,7 +105,12 @@ public final class Constants {
 	public static NetworkTableEntry time;
 	public static NetworkTableEntry timeT;
 	public static NetworkTableEntry timeA;
-
+	public static NetworkTableEntry tarspeedthing;
+	public static NetworkTableEntry autoPickerEntry;
+	
+	public enum automodes{
+		backupOnly, backupShoot, backupShootTurnRight
+	}
 
 	public static final PhotonCamera photon = new PhotonCamera("photonvision");
 
@@ -150,7 +156,9 @@ public final class Constants {
 	 * @returns yaw of best ball or Double.POSITIVE_INFINITY if none found
 	 */
 	public static double pTrack(){
-		onFlash();
+		// return Double.POSITIVE_INFINITY;
+
+		// onFlash();
 		PhotonTrackedTarget target = pTarget();
 		if (target != null){
 			return target.getYaw();
@@ -223,7 +231,8 @@ public final class Constants {
 
 		// System.out.println("ON SUCCESS");
 		// flashlight.set((5.0/RobotController.getBatteryVoltage()));
-		flashlight.set(0.4);
+		// flashlight.set(0.4);
+		flashlight.set(1);
 	}
 
 	public static void offFlash() {

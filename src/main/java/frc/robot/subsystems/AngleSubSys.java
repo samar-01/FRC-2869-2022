@@ -73,6 +73,7 @@ public class AngleSubSys extends SubsystemBase {
 		if (opxbox.getStartButton()){
 			arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
 			armPID.reset();
+			target = getAngle();
 		} else if (xbox.getStartButtonReleased()){
 			arm.getEncoder().setPosition(0);
 		} else {
