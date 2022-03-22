@@ -19,6 +19,10 @@ public class twoBallRight extends SequentialCommandGroup {
 	public twoBallRight() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new driveBack(), new LiftAlignShoot(), new DownRotate(120), new FindBallShoot());
+		double angle = 120;
+		addCommands(new driveBack(), new LiftAlignShoot(), new DownRotate(angle),
+				new FindBall(RobotContainer.drivetrainSubSys),
+				new PointIntakeDrive(RobotContainer.drivetrainSubSys, RobotContainer.shooterSubSys),
+				new Rotate(RobotContainer.drivetrainSubSys, -angle), new LiftAlignShoot());
 	}
 }
