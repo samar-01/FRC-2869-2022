@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import static frc.robot.Constants.*;
 
 public class Rotate extends CommandBase {
 	DrivetrainSubSys drive;
@@ -23,6 +25,7 @@ public class Rotate extends CommandBase {
 	public void initialize() {
 		drive.setRot(angle);
 		drive.resetPID();
+		status.setString("rotating");
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
