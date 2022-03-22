@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class DriveBack extends CommandBase {
 	DrivetrainSubSys drivetrainSubSys;
 	/** Creates a new DriveBack. */
-	public DriveBack(DrivetrainSubSys drivetrainSubSys) {
-		this.drivetrainSubSys = drivetrainSubSys;
+	public DriveBack() {
+		this.drivetrainSubSys = RobotContainer.drivetrainSubSys;
 		addRequirements(drivetrainSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

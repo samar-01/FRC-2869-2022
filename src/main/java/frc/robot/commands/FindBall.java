@@ -12,7 +12,7 @@ import static frc.robot.Constants.*;
 public class FindBall extends CommandBase {
 	DrivetrainSubSys drivetrainSubSys;
 	/** Creates a new FindBall. */
-	public FindBall(DrivetrainSubSys drivetrainSubSys) {
+	public FindBall() {
 		this.drivetrainSubSys = RobotContainer.drivetrainSubSys;
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

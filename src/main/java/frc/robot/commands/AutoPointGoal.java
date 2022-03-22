@@ -16,8 +16,8 @@ public class AutoPointGoal extends CommandBase {
 	private final DrivetrainSubSys drive;
 
 	/** Creates a new Drivetrain. */
-	public AutoPointGoal(DrivetrainSubSys drive) {
-		this.drive = drive;
+	public AutoPointGoal() {
+		this.drive = RobotContainer.drivetrainSubSys;
 		addRequirements(drive);
 	}
 

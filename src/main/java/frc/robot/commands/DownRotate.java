@@ -15,6 +15,6 @@ public class DownRotate extends ParallelCommandGroup {
 	public DownRotate(double angle) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoDown(RobotContainer.angleSubSys, RobotContainer.shooterSubSys), new Rotate(RobotContainer.drivetrainSubSys, angle));
+		addCommands(new AutoDown(), new Rotate(angle));
 	}
 }

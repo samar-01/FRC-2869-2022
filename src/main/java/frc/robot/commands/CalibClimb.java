@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClimberSubSys;
 
 public class CalibClimb extends CommandBase {
 	ClimberSubSys climberSubSys;
 	/** Creates a new CalibClimb. */
-	public CalibClimb(ClimberSubSys climberSubSys) {
-		this.climberSubSys = climberSubSys;
+	public CalibClimb() {
+		this.climberSubSys = RobotContainer.climberSubSys;
 		addRequirements(climberSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

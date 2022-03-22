@@ -15,6 +15,6 @@ public class LiftAlignShoot extends SequentialCommandGroup {
 	public LiftAlignShoot() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoLift(RobotContainer.angleSubSys, RobotContainer.shooterSubSys), new AutoPointGoal(RobotContainer.drivetrainSubSys), new AutoShoot(RobotContainer.shooterSubSys));
+		addCommands(new AutoLift(), new AutoPointGoal(), new AutoShoot());
 	}
 }

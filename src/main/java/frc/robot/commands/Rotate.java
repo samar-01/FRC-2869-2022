@@ -5,14 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class Rotate extends CommandBase {
 	DrivetrainSubSys drive;
 	double angle;
 	/** Creates a new Drivetrain. */
-	public Rotate(DrivetrainSubSys drive, double angle) {
-		this.drive = drive;
+	public Rotate(double angle) {
+		this.drive = RobotContainer.drivetrainSubSys;
 		this.angle = angle;
 		addRequirements(drive);
 	}

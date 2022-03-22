@@ -14,8 +14,8 @@ public class DriveStop extends CommandBase {
 	private boolean stopped;
 
 	/** Creates a new Drivetrain. */
-	public DriveStop(DrivetrainSubSys drive) {
-		this.drive = drive;
+	public DriveStop() {
+		this.drive = RobotContainer.drivetrainSubSys;
 		addRequirements(drive);
 	}
 

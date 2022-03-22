@@ -14,6 +14,6 @@ public class UpRotate extends ParallelCommandGroup {
 	public UpRotate(double angle) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new AutoLift(RobotContainer.angleSubSys, RobotContainer.shooterSubSys), new Rotate(RobotContainer.drivetrainSubSys, angle));
+		addCommands(new AutoLift(), new Rotate(angle));
 	}
 }

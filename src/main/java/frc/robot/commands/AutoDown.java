@@ -19,9 +19,9 @@ public class AutoDown extends CommandBase {
 	private final ShooterSubSys shooterSubSys;
 
 	/** Creates a new Angle. */
-	public AutoDown(AngleSubSys angleSubSys, ShooterSubSys shooterSubSys) {
-		this.angleSubSys = angleSubSys;
-		this.shooterSubSys = shooterSubSys;
+	public AutoDown() {
+		this.angleSubSys = RobotContainer.angleSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(angleSubSys, shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

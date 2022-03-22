@@ -15,9 +15,9 @@ public class PointIntakeDrive extends CommandBase {
 	DrivetrainSubSys drive;
 	ShooterSubSys shooterSubSys;
 	/** Creates a new PointIntake. */
-	public PointIntakeDrive(DrivetrainSubSys drive, ShooterSubSys shooterSubSys) {
-		this.drive = drive;
-		this.shooterSubSys = shooterSubSys;
+	public PointIntakeDrive() {
+		this.drive = RobotContainer.drivetrainSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(drive, shooterSubSys);
 		// addRequirements(drive);
 		// Use addRequirements() here to declare subsystem dependencies.

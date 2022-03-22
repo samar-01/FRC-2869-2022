@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 import static frc.robot.Constants.*;
 
@@ -14,8 +15,8 @@ public class DriveDistance extends CommandBase {
 	private final double distance;
 
 	/** Creates a new Drivetrain. */
-	public DriveDistance(DrivetrainSubSys drive, double distance) {
-		this.drive = drive;
+	public DriveDistance(double distance) {
+		this.drive = RobotContainer.drivetrainSubSys;
 		this.distance = distance;
 		addRequirements(drive);
 	}

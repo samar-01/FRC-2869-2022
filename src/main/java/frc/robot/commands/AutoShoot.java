@@ -15,8 +15,8 @@ import static frc.robot.Constants.*;
 public class AutoShoot extends CommandBase {
 	ShooterSubSys shooterSubSys;
 	/** Creates a new AutoShoot. */
-	public AutoShoot(ShooterSubSys shooterSubSys) {
-		this.shooterSubSys = shooterSubSys;
+	public AutoShoot() {
+		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class DriveReset extends CommandBase {
@@ -12,8 +13,8 @@ public class DriveReset extends CommandBase {
 	private final DrivetrainSubSys drive;
 
 	/** Creates a new Drivetrain. */
-	public DriveReset(DrivetrainSubSys drive) {
-		this.drive = drive;
+	public DriveReset() {
+		this.drive = RobotContainer.drivetrainSubSys;
 		addRequirements(drive);
 	}
 

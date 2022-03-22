@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.AngleSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 
@@ -12,9 +13,9 @@ public class AutoShootSpeed extends CommandBase {
 	ShooterSubSys shooterSubSys;
 	AngleSubSys angleSubSys;
 	/** Creates a new AutoShootSpeed. */
-	public AutoShootSpeed(ShooterSubSys shooterSubSys, AngleSubSys angleSubSys) {
-		this.shooterSubSys = shooterSubSys;
-		this.angleSubSys = angleSubSys;
+	public AutoShootSpeed() {
+		this.shooterSubSys = RobotContainer.shooterSubSys;
+		this.angleSubSys = RobotContainer.angleSubSys;
 		addRequirements(shooterSubSys, angleSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

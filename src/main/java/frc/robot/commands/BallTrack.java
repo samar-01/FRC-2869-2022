@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
 
 public class BallTrack extends CommandBase {
 	DrivetrainSubSys drivetrainSubSys;
 	/** Creates a new BallTrack. */
-	public BallTrack(DrivetrainSubSys drivetrainSubSys) {
-		this.drivetrainSubSys = drivetrainSubSys;
+	public BallTrack() {
+		this.drivetrainSubSys = RobotContainer.drivetrainSubSys;
 		addRequirements(drivetrainSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

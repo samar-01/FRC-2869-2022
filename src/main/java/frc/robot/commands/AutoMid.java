@@ -17,9 +17,9 @@ public class AutoMid extends CommandBase {
 	private final ShooterSubSys shooterSubSys;
 
 	/** Creates a new Angle. */
-	public AutoMid(AngleSubSys angleSubSys, ShooterSubSys shooterSubSys) {
-		this.angleSubSys = angleSubSys;
-		this.shooterSubSys = shooterSubSys;
+	public AutoMid() {
+		this.angleSubSys = RobotContainer.angleSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(angleSubSys, shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
