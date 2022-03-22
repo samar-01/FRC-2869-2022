@@ -11,10 +11,10 @@ import frc.robot.RobotContainer;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveBackAndCalibClimb extends ParallelCommandGroup {
-  /** Creates a new DriveBackAndCalibClimb. */
-  public DriveBackAndCalibClimb() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10), new CalibClimb(RobotContainer.climberSubSys));
-  }
+	/** Creates a new DriveBackAndCalibClimb. */
+	public DriveBackAndCalibClimb() {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10), new CalibClimb(RobotContainer.climberSubSys));
+	}
 }
