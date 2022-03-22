@@ -106,11 +106,15 @@ public final class Constants {
 	public static NetworkTableEntry timeT;
 	public static NetworkTableEntry timeA;
 	public static NetworkTableEntry tarspeedthing;
+
+
+	public static SendableChooser<Command> autopicker = new SendableChooser<Command>();
 	public static NetworkTableEntry autoPickerEntry;
-	
-	public enum automodes{
-		backupOnly, backupShoot, backupShootTurnRight
-	}
+	// public enum automodes{
+	// 	backupOnly, backupShoot, backupShootTurnRight
+	// }
+	// public static automodes state = automodes.backupOnly;
+	public static Command auto;
 
 	public static final PhotonCamera photon = new PhotonCamera("photonvision");
 

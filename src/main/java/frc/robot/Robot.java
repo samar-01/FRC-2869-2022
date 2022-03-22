@@ -19,23 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
-import frc.robot.commands.Angle;
-import frc.robot.commands.AutoPointGoal;
-import frc.robot.commands.Autonomous;
-import frc.robot.commands.Climber;
-import frc.robot.commands.Drive180;
-import frc.robot.commands.DriveAuto;
-import frc.robot.commands.DriveDistance;
-import frc.robot.commands.Drivetrain;
-import frc.robot.commands.PreRev;
-import frc.robot.commands.Shooter;
-import frc.robot.commands.DriveReset;
-import frc.robot.commands.DriveStop;
-import frc.robot.subsystems.DrivetrainSubSys;
-import frc.robot.subsystems.LimelightSubSys;
-import frc.robot.subsystems.ShooterSubSys;
-import frc.robot.subsystems.AngleSubSys;
-import frc.robot.subsystems.ClimberSubSys;
+import frc.robot.commands.*;
+import frc.robot.commands.autonomous.*;
+import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.*;
 
@@ -53,8 +39,6 @@ public class Robot extends TimedRobot {
 	double autorotate = 120;
 	ShuffleboardTab auto = Shuffleboard.getTab("Auto");
 	ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
-
-	public static SendableChooser autopicker = new SendableChooser();
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any
@@ -76,11 +60,22 @@ public class Robot extends TimedRobot {
 		angleEntryA = auto.add("Angle", -34).withPosition(0, 1).withSize(1, 1).getEntry();
 		batVoltageEntryA = auto.add("Voltage", 0).withPosition(1, 1).withSize(1, 1).getEntry();
 		timeA = auto.add("time", 0).withPosition(2, 1).getEntry();
-		autopicker.setDefaultOption("backup shoot", automodes.backupShoot);
-		autopicker.addOption("backup only", automodes.backupOnly);
-		autopicker.addOption("2 ball right", automodes.backupShootTurnRight);
-		// auto.add("autopicker", autopicker).withPosition(0, 0).withSize(3, 1);
-		autoPickerEntry = auto.add("autoselector", 0).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
+		
+		
+		// autopicker.setDefaultOption("backup shoot", automodes.backupShoot);
+		// autopicker.addOption("backup only", automodes.backupOnly);
+		// autopicker.addOption("2 ball right", automodes.backupShootTurnRight);
+		// autoPickerEntry = auto.add("autoselector", autopicker).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
+		// auto.add("autoselector", 0);
+		
+		Command driveBack = new driveBack();
+		Command driveShoot = new driveShoot();
+		
+		autopicker.setDefaultOption("driveBack", driveBack);
+		autopicker.addOption("driveShoot", driveShoot);
+		
+		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
+		auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
 
 		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
@@ -153,7 +148,8 @@ public class Robot extends TimedRobot {
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
 		RobotContainer.drivetrainSubSys.autoInit();
 
-		m_autonomousCommand = new Autonomous(autorotate);
+		// m_autonomousCommand = new Autonomous(autorotate);
+		m_autonomousCommand = autopicker.getSelected();
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {

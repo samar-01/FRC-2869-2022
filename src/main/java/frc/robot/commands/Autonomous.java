@@ -13,6 +13,10 @@ import static frc.robot.Constants.*;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Autonomous extends SequentialCommandGroup {
+	// boolean autoCheck(automodes a){
+	// 	return (autoPickerEntry.equals(a));
+	// }
+
 	/** Creates a new Autonomous. */
 	public Autonomous(double autorotate) {
 		// if (autopicker.getSelected() == automodes.backupShoot){
@@ -22,6 +26,10 @@ public class Autonomous extends SequentialCommandGroup {
 		// 	addCommands(new DriveBackAndCalibClimb());
 		// }
 		
+		// if (autoCheck(automodes.backupOnly)){
+		// 	addCommands(new DriveBackAndCalibClimb());
+		// 	System.out.println("backup");
+		// }
 		
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
