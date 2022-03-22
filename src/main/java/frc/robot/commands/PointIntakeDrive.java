@@ -26,6 +26,7 @@ public class PointIntakeDrive extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		onFlash();
 		drive.resetPID();
 		shooterSubSys.intake();
 		status.setString("point driving");
@@ -42,6 +43,7 @@ public class PointIntakeDrive extends CommandBase {
 	public void end(boolean interrupted) {
 		drive.stop();
 		drive.resetPID();
+		offFlash();
 	}
 	// Returns true when the command should end.
 	@Override

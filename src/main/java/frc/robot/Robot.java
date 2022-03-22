@@ -164,6 +164,7 @@ public class Robot extends TimedRobot {
 		}
 		
 		initLime();
+		offFlash();
 		// autodrive.reset();
 		// autodrive.start();
 		// AngleSubSys.init();
@@ -213,8 +214,8 @@ public class Robot extends TimedRobot {
 		
 		// spinDriveButton.whenPressed(new Drive180(new DrivetrainSubSys()));
 		
-		// offFlash();
-		onFlash();
+		offFlash();
+		// onFlash();
 		onLime();
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
 
