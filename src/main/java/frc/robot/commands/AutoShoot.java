@@ -6,7 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubSys;
+
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import static frc.robot.Constants.*;
 
 public class AutoShoot extends CommandBase {
 	ShooterSubSys shooterSubSys;
@@ -21,6 +25,7 @@ public class AutoShoot extends CommandBase {
 	@Override
 	public void initialize() {
 		shooterSubSys.autoRev();
+		status.setString("shooting");
 	}
 
 	boolean done = false;

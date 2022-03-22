@@ -5,8 +5,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubSys;
-import frc.robot.subsystems.ShooterSubSys;
+
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import static frc.robot.Constants.*;
 
 public class PointIntakeDrive extends CommandBase {
 	DrivetrainSubSys drive;
@@ -25,6 +28,7 @@ public class PointIntakeDrive extends CommandBase {
 	public void initialize() {
 		drive.resetPID();
 		shooterSubSys.intake();
+		status.setString("point driving");
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

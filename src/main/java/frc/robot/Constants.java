@@ -106,6 +106,9 @@ public final class Constants {
 	public static NetworkTableEntry timeT;
 	public static NetworkTableEntry timeA;
 	public static NetworkTableEntry tarspeedthing;
+	public static NetworkTableEntry status;
+	public static NetworkTableEntry statusT;
+	public static NetworkTableEntry statusA;
 
 
 	public static SendableChooser<Command> autopicker = new SendableChooser<Command>();

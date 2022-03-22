@@ -34,7 +34,7 @@ public class Autonomous extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate), new FindBallShoot());
-		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate));
+		addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate));
 		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new AutoDown(RobotContainer.angleSubSys, RobotContainer.shooterSubSys));
 		// addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10));
 	}

@@ -56,11 +56,23 @@ public class Robot extends TimedRobot {
 		offLime();
 
 		ShuffleboardTab auto = Shuffleboard.getTab("Auto");
+
+		Command driveBack = new driveBack();
+		Command driveShoot = new driveShoot();
+		Command twoBallRight = new twoBallRight();
+		
+		autopicker.setDefaultOption("driveBack", driveBack);
+		autopicker.addOption("driveShoot", driveShoot);
+		autopicker.addOption("2 ball right", twoBallRight);
+		
+		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
+		auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
+
 		// autorotateEntry = auto.add("autorotate", autorotate).withPosition(0, 0).withSize(1, 1).getEntry();
 		angleEntryA = auto.add("Angle", -34).withPosition(0, 1).withSize(1, 1).getEntry();
 		batVoltageEntryA = auto.add("Voltage", 0).withPosition(1, 1).withSize(1, 1).getEntry();
 		timeA = auto.add("time", 0).withPosition(2, 1).getEntry();
-		
+		statusA = auto.add("status", "init").withPosition(0, 2).withSize(3, 1).getEntry();
 		
 		// autopicker.setDefaultOption("backup shoot", automodes.backupShoot);
 		// autopicker.addOption("backup only", automodes.backupOnly);
@@ -68,32 +80,25 @@ public class Robot extends TimedRobot {
 		// autoPickerEntry = auto.add("autoselector", autopicker).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
 		// auto.add("autoselector", 0);
 		
-		Command driveBack = new driveBack();
-		Command driveShoot = new driveShoot();
-		
-		autopicker.setDefaultOption("driveBack", driveBack);
-		autopicker.addOption("driveShoot", driveShoot);
-		
-		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
-		auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
-
 		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
 		velconstantEntry = teleop.addPersistent("velconstant", 7.77).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 6, "max", 10)).withPosition(0,1).withSize(3, 1).getEntry();
 		ballinEntry = teleop.add("BallIn", false).withPosition(0, 2).withSize(1, 1).getEntry();
 		revedEntry = teleop.add("Reved", false).withPosition(1, 2).withSize(1, 1).getEntry();
-		angleEntryT = teleop.add("Angle", -34).withPosition(2, 2).getEntry();
-		leftFalEntry = teleop.add("lfalc", 0).withPosition(0, 3).getEntry();
-		rightFalEntry = teleop.add("rfalc", 0).withPosition(1, 3).getEntry();
-		tarSpeedEntry = teleop.add("target", 0).withPosition(2, 3).getEntry();
-		batVoltageEntryT = teleop.add("battery",0).withPosition(0, 4).getEntry();
-		timeT = teleop.add("time", 0).withPosition(1, 4).getEntry();
+		angleEntryT = teleop.add("Angle", -34).withPosition(2, 2).withSize(1, 1).getEntry();
+		leftFalEntry = teleop.add("lfalc", 0).withPosition(0, 3).withSize(1, 1).getEntry();
+		rightFalEntry = teleop.add("rfalc", 0).withPosition(1, 3).withSize(1, 1).getEntry();
+		tarSpeedEntry = teleop.add("target", 0).withPosition(2, 3).withSize(1, 1).getEntry();
+		batVoltageEntryT = teleop.add("battery",0).withPosition(0, 4).withSize(1, 1).getEntry();
+		timeT = teleop.add("time", 0).withPosition(1, 4).withSize(1, 1).getEntry();
+		statusT = teleop.add("status", "init").withPosition(2, 4).withSize(3, 1).getEntry();
 		// tarspeedthing = teleop.add("tarspeedthing", 7000).withPosition(4, 4).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 7000, "max", 9000)).withSize(3, 1).getEntry();
 		Shuffleboard.selectTab("Auto");
 
 		batVoltageEntry = batVoltageEntryA;
 		angleEntry = angleEntryA;
 		time = timeA;
+		status = statusA;
 	}
 
 	/**
@@ -143,6 +148,7 @@ public class Robot extends TimedRobot {
 		batVoltageEntry = batVoltageEntryA;
 		angleEntry = angleEntryA;
 		time = timeA;
+		status = statusA;
 		photonResetPipe();
 		Shuffleboard.selectTab("Auto");
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
@@ -186,6 +192,7 @@ public class Robot extends TimedRobot {
 		batVoltageEntry = batVoltageEntryT;
 		angleEntry = angleEntryT;
 		time = timeT;
+		status = statusT;
 		Shuffleboard.selectTab("Teleop");
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to

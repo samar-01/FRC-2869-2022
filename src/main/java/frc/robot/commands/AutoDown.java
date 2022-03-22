@@ -5,9 +5,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.AngleSubSys;
-import frc.robot.subsystems.ShooterSubSys;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import static frc.robot.Constants.*;
 /**
  * lifts and revs
  */
@@ -31,6 +33,7 @@ public class AutoDown extends CommandBase {
 		angleSubSys.resetPID();
 		shooterSubSys.stop();
 		angleSubSys.setTargetLow();
+		status.setString("angling down");
 	}
 
 //arsh is epic

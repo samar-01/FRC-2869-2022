@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubSys;
+import static frc.robot.Constants.*;
 
 public class DriveDistance extends CommandBase {
 
@@ -24,6 +25,7 @@ public class DriveDistance extends CommandBase {
 	public void initialize() {
 		// drive.setDrivePID(distance);
 		drive.resetEncoders();
+		status.setString("driving back");
 	}
 
 	boolean done = false;
