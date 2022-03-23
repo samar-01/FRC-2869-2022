@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.RobotContainer;
+import static frc.robot.Constants.*;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -15,6 +16,6 @@ public class DriveBackAndCalibClimb extends ParallelCommandGroup {
 	public DriveBackAndCalibClimb() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new DriveDistance(-30), new CalibClimb()); // TODO check rotations to distance
+		addCommands(new DriveDistance(-encToDist(1.5)), new CalibClimb()); // TODO check rotations to distance
 	}
 }

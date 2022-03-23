@@ -112,6 +112,10 @@ public final class Constants {
 	public static NetworkTableEntry statusT;
 	public static NetworkTableEntry statusA;
 
+	public static double encToDist(double e){
+		return e * 0.1524 * Math.PI / 10;
+	}
+
 	public enum automodes{
 		backupOnly, backupShoot, left2ball, none, ballfind, testrot
 	}
