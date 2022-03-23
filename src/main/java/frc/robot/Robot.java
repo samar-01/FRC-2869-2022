@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 
 		newautopick.addOption("back", automodes.backupOnly);
 		newautopick.setDefaultOption("backshoot", automodes.backupShoot);
-		newautopick.setDefaultOption("rightball", automodes.right2ball);
+		newautopick.setDefaultOption("leftball", automodes.left2ball);
 		newautopick.setDefaultOption("none", automodes.none);
 		newautopick.setDefaultOption("ballfind", automodes.ballfind);
 		newautopick.setDefaultOption("testrot", automodes.testrot);
@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
 		velconstantEntry = teleop.addPersistent("velconstant", 6.78).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 6, "max", 10)).withPosition(0,1).withSize(3, 1).getEntry();
-		launchvelconstantEntry = teleop.add("launchvelconstant", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0.5, "max", 1.5)).withPosition(0,2).withSize(3, 1).getEntry();
+		launchvelconstantEntry = teleop.addPersistent("launchvelconstant", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0.5, "max", 1.5)).withPosition(0,2).withSize(3, 1).getEntry();
 		slider775 = teleop.addPersistent("slider775", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 5, "max", 12)).withPosition(0,3).withSize(3, 1).getEntry();
 		ballinEntry = teleop.add("BallIn", false).withPosition(3, 0).withSize(1, 1).getEntry();
 		revedEntry = teleop.add("Reved", false).withPosition(4, 0).withSize(1, 1).getEntry();
@@ -164,7 +164,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		batVoltageEntry = batVoltageEntryA;
-		angleEntry = angleEntryA;
+		angleEntry = angleEntryA; // TODO check that angle doesnt go to low in auto
 		time = timeA;
 		status = statusA;
 		photonResetPipe();
@@ -174,15 +174,15 @@ public class Robot extends TimedRobot {
 
 		m_autonomousCommand = new Autonomous(newautopick.getSelected());
 		// m_autonomousCommand = autopicker.getSelected();
-
+		
+		initLime();
+		offFlash();
+		
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
 			System.out.println("auto scheduled");
 			m_autonomousCommand.schedule();
 		}
-		
-		initLime();
-		offFlash();
 		// autodrive.reset();
 		// autodrive.start();
 		// AngleSubSys.init();

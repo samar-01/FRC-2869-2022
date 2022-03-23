@@ -11,9 +11,12 @@ import static frc.robot.Constants.*;
 
 public class FindBall extends CommandBase {
 	DrivetrainSubSys drivetrainSubSys;
+	double tolerance;
 	/** Creates a new FindBall. */
-	public FindBall() {
+	public FindBall(double tolerance) {
+		this.tolerance = tolerance;
 		this.drivetrainSubSys = RobotContainer.drivetrainSubSys;
+		addRequirements(drivetrainSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
@@ -31,8 +34,9 @@ public class FindBall extends CommandBase {
 		if (pTrack() != Double.POSITIVE_INFINITY){
 			done = true;
 		} else {
-			drivetrainSubSys.drv(0, 0.3);
+			drivetrainSubSys.drv(0, 0.2); // TODO check if too fast/slow
 		}
+		// TODO yell at ankur if he doesnt implement navx stuff to avoid turning too far
 	}
 
 	// Called once the command ends or is interrupted.

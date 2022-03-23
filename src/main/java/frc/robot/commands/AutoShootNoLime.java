@@ -12,10 +12,10 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
 
-public class AutoShoot extends CommandBase {
+public class AutoShootNoLime extends CommandBase {
 	ShooterSubSys shooterSubSys;
 	/** Creates a new AutoShoot. */
-	public AutoShoot() {
+	public AutoShootNoLime() {
 		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
@@ -24,7 +24,7 @@ public class AutoShoot extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		shooterSubSys.autoRev();
+		shooterSubSys.PIDSpeed(7000); // TODO calibrate
 		status.setString("shooting");
 	}
 

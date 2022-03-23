@@ -17,22 +17,22 @@ public class RotateNoEncoder extends CommandBase {
 	private int cycleCount = 0;
 	boolean done = false;
 	double turnValue;
-
+	double turnspeed = 0.4;
 	/**
 	 * Creates the Rotate Command
 	 * 
 	 * @param goRight If set to true then machine rotates right.
 	 * @param cycles cycle
 	 */
-	public RotateNoEncoder(boolean goRight, int cycles) {
+	public RotateNoEncoder(boolean goRight, double cycles) {
 		this.drive = RobotContainer.drivetrainSubSys;
 		// this.distance = distance;
-		this.numCycles = cycles;
+		this.numCycles = (int)cycles;
 		addRequirements(drive);
 		if (goRight) {
-			turnValue = 0.4;
+			turnValue = turnspeed;
 		} else {
-			turnValue = -0.4;
+			turnValue = -turnspeed;
 		}
 	}
 
@@ -50,13 +50,15 @@ public class RotateNoEncoder extends CommandBase {
 				drive.drv(0, turnValue * cycleCount / 5);
 			} else if (cycleCount > numCycles - 5) {
 				drive.drv(0, turnValue * (numCycles - cycleCount) / 5);
-			} else
+			} else {
 				drive.drv(0, turnValue);
+			}
 			cycleCount++;
 		} else {
-			drive.stop();
 			done = true;
 		}
+
+
 	}
 
 	// Called once the command ends or is interrupted.

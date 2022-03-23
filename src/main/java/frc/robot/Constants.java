@@ -113,7 +113,7 @@ public final class Constants {
 	public static NetworkTableEntry statusA;
 
 	public enum automodes{
-		backupOnly, backupShoot, right2ball, none, ballfind, testrot
+		backupOnly, backupShoot, left2ball, none, ballfind, testrot
 	}
 	
 	// public static SendableChooser<Command> autopicker = new SendableChooser<Command>();

@@ -11,12 +11,12 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
 
-public class AutoPointGoal extends CommandBase {
+public class AutoFindGoal extends CommandBase {
 
 	private final DrivetrainSubSys drive;
 
 	/** Creates a new Drivetrain. */
-	public AutoPointGoal() {
+	public AutoFindGoal() {
 		this.drive = RobotContainer.drivetrainSubSys;
 		addRequirements(drive);
 	}
@@ -30,7 +30,9 @@ public class AutoPointGoal extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.point();
+		if (!drive.isLimePointed()){
+			drive.drv(0, 0.2);
+		}
 	}
 
 	// Called once the command ends or is interrupted.

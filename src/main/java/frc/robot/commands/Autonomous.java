@@ -20,20 +20,19 @@ public class Autonomous extends SequentialCommandGroup {
 
 	/** Creates a new Autonomous. */
 	public Autonomous(automodes a) {
+		// switch a: // TODO sooon
 		if (a == automodes.backupOnly){
 			addCommands(new driveBack());
 		} else if (a == automodes.backupShoot){
 			addCommands(new driveShoot());
 		} else if (a == automodes.none){
 			addCommands(new none());
-		} else if (a == automodes.right2ball){
+		} else if (a == automodes.left2ball){
 			addCommands(new twoBallLeft());
 		} else if (a == automodes.ballfind){
 			addCommands(new ballfind());
 		} else if (a == automodes.testrot){
 			addCommands(new testrot());
-		} else if (a == automodes.right2ball){
-			addCommands(new twoBallLeft());
 		}
 
 		// if (autopicker.getSelected() == automodes.backupShoot){
