@@ -14,10 +14,13 @@ public class DriveDistance extends CommandBase {
 	private final DrivetrainSubSys drive;
 	private final double distance;
 
-	/** Creates a new Drivetrain. */
+	/**
+	 * 
+	 * @param distance meters
+	 */
 	public DriveDistance(double distance) {
 		this.drive = RobotContainer.drivetrainSubSys;
-		this.distance = distance;
+		this.distance = encToDist(distance);
 		addRequirements(drive);
 	}
 

@@ -16,6 +16,6 @@ public class DriveBackAndCalibClimb extends ParallelCommandGroup {
 	public DriveBackAndCalibClimb() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new DriveDistance(-encToDist(1.5)), new CalibClimb()); // TODO check rotations to distance
+		addCommands(new DriveDistance(-1.5), new CalibClimb()); // TODO check rotations to distance
 	}
 }

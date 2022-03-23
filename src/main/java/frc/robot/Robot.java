@@ -300,7 +300,8 @@ public class Robot extends TimedRobot {
 			autoSchedule(RobotContainer.angle);
 		}
 		
-		LimelightSubSys.getDistance();
+		// LimelightSubSys.getDistance();
+		distanceEntry.setDouble(distance());
 	}
 
 	@Override
