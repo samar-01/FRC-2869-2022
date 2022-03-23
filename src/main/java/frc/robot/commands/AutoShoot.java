@@ -29,14 +29,18 @@ public class AutoShoot extends CommandBase {
 	}
 
 	boolean done = false;
+	Timer revtimer = new Timer();
 	Timer timer = new Timer();
+	double revdelay = 0.5;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (shooterSubSys.isAtSpeed() && timer.get() == 0){
+		if (shooterSubSys.isAtSpeed() && revtimer.get() == 0){
+			revtimer.start();
+		} else if (shooterSubSys.isAtSpeed() && timer.get() == 0 && revtimer.hasElapsed(revdelay)){
 			timer.start();
 			shooterSubSys.shoot();
-		} else if (timer.hasElapsed(1)){
+		} else if (timer.hasElapsed(1) && revtimer.hasElapsed(revdelay)){
 			done = true;
 		}
 	}
