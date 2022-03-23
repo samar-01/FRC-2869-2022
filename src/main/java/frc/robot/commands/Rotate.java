@@ -32,6 +32,7 @@ public class Rotate extends CommandBase {
 	@Override
 	public void execute() {
 		drive.spin();
+		// System.out.println(angle);
 	}
 
 	// Called once the command ends or is interrupted.

@@ -93,6 +93,8 @@ public final class Constants {
 	public static NetworkTableEntry ballinEntry;
 	public static NetworkTableEntry revedEntry;
 	public static NetworkTableEntry velconstantEntry;
+	public static NetworkTableEntry launchvelconstantEntry;
+	public static NetworkTableEntry slider775;
 	public static NetworkTableEntry angleEntry;
 	public static NetworkTableEntry angleEntryT;
 	public static NetworkTableEntry angleEntryA;
@@ -110,13 +112,14 @@ public final class Constants {
 	public static NetworkTableEntry statusT;
 	public static NetworkTableEntry statusA;
 
-
-	public static SendableChooser<Command> autopicker = new SendableChooser<Command>();
+	public enum automodes{
+		backupOnly, backupShoot, right2ball, none, ballfind, testrot
+	}
+	
+	// public static SendableChooser<Command> autopicker = new SendableChooser<Command>();
+	
+	public static SendableChooser<automodes> newautopick = new SendableChooser<automodes>();
 	public static NetworkTableEntry autoPickerEntry;
-	// public enum automodes{
-	// 	backupOnly, backupShoot, backupShootTurnRight
-	// }
-	// public static automodes state = automodes.backupOnly;
 	public static Command auto;
 
 	public static final PhotonCamera photon = new PhotonCamera("photonvision");
@@ -165,7 +168,7 @@ public final class Constants {
 	public static double pTrack(){
 		// return Double.POSITIVE_INFINITY;
 
-		// onFlash();
+		onFlash();
 		PhotonTrackedTarget target = pTarget();
 		if (target != null){
 			return target.getYaw();

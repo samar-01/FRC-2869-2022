@@ -14,12 +14,15 @@ import static frc.robot.Constants.*;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class twoBallRight extends SequentialCommandGroup {
+public class twoBallLeft extends SequentialCommandGroup {
 	/** Creates a new twoBallRight. */
-	public twoBallRight() {
+	public twoBallLeft() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		double angle = 120;
-		addCommands(new driveBack(), new LiftAlignShoot(), new DownRotate(angle), new FindBall(), new PointIntakeDrive(), new Rotate(-angle), new LiftAlignShoot());
+		double angle = 60;
+		angle = 100/angle;
+		// addCommands(new driveBack(), new LiftAlignShoot(), new DownRotate(angle), new FindBall(), new PointIntakeDrive(), new Rotate(-angle));
+		// addCommands(new driveBack(), new LiftShoot(), new AutoDown(), new RotateNoEncoder(false, (int)angle), new FindBall(), new RotateNoEncoder(true, (int)angle), new LiftAlignShoot(), new AutoDown());
+		addCommands(new driveShoot(), new RotateNoEncoder(false, (int)angle), new FindBall(), new RotateNoEncoder(true, (int)angle), new LiftAlignShoot(), new AutoDown());
 	}
 }

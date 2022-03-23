@@ -19,6 +19,6 @@ public class driveShoot extends SequentialCommandGroup {
 	public driveShoot() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new driveBack(), new LiftAlignShoot(), new AutoDown());
+		addCommands(new driveBack(), new LiftShoot(), new AutoDown());
 	}
 }

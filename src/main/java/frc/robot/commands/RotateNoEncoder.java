@@ -7,37 +7,52 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
-import static frc.robot.Constants.*;
 
-public class DriveDistance extends CommandBase {
+public class RotateNoEncoder extends CommandBase {
 
 	private final DrivetrainSubSys drive;
-	private final double distance;
+	// private final double distance;
 
-	/** Creates a new Drivetrain. */
-	public DriveDistance(double distance) {
+	private int numCycles;
+	private int cycleCount = 0;
+	boolean done = false;
+	double turnValue;
+
+	/**
+	 * Creates the Rotate Command
+	 * 
+	 * @param goRight If set to true then machine rotates right.
+	 * @param cycles cycle
+	 */
+	public RotateNoEncoder(boolean goRight, int cycles) {
 		this.drive = RobotContainer.drivetrainSubSys;
-		this.distance = distance;
+		// this.distance = distance;
+		this.numCycles = cycles;
 		addRequirements(drive);
+		if (goRight) {
+			turnValue = 0.4;
+		} else {
+			turnValue = -0.4;
+		}
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		// drive.setDrivePID(distance);
-		drive.resetEncoders();
-		status.setString("driving back");
+		// do we need toinitialize anything?
 	}
-
-	boolean done = false;
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		// drive.drivePID();
-		// drive.autoDrive();
-		if (drive.getEncDistance() > distance){
-			drive.drv(-0.6, 0);
+		if (cycleCount < numCycles) {
+			if (cycleCount < 5) {
+				drive.drv(0, turnValue * cycleCount / 5);
+			} else if (cycleCount > numCycles - 5) {
+				drive.drv(0, turnValue * (numCycles - cycleCount) / 5);
+			} else
+				drive.drv(0, turnValue);
+			cycleCount++;
 		} else {
 			drive.stop();
 			done = true;

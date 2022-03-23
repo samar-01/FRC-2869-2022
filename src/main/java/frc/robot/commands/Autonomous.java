@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
+import frc.robot.commands.autonomous.*;
 import frc.robot.subsystems.*;
 import static frc.robot.Constants.*;
 
@@ -18,7 +19,23 @@ public class Autonomous extends SequentialCommandGroup {
 	// }
 
 	/** Creates a new Autonomous. */
-	public Autonomous(double autorotate) {
+	public Autonomous(automodes a) {
+		if (a == automodes.backupOnly){
+			addCommands(new driveBack());
+		} else if (a == automodes.backupShoot){
+			addCommands(new driveShoot());
+		} else if (a == automodes.none){
+			addCommands(new none());
+		} else if (a == automodes.right2ball){
+			addCommands(new twoBallLeft());
+		} else if (a == automodes.ballfind){
+			addCommands(new ballfind());
+		} else if (a == automodes.testrot){
+			addCommands(new testrot());
+		} else if (a == automodes.right2ball){
+			addCommands(new twoBallLeft());
+		}
+
 		// if (autopicker.getSelected() == automodes.backupShoot){
 		// 	addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new AutoDown(RobotContainer.angleSubSys, RobotContainer.shooterSubSys));
 		// }
@@ -34,7 +51,7 @@ public class Autonomous extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate), new FindBallShoot());
-		addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate));
+		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new DownRotate(autorotate));
 		// addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new AutoDown(RobotContainer.angleSubSys, RobotContainer.shooterSubSys));
 		// addCommands(new DriveDistance(RobotContainer.drivetrainSubSys, -10));
 	}

@@ -117,8 +117,8 @@ public class ShooterSubSys extends SubsystemBase {
 		return Math.abs((-leftfal.getSensorCollection().getIntegratedSensorVelocity() + rightfal.getSensorCollection().getIntegratedSensorVelocity())/2 - tarspeed) < 100;
 	}
 
-	static final double lim775 = 0.30;
-	static final double falconInLim = 0.25;
+	static final double lim775 = 0.60;
+	static final double falconInLim = 0.35;
 	static double falconfast = 0.2;
 	static double tarspeed = 0;
 
@@ -141,8 +141,13 @@ public class ShooterSubSys extends SubsystemBase {
 	}
 
 	public void shoot(){
-		left775.set(TalonSRXControlMode.PercentOutput, -9.0/RobotController.getBatteryVoltage());
-		right775.set(TalonSRXControlMode.PercentOutput, 9.0/RobotController.getBatteryVoltage());
+		double v = 9;
+		try {
+			v = slider775.getDouble(9);
+		} catch (Exception e){
+		}
+		left775.set(TalonSRXControlMode.PercentOutput, -v/RobotController.getBatteryVoltage());
+		right775.set(TalonSRXControlMode.PercentOutput, v/RobotController.getBatteryVoltage());
 	}
 
 	static DigitalInput intake = new DigitalInput(2);
@@ -162,7 +167,7 @@ public class ShooterSubSys extends SubsystemBase {
 		revedEntry.setBoolean(isAtSpeed());
 		ballinEntry.setBoolean(!isIntakeEmpty());
 		//Gets the value from the SmartDashboard
-		SmartDashboard.getNumber("falcpower", falconfast);
+		// SmartDashboard.getNumber("falcpower", falconfast);
 		// SmartDashboard.putBoolean("intaked", !intake.get());
 		// System.out.println(intake.get());
 		// SmartDashboard.getNumber("vel", calcVel(560, 60));
@@ -204,8 +209,8 @@ public class ShooterSubSys extends SubsystemBase {
 		else if (opxbox.getPOV() == 270){
 			onFlash();
 		}
-		leftFalEntry.setNumber(leftfal.getSensorCollection().getIntegratedSensorVelocity());
-		rightFalEntry.setNumber(rightfal.getSensorCollection().getIntegratedSensorVelocity());
+		// leftFalEntry.setNumber(leftfal.getSensorCollection().getIntegratedSensorVelocity());
+		// rightFalEntry.setNumber(rightfal.getSensorCollection().getIntegratedSensorVelocity());
 		tarSpeedEntry.setNumber(calcVel());
 		// SmartDashboard.putNumber("target speed1", (calcVel()));
 		// SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
@@ -261,7 +266,15 @@ public class ShooterSubSys extends SubsystemBase {
 		// launchpad is 7805
 
 		if (opxbox.getPOV() == 90){
-			return 7860;
+			try {
+				return 7860 * launchvelconstantEntry.getDouble(1);
+			} catch (Exception e){
+				return 7860;
+			}
+		
+
+			
+			// return 7860;
 		}
 
 		// tinyurl.com/projmath
@@ -282,7 +295,9 @@ public class ShooterSubSys extends SubsystemBase {
 		vel *= 60;
 		//correct for real life;
 		// thing = SmartDashboard.getNumber("velconstant", 7.2);
-		thing = SmartDashboard.getNumber("velconstant", thing);
+		// thing = SmartDashboard.getNumber("velconstant", thing);
+		// thing = 7.77;
+		thing = velconstantEntry.getDouble(7.77);
 		vel *= thing;
 		// 9v constant - 
 

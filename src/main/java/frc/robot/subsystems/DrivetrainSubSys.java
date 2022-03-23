@@ -114,9 +114,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 			pidturn.reset();
 		}
 		double track = -pTrack();
-		// System.out.println(track);
-		if (track != Double.POSITIVE_INFINITY){
+		System.out.println(track);
+		if (track != Double.NEGATIVE_INFINITY){
 			autoTurn(track,0.4);
+			// System.out.println(track);
 		}
 	}
 
@@ -129,6 +130,8 @@ public class DrivetrainSubSys extends SubsystemBase {
 		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		if (xbox.getRightBumper()){
 			speed *= 0.7;
+		} else if (xbox.getLeftBumper()){
+			
 		} else {
 			speed *= 0.45;
 		}
@@ -275,10 +278,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// }
 		turn = spinner.calculate(-error);
 		turn = clamp(turn, -maxspeed, maxspeed);
-		if(ahrs.isConnected())
+		if (ahrs.isConnected()){
 			drv(0, turn);
-		else
+		} else{
 			spun=true;
+		}
 		// SmartDashboard.putString("livepos", livepos+"");
 		// SmartDashboard.putString("pos", pos+"");
 		// SmartDashboard.putString("spintarget", spinTarget+"");

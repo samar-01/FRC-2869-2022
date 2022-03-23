@@ -25,7 +25,7 @@ public class AngleSubSys extends SubsystemBase {
 	static final double ratio = 5 * 4 * 3 * 4;
 	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
 	static PIDController armPID = new PIDController(kp, ki, kd);
-	public static double base = -34, max = 70, mid = 45;
+	public static double base = -34, max = 70, mid = 55;
 	public static double target = base, limit = 80;
 	// set target to real target - 10
 	static boolean past = false;

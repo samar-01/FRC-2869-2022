@@ -29,6 +29,7 @@ public class PointIntakeDrive extends CommandBase {
 		onFlash();
 		drive.resetPID();
 		shooterSubSys.intake();
+		photonResetPipe();
 		status.setString("point driving");
 	}
 
@@ -36,6 +37,7 @@ public class PointIntakeDrive extends CommandBase {
 	@Override
 	public void execute() {
 		drive.ballTurnDrive();
+
 	}
 
 	// Called once the command ends or is interrupted.
@@ -43,6 +45,7 @@ public class PointIntakeDrive extends CommandBase {
 	public void end(boolean interrupted) {
 		drive.stop();
 		drive.resetPID();
+		shooterSubSys.stop();
 		offFlash();
 	}
 	// Returns true when the command should end.

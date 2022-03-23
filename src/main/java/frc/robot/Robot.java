@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -57,16 +58,31 @@ public class Robot extends TimedRobot {
 
 		ShuffleboardTab auto = Shuffleboard.getTab("Auto");
 
-		Command driveBack = new driveBack();
-		Command driveShoot = new driveShoot();
-		Command twoBallRight = new twoBallRight();
+		// Command driveBack = new driveBack();
+		// Command driveShoot = new driveShoot();
+		// Command twoBallRight = new twoBallLeft();
+		// Command ballfind = new ballfind();
+		// Command testrot = new testrot();
+		// Command none = new none();
 		
-		autopicker.setDefaultOption("driveBack", driveBack);
-		autopicker.addOption("driveShoot", driveShoot);
-		autopicker.addOption("2 ball right", twoBallRight);
+		// autopicker.addOption("driveBack", driveBack);
+		// autopicker.setDefaultOption("driveShoot", driveShoot);
+		// autopicker.addOption("2 ball right", twoBallRight);
+		// autopicker.addOption("ballfind", ballfind);
+		// autopicker.addOption("testrot", testrot);
+		// autopicker.addOption("none", none);
 		
 		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
-		auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
+		// auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
+
+		newautopick.addOption("back", automodes.backupOnly);
+		newautopick.setDefaultOption("backshoot", automodes.backupShoot);
+		newautopick.setDefaultOption("rightball", automodes.right2ball);
+		newautopick.setDefaultOption("none", automodes.none);
+		newautopick.setDefaultOption("ballfind", automodes.ballfind);
+		newautopick.setDefaultOption("testrot", automodes.testrot);
+
+		auto.add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 
 		// autorotateEntry = auto.add("autorotate", autorotate).withPosition(0, 0).withSize(1, 1).getEntry();
 		angleEntryA = auto.add("Angle", -34).withPosition(0, 1).withSize(1, 1).getEntry();
@@ -82,15 +98,17 @@ public class Robot extends TimedRobot {
 		
 		ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
 		distanceEntry = teleop.add("Distance", 0.0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 7)).withPosition(0, 0).withSize(3, 1).getEntry();
-		velconstantEntry = teleop.addPersistent("velconstant", 7.77).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 6, "max", 10)).withPosition(0,1).withSize(3, 1).getEntry();
-		ballinEntry = teleop.add("BallIn", false).withPosition(0, 2).withSize(1, 1).getEntry();
-		revedEntry = teleop.add("Reved", false).withPosition(1, 2).withSize(1, 1).getEntry();
-		angleEntryT = teleop.add("Angle", -34).withPosition(2, 2).withSize(1, 1).getEntry();
-		leftFalEntry = teleop.add("lfalc", 0).withPosition(0, 3).withSize(1, 1).getEntry();
-		rightFalEntry = teleop.add("rfalc", 0).withPosition(1, 3).withSize(1, 1).getEntry();
-		tarSpeedEntry = teleop.add("target", 0).withPosition(2, 3).withSize(1, 1).getEntry();
-		batVoltageEntryT = teleop.add("battery",0).withPosition(0, 4).withSize(1, 1).getEntry();
-		timeT = teleop.add("time", 0).withPosition(1, 4).withSize(1, 1).getEntry();
+		velconstantEntry = teleop.addPersistent("velconstant", 6.78).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 6, "max", 10)).withPosition(0,1).withSize(3, 1).getEntry();
+		launchvelconstantEntry = teleop.add("launchvelconstant", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0.5, "max", 1.5)).withPosition(0,2).withSize(3, 1).getEntry();
+		slider775 = teleop.addPersistent("slider775", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 5, "max", 12)).withPosition(0,3).withSize(3, 1).getEntry();
+		ballinEntry = teleop.add("BallIn", false).withPosition(3, 0).withSize(1, 1).getEntry();
+		revedEntry = teleop.add("Reved", false).withPosition(4, 0).withSize(1, 1).getEntry();
+		angleEntryT = teleop.add("Angle", -34).withPosition(5, 0).withSize(1, 1).getEntry();
+		// leftFalEntry = teleop.add("lfalc", 0).withPosition(0, 4).withSize(1, 1).getEntry();
+		// rightFalEntry = teleop.add("rfalc", 0).withPosition(1, 4).withSize(1, 1).getEntry();
+		tarSpeedEntry = teleop.add("target", 0).withPosition(1, 4).withSize(1, 1).getEntry();
+		batVoltageEntryT = teleop.add("battery",0).withPosition(1, 4).withSize(1, 1).getEntry();
+		timeT = teleop.add("time", 0).withPosition(0, 4).withSize(1, 1).getEntry();
 		statusT = teleop.add("status", "init").withPosition(2, 4).withSize(3, 1).getEntry();
 		// tarspeedthing = teleop.add("tarspeedthing", 7000).withPosition(4, 4).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 7000, "max", 9000)).withSize(3, 1).getEntry();
 		Shuffleboard.selectTab("Auto");
@@ -154,8 +172,8 @@ public class Robot extends TimedRobot {
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
 		RobotContainer.drivetrainSubSys.autoInit();
 
-		// m_autonomousCommand = new Autonomous(autorotate);
-		m_autonomousCommand = autopicker.getSelected();
+		m_autonomousCommand = new Autonomous(newautopick.getSelected());
+		// m_autonomousCommand = autopicker.getSelected();
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -219,6 +237,12 @@ public class Robot extends TimedRobot {
 		onLime();
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
 
+		try{
+			HttpCamera ll = new HttpCamera("limelight", "https://limelight.local:5800/stream.mjpeg");
+			teleop.add("limelight", ll).withPosition(3, 0).withSize(3, 3);
+		} catch (Exception e){
+
+		}
 	}
 
 	public void initLime(){
@@ -230,6 +254,10 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
+		// System.out.println(getFlashCurrent());
+		// System.out.println(RobotContainer.shooterSubSys.left775.getSupplyCurrent());
+		// status.setDouble(getFlashCurrent());
+		
 		// System.out.println(velconstantEntry.getNumber(0));
 		// System.out.println(ShooterSubSys.isIntakeEmpty());
 
