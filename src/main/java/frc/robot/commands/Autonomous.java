@@ -33,6 +33,8 @@ public class Autonomous extends SequentialCommandGroup {
 				addCommands(new ballfind());
 			case testrot:
 				addCommands(new testrot());
+			case fender:
+				addCommands(new fenderhigh());
 			default:
 				addCommands(new none());
 		}

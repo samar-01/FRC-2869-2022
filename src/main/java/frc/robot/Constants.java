@@ -87,7 +87,7 @@ public final class Constants {
 	// public static final JoystickButton stopDriveButton = new JoystickButton(xboxjoystick, 1); // A
 	// public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
 	// public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
-	public static final JoystickButton closeHigh = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
+	// public static final JoystickButton closeHigh = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 
@@ -127,7 +127,7 @@ public final class Constants {
 	}
 
 	public enum automodes{
-		backupOnly, backupShoot, left2ball, none, ballfind, testrot
+		backupOnly, backupShoot, left2ball, none, ballfind, testrot, fender
 	}
 	
 	// public static SendableChooser<Command> autopicker = new SendableChooser<Command>();

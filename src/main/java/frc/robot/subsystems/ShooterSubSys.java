@@ -192,16 +192,16 @@ public class ShooterSubSys extends SubsystemBase {
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
 			
-		// } else if (opxbox.getRightBumper()){
-		// 	left775.set(TalonSRXControlMode.PercentOutput, 1);
-		// 	right775.set(TalonSRXControlMode.PercentOutput, -1);
-		// 	leftfal.set(ControlMode.PercentOutput, 1);
-		// 	rightfal.set(ControlMode.PercentOutput, -1);
-		// } else if (opxbox.getLeftBumper()){
-		// 	left775.set(TalonSRXControlMode.PercentOutput, -1);
-		// 	right775.set(TalonSRXControlMode.PercentOutput, 1);
-		// 	leftfal.set(ControlMode.PercentOutput, -1);
-		// 	rightfal.set(ControlMode.PercentOutput, 1);
+		} else if (opxbox.getRightBumper()){
+			left775.set(TalonSRXControlMode.PercentOutput, 1);
+			right775.set(TalonSRXControlMode.PercentOutput, -1);
+			leftfal.set(ControlMode.PercentOutput, 1);
+			rightfal.set(ControlMode.PercentOutput, -1);
+		} else if (opxbox.getLeftBumper()){
+			left775.set(TalonSRXControlMode.PercentOutput, -1);
+			right775.set(TalonSRXControlMode.PercentOutput, 1);
+			leftfal.set(ControlMode.PercentOutput, -1);
+			rightfal.set(ControlMode.PercentOutput, 1);
 		} else {
 			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*1);
 			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getRightY()*1);

@@ -77,7 +77,8 @@ public class Robot extends TimedRobot {
 		// auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
 
 		newautopick.addOption("back", automodes.backupOnly);
-		newautopick.setDefaultOption("backshoot", automodes.backupShoot);
+		newautopick.setDefaultOption("fender", automodes.fender);
+		newautopick.addOption("backshoot", automodes.backupShoot);
 		newautopick.addOption("leftball", automodes.left2ball);
 		newautopick.addOption("none", automodes.none);
 		newautopick.addOption("ballfind", automodes.ballfind);
@@ -238,6 +239,7 @@ public class Robot extends TimedRobot {
 		// onFlash();
 		onLime();
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+		// closeHigh.whenPressed(new CloseHigh());
 
 		try{
 			HttpCamera ll = new HttpCamera("limelight", "http://limelight.local:5800/stream.mjpeg"); // TODO check this
@@ -297,6 +299,8 @@ public class Robot extends TimedRobot {
 		} else if (opxbox.getYButton()){
 			// RobotContainer.shooterSubSys.rev();
 			autoSchedule(RobotContainer.autoMid);
+		} else if (opxbox.getPOV() == 270){
+			autoSchedule(RobotContainer.closeHigh);
 		} else if (!RobotContainer.pointIntake.isScheduled() && !RobotContainer.autoLift.isScheduled() && !RobotContainer.autoDown.isScheduled() && !RobotContainer.autoMid.isScheduled()){
 			autoSchedule(RobotContainer.shooter);
 			autoSchedule(RobotContainer.angle);
