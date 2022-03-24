@@ -132,6 +132,10 @@ public class ShooterSubSys extends SubsystemBase {
 		rightfal.set(TalonFXControlMode.Velocity, tarspeed);
 	}
 
+	public static void highClose(){
+		PIDSpeed(closeVel);
+	}
+
 	public static void rev(){
 		PIDSpeed(7000);
 	}
@@ -188,31 +192,25 @@ public class ShooterSubSys extends SubsystemBase {
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
 			
-		} else if (opxbox.getRightBumper()){
-			left775.set(TalonSRXControlMode.PercentOutput, 1);
-			right775.set(TalonSRXControlMode.PercentOutput, -1);
-			leftfal.set(ControlMode.PercentOutput, 1);
-			rightfal.set(ControlMode.PercentOutput, -1);
-		} else if (opxbox.getLeftBumper()){
-			left775.set(TalonSRXControlMode.PercentOutput, -1);
-			right775.set(TalonSRXControlMode.PercentOutput, 1);
-			leftfal.set(ControlMode.PercentOutput, -1);
-			rightfal.set(ControlMode.PercentOutput, 1);
+		// } else if (opxbox.getRightBumper()){
+		// 	left775.set(TalonSRXControlMode.PercentOutput, 1);
+		// 	right775.set(TalonSRXControlMode.PercentOutput, -1);
+		// 	leftfal.set(ControlMode.PercentOutput, 1);
+		// 	rightfal.set(ControlMode.PercentOutput, -1);
+		// } else if (opxbox.getLeftBumper()){
+		// 	left775.set(TalonSRXControlMode.PercentOutput, -1);
+		// 	right775.set(TalonSRXControlMode.PercentOutput, 1);
+		// 	leftfal.set(ControlMode.PercentOutput, -1);
+		// 	rightfal.set(ControlMode.PercentOutput, 1);
 		} else {
 			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*1);
 			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getRightY()*1);
 			leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getRightY());
 			rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getRightY());
 		}
-		if (opxbox.getPOV() == 90){
-			offFlash();
-		}
-		else if (opxbox.getPOV() == 270){
-			onFlash();
-		}
 		// leftFalEntry.setNumber(leftfal.getSensorCollection().getIntegratedSensorVelocity());
 		// rightFalEntry.setNumber(rightfal.getSensorCollection().getIntegratedSensorVelocity());
-		tarSpeedEntry.setNumber(calcVel());
+		tarSpeedEntry.setNumber(tarspeed);
 		// SmartDashboard.putNumber("target speed1", (calcVel()));
 		// SmartDashboard.putNumber("leftfalconspeed", leftfal.getSensorCollection().getIntegratedSensorVelocity());
 		// SmartDashboard.putNumber("rightfalconspeed", rightfal.getSensorCollection().getIntegratedSensorVelocity());

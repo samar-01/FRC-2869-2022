@@ -240,7 +240,7 @@ public class Robot extends TimedRobot {
 		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
 
 		try{
-			HttpCamera ll = new HttpCamera("limelight", "https://limelight.local:5800/stream.mjpeg");
+			HttpCamera ll = new HttpCamera("limelight", "http://limelight.local:5800/stream.mjpeg"); // TODO check this
 			teleop.add("limelight", ll).withPosition(3, 0).withSize(3, 3);
 		} catch (Exception e){
 

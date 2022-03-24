@@ -52,6 +52,9 @@ public class AngleSubSys extends SubsystemBase {
 	public void setTargetHigh(){
 		target = max;
 	}
+	public void setTargetHighClose(){
+		target = closeAngle;
+	}
 	public void setTargetMid(){
 		target = mid;
 	}
