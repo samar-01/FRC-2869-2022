@@ -37,7 +37,7 @@ public class CloseHigh extends CommandBase {
 		angleSubSys.pidmove();
 		if (shooterSubSys.isAtSpeed() && revtimer.get() == 0){
 			revtimer.start();
-		} else if (shooterSubSys.isAtSpeed() && timer.get() == 0 && revtimer.hasElapsed(revdelay)){
+		} else if (shooterSubSys.isAtSpeed() && timer.get() == 0 && revtimer.hasElapsed(revdelay) && angleSubSys.isLifted()){
 			timer.start();
 			shooterSubSys.shoot();
 		} else if (timer.hasElapsed(shoottime) && revtimer.hasElapsed(revdelay)){
