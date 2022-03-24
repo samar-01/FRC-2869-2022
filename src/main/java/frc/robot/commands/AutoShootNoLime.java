@@ -31,7 +31,7 @@ public class AutoShootNoLime extends CommandBase {
 	boolean done = false;
 	Timer revtimer = new Timer();
 	Timer timer = new Timer();
-	double revdelay = 0.5, shoottime = 0.5;
+	double revdelay = 1, shoottime = 0.5;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {

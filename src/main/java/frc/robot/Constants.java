@@ -116,6 +116,10 @@ public final class Constants {
 		return e * 0.1524 * Math.PI / 10;
 	}
 
+	public static double distToEnc(double d){
+		return (d*10)/(0.1524 * Math.PI);
+	}
+
 	public enum automodes{
 		backupOnly, backupShoot, left2ball, none, ballfind, testrot
 	}
@@ -301,7 +305,7 @@ public final class Constants {
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 	}
 	public static void offLime(){
-		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+		// NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
 	}
 
 

@@ -153,7 +153,8 @@ public class ShooterSubSys extends SubsystemBase {
 	static DigitalInput intake = new DigitalInput(2);
 
 	public static boolean isIntakeEmpty(){
-		return intake.get();
+		// return intake.get();
+		return true;
 	}
 
 	public void intake(){

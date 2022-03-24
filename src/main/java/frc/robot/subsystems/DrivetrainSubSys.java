@@ -117,7 +117,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		System.out.println(track);
 		if (track != Double.NEGATIVE_INFINITY){
 			autoTurn(track,0.4);
-			// System.out.println(track);
+			System.out.println(track);
 		}
 	}
 

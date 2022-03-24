@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		System.out.println("----ROBOT INIT----");
 		// Instantiate our RobotContainer.  This will perform all our button bindings, and put our
 		// autonomous chooser on the dashboard.
 		m_robotContainer = new RobotContainer();
@@ -77,10 +78,10 @@ public class Robot extends TimedRobot {
 
 		newautopick.addOption("back", automodes.backupOnly);
 		newautopick.setDefaultOption("backshoot", automodes.backupShoot);
-		newautopick.setDefaultOption("leftball", automodes.left2ball);
-		newautopick.setDefaultOption("none", automodes.none);
-		newautopick.setDefaultOption("ballfind", automodes.ballfind);
-		newautopick.setDefaultOption("testrot", automodes.testrot);
+		newautopick.addOption("leftball", automodes.left2ball);
+		newautopick.addOption("none", automodes.none);
+		newautopick.addOption("ballfind", automodes.ballfind);
+		newautopick.addOption("testrot", automodes.testrot);
 
 		auto.add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 
@@ -134,7 +135,8 @@ public class Robot extends TimedRobot {
 		// block in order for anything in the Command-based framework to work.
 		CommandScheduler.getInstance().run();
 		batVoltageEntry.setNumber(RobotController.getBatteryVoltage());
-		time.setNumber(Timer.getMatchTime());
+		time.setNumber(RobotContainer.shooterSubSys.calcVel());
+		// time.setNumber(Timer.getMatchTime());
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */

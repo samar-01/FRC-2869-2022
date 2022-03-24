@@ -23,8 +23,8 @@ public class ClimberSubSys extends SubsystemBase {
 	static PIDController lPID = new PIDController(kp, ki, kd);
 	static PIDController rPID = new PIDController(kp, ki, kd);
 	double target = 0;
-	double speedlim = 0.3;
-	double uplim = 215;
+	double speedlim = 0.6;
+	double uplim = 300;
 	double zero = 10;
 	static boolean init = false;
 
@@ -44,7 +44,7 @@ public class ClimberSubSys extends SubsystemBase {
 		if (power > 0){
 			power = clamp(power, -0.6, 0.6);
 		} else {
-			power = clamp(power, -speedlim, speedlim);
+			power = clamp(power, -1, 1);
 		}
 		// System.out.println(power);
 		motor.set(power);
@@ -120,7 +120,7 @@ public class ClimberSubSys extends SubsystemBase {
 		// }
 
 		if (xpov == 0){
-			target = uplim;
+			target = 220;
 			pidmove();
 		} else if (xpov == 180){
 			target = zero;

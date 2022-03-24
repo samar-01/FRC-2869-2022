@@ -20,7 +20,9 @@ public class DriveDistance extends CommandBase {
 	 */
 	public DriveDistance(double distance) {
 		this.drive = RobotContainer.drivetrainSubSys;
-		this.distance = encToDist(distance);
+		// this.distance = encToDist(distance);
+		this.distance = distToEnc(distance);
+		// this.distance = distance;
 		addRequirements(drive);
 	}
 
