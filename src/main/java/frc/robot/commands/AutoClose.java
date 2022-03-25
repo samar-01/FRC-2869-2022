@@ -10,49 +10,51 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
+/**
+ * lifts and revs
+ */
+public class AutoClose extends CommandBase {
 
-public class PointIntakeDrive extends CommandBase {
-	DrivetrainSubSys drive;
-	ShooterSubSys shooterSubSys;
-	/** Creates a new PointIntake. */
-	public PointIntakeDrive() {
-		this.drive = RobotContainer.drivetrainSubSys;
-		this.shooterSubSys = RobotContainer.shooterSubSys;
-		addRequirements(drive, shooterSubSys);
-		// addRequirements(drive);
+	private final AngleSubSys angleSubSys;
+	// private final ShooterSubSys shooterSubSys;
+
+	/** Creates a new Angle. */
+	public AutoClose() {
+		this.angleSubSys = RobotContainer.angleSubSys;
+		// this.shooterSubSys = RobotContainer.shooterSubSys;
+		addRequirements(angleSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		// onFlash();
-		drive.resetPID();
-		shooterSubSys.intake();
-		photonResetPipe();
-		status.setString("point driving");
+		angleSubSys.init();
+		angleSubSys.resetPID();
+		// shooterSubSys.stop();
+		angleSubSys.setTargetHighClose();
+		status.setString("angling close");
 	}
+
+//arsh is epic
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.ballTurnDrive();
-
+		angleSubSys.pidmove();
+		// angleSubSys.lift();
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {
-		drive.stop();
-		drive.resetPID();
-		shooterSubSys.stop();
-		offFlash();
-	}
+	public void end(boolean interrupted) {}
+
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		// return drive.isBallPointed();
-		return !shooterSubSys.isIntakeEmpty();
-		// return false;
+		if (angleSubSys.isLifted()){
+			angleSubSys.stop();
+		}
+		return angleSubSys.isLifted();
 	}
 }

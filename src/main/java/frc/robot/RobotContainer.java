@@ -36,11 +36,12 @@ public class RobotContainer {
 	public static final AutoLift autoLift = new AutoLift();
 	public static final AutoDown autoDown = new AutoDown();
 	public static final AutoMid autoMid = new AutoMid();
-	public static final CloseHigh closeHigh = new CloseHigh();
+	public static final AutoClose autoClose = new AutoClose();
+	// public static final CloseHigh closeHigh = new CloseHigh();
 	// public static final Autonomous autonomous = new Autonomous(drivetrainSubSys, angleSubSys, shooterSubSys);
 	// public static final DriveDistance driveBack = new DriveDistance(drivetrainSubSys, -10);
 	// public static final Autonomous autonomous = new Autonomous();
-	public static final PointIntakeDrive pointIntake = new PointIntakeDrive();
+	public static final PointIntakeDrive pointIntakeDrive = new PointIntakeDrive();
 	public static final ClimberSubSys climberSubSys= new ClimberSubSys();
 	public static final Climber climber = new Climber(climberSubSys);
 	// public static final CalibClimb calibClimb = new CalibClimb(climberSubSys);

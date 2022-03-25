@@ -88,11 +88,12 @@ public final class Constants {
 	// public static final JoystickButton driveDriveButton = new JoystickButton(xboxjoystick, 5); // LB
 	// public static final JoystickButton spinDriveButton = new JoystickButton(xboxjoystick, 5); // lb
 	// public static final JoystickButton closeHigh = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
+	public static final JoystickButton pointDriveButton = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 
-	public static double closeAngle = 85;
-	public static double closeVel = 8000;
+	public static double closeAngle = 77.18;
+	public static double closeVel = 6289.84;
 
 	public static NetworkTableEntry distanceEntry;
 	// public static NetworkTableEntry autorotateEntry;
@@ -117,6 +118,10 @@ public final class Constants {
 	public static NetworkTableEntry status;
 	public static NetworkTableEntry statusT;
 	public static NetworkTableEntry statusA;
+
+	public static NetworkTableEntry closeEntry;
+	public static NetworkTableEntry closeAngleEntry;
+
 
 	public static double encToDist(double e){
 		return e * 0.1524 * Math.PI / 10;

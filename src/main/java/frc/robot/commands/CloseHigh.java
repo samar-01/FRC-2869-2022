@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer; 
+import static frc.robot.Constants.*;
 import frc.robot.subsystems.AngleSubSys;
 import frc.robot.subsystems.ShooterSubSys;
 
@@ -14,8 +16,8 @@ public class CloseHigh extends CommandBase {
 	AngleSubSys angleSubSys;
 	/** Creates a new CloseHigh. */
 	public CloseHigh() {
-		this.shooterSubSys = shooterSubSys;
-		this.angleSubSys = angleSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
+		this.angleSubSys = RobotContainer.angleSubSys;
 		addRequirements(shooterSubSys, angleSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
@@ -23,18 +25,22 @@ public class CloseHigh extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		shooterSubSys.highClose();
+		// shooterSubSys.highClose();
+		shooterSubSys.PIDSpeed(closeVel * 0.8);
 		angleSubSys.setTargetHighClose();
 	}
 
 	boolean done = false;
 	Timer revtimer = new Timer();
 	Timer timer = new Timer();
-	double revdelay = 0.5, shoottime = 0.5;
+	double revdelay = 1, shoottime = 0.5;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		angleSubSys.pidmove();
+		// if (angleSubSys.isLifted()){
+		// 	done = true;
+		// }
 		if (shooterSubSys.isAtSpeed() && revtimer.get() == 0){
 			revtimer.start();
 		} else if (shooterSubSys.isAtSpeed() && timer.get() == 0 && revtimer.hasElapsed(revdelay) && angleSubSys.isLifted()){
@@ -49,6 +55,7 @@ public class CloseHigh extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		shooterSubSys.stop();
+		angleSubSys.stop();
 	}
 
 	// Returns true when the command should end.

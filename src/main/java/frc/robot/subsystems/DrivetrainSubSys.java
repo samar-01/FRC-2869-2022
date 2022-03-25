@@ -113,10 +113,10 @@ public class DrivetrainSubSys extends SubsystemBase {
 			isBallTurn = true;
 			pidturn.reset();
 		}
-		double track = -pTrack();
-		System.out.println(track);
+		double track = pTrack();
 		if (track != Double.NEGATIVE_INFINITY){
-			autoTurn(track,0.4);
+			autoTurn(track,0.2);
+			// drv(0,track/10);
 			System.out.println(track);
 		}
 	}
@@ -135,7 +135,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		} else {
 			speed *= 0.45;
 		}
-		drv(speed, xbox.getLeftX()*0.5);
+		drv(speed, xbox.getLeftX()*0.7);
 		
 		if (xbox.getYButtonPressed()){
 			resetTurn();

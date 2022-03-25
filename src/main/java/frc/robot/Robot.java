@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
 	double autorotate = 120;
 	ShuffleboardTab auto = Shuffleboard.getTab("Auto");
 	ShuffleboardTab teleop = Shuffleboard.getTab("Teleop");
+	ShuffleboardTab test = Shuffleboard.getTab("test");
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any
@@ -56,6 +57,10 @@ public class Robot extends TimedRobot {
 		RobotContainer.climberSubSys.init();
 		networkInit();
 		offLime();
+
+		// ShuffleboardTab test = Shuffleboard.getTab("test");
+		// closeEntry = test.addPersistent("closeentry", 8000).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).withPosition(0,0).withSize(3, 1).getEntry();
+		// closeAngleEntry = test.addPersistent("close angle", 70).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 85)).withPosition(0,1).withSize(3, 1).getEntry();
 
 		ShuffleboardTab auto = Shuffleboard.getTab("Auto");
 
@@ -115,6 +120,7 @@ public class Robot extends TimedRobot {
 		// tarspeedthing = teleop.add("tarspeedthing", 7000).withPosition(4, 4).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 7000, "max", 9000)).withSize(3, 1).getEntry();
 		Shuffleboard.selectTab("Auto");
 
+		
 		batVoltageEntry = batVoltageEntryA;
 		angleEntry = angleEntryA;
 		time = timeA;
@@ -238,12 +244,12 @@ public class Robot extends TimedRobot {
 		offFlash();
 		// onFlash();
 		onLime();
-		// pointDriveButton.whenPressed(new AutoPoint(new DrivetrainSubSys()));
+		// pointDriveButton.whenPressed(new PointIntakeDrive());
 		// closeHigh.whenPressed(new CloseHigh());
 
 		try{
 			HttpCamera ll = new HttpCamera("limelight", "http://limelight.local:5800/stream.mjpeg"); // TODO check this
-			teleop.add("limelight", ll).withPosition(3, 0).withSize(3, 3);
+			teleop.add("limelight", ll).withPosition(3, 1).withSize(3, 3);
 		} catch (Exception e){
 
 		}
@@ -254,7 +260,18 @@ public class Robot extends TimedRobot {
 		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
 	}
 	
-	
+	// CloseHigh close;
+
+	// boolean isClose(){
+	// 	if (close == null){
+	// 		return false;
+	// 	} else if (close.isFinished()){
+	// 		return false;
+	// 	} else {
+	// 		return true;
+	// 	}
+	// }
+
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
@@ -273,9 +290,9 @@ public class Robot extends TimedRobot {
 			}
 		}
 
-		if (!RobotContainer.pointIntake.isScheduled()){
-			if (xbox.getPOV() == 90 && !RobotContainer.pointIntake.isScheduled()){
-				autoSchedule(RobotContainer.pointIntake);
+		if (!RobotContainer.pointIntakeDrive.isScheduled()){
+			if (xbox.getPOV() == 90 && !RobotContainer.pointIntakeDrive.isScheduled()){
+				autoSchedule(RobotContainer.pointIntakeDrive);
 			} else {
 				autoSchedule(RobotContainer.drivetrain);
 				autoSchedule(RobotContainer.shooter);
@@ -286,7 +303,7 @@ public class Robot extends TimedRobot {
 		}
 
 		if (xbox.getPOV() == 270){
-			RobotContainer.pointIntake.cancel();
+			RobotContainer.pointIntakeDrive.cancel();
 		}
 
 		autoSchedule(RobotContainer.climber);
@@ -300,11 +317,26 @@ public class Robot extends TimedRobot {
 			// RobotContainer.shooterSubSys.rev();
 			autoSchedule(RobotContainer.autoMid);
 		} else if (opxbox.getPOV() == 270){
-			autoSchedule(RobotContainer.closeHigh);
-		} else if (!RobotContainer.pointIntake.isScheduled() && !RobotContainer.autoLift.isScheduled() && !RobotContainer.autoDown.isScheduled() && !RobotContainer.autoMid.isScheduled()){
+			// autoSchedule(RobotContainer.closeHigh);
+			// System.out.println("close");
+			// if (close == null){
+			// 	System.out.println("new close");
+			// 	close = new CloseHigh();
+			// 	close.schedule();
+			// }
+			// closeAngle = closeAngleEntry.getDouble(closeAngle);
+			autoSchedule(RobotContainer.autoClose);
+		// } else if (!RobotContainer.pointIntake.isScheduled() && !RobotContainer.autoLift.isScheduled() && !RobotContainer.autoDown.isScheduled() && !RobotContainer.autoMid.isScheduled() && !isClose()){
+		} else if (!RobotContainer.pointIntakeDrive.isScheduled() && !RobotContainer.autoLift.isScheduled() && !RobotContainer.autoDown.isScheduled() && !RobotContainer.autoMid.isScheduled() && !RobotContainer.autoClose.isScheduled()){
 			autoSchedule(RobotContainer.shooter);
 			autoSchedule(RobotContainer.angle);
 		}
+
+		// System.out.println(isClose());
+		// if (close != null && close.isFinished()){
+		// 	System.out.println("close finish");
+		// 	close = null;
+		// }
 		
 		// LimelightSubSys.getDistance();
 		distanceEntry.setDouble(distance());

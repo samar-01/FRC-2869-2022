@@ -15,6 +15,7 @@ public class fenderhigh extends SequentialCommandGroup {
   public fenderhigh() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new CloseHigh(), new DriveDistance(-2));
+    addCommands(new CloseHigh(), new AutoDown(), new DriveDistance(-2.5));
+    // addCommands(new CloseHigh(), new AutoDown());
   }
 }

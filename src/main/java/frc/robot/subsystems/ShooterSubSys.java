@@ -270,10 +270,10 @@ public class ShooterSubSys extends SubsystemBase {
 			} catch (Exception e){
 				return 7860;
 			}
-		
-
-			
 			// return 7860;
+		} else if (opxbox.getPOV() == 270){
+			// return closeEntry.getDouble(closeVel);
+			return closeVel;
 		}
 
 		// tinyurl.com/projmath
