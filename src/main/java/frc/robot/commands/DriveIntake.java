@@ -5,65 +5,76 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.*;
-import frc.robot.commands.*;
+import frc.robot.subsystems.DrivetrainSubSys;
+import frc.robot.subsystems.ShooterSubSys;
+
 import static frc.robot.Constants.*;
 
-public class PointIntakeDrive extends CommandBase {
-	DrivetrainSubSys drive;
+public class DriveIntake extends CommandBase {
+
+	private final DrivetrainSubSys drive;
+	double distance;
 	ShooterSubSys shooterSubSys;
-	/** Creates a new PointIntake. */
-	public PointIntakeDrive() {
+
+	public DriveIntake() {
 		this.drive = RobotContainer.drivetrainSubSys;
+		// this.distance = encToDist(distance);
+		// this.distance = distance;
 		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(drive, shooterSubSys);
-		// addRequirements(drive);
-		// Use addRequirements() here to declare subsystem dependencies.
+	}
+	/**
+	 * 
+	 * @param distance meters
+	 */
+	public DriveIntake(double distance) {
+		this.drive = RobotContainer.drivetrainSubSys;
+		// this.distance = encToDist(distance);
+		this.distance = distToEnc(distance);
+		// this.distance = distance;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
+		addRequirements(drive, shooterSubSys);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		// onFlash();
-		drive.resetPID();
+		// drive.setDrivePID(distance);
+		drive.resetEncoders();
+		status.setString("driving back");
 		shooterSubSys.intake();
-		photonResetPipe();
-		status.setString("point driving");
-		c = 0;
-		done = false;
 	}
-	int c = 0;
+
 	boolean done = false;
+	double speed = 0.6, tolerance = 3;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.ballTurnDrive();
-		c++;
-		// if (!shooterSubSys.isIntakeEmpty() ||  c > 30 && shooterSubSys.get775Current() > 25){
-		if (!shooterSubSys.isIntakeEmpty()){// ||  c > 30 && shooterSubSys.get775Current() > 25){
+		// drive.drivePID();
+		// drive.autoDrive();
+		if (Math.abs(drive.getEncDistance() - distance) < tolerance){
 			done = true;
 		}
-		// System.out.println(shooterSubSys.get775Current());
-		// drive.ballTurn();
-
+		if (drive.getEncDistance() > distance){
+			drive.drv(-speed, 0);
+		} else if (drive.getEncDistance() < distance){
+			drive.drv(speed, 0);
+		} else {
+			done = true;
+		}
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		drive.stop();
-		drive.resetPID();
 		shooterSubSys.stop();
-		offFlash();
 	}
+
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		// return drive.isBallPointed();
 		return done;
-		// return !shooterSubSys.isIntakeEmpty();
-		// return false;
 	}
 }

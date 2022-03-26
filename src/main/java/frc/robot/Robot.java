@@ -83,6 +83,8 @@ public class Robot extends TimedRobot {
 
 		newautopick.addOption("back", automodes.backupOnly);
 		newautopick.setDefaultOption("fender", automodes.fender);
+		newautopick.addOption("fender preset", automodes.fenderpreset);
+		newautopick.addOption("fender find", automodes.fenderballtrack);
 		newautopick.addOption("backshoot", automodes.backupShoot);
 		newautopick.addOption("leftball", automodes.left2ball);
 		newautopick.addOption("none", automodes.none);
@@ -143,6 +145,7 @@ public class Robot extends TimedRobot {
 		CommandScheduler.getInstance().run();
 		batVoltageEntry.setNumber(RobotController.getBatteryVoltage());
 		time.setNumber(RobotContainer.shooterSubSys.calcVel());
+		ballinEntry.setBoolean(!RobotContainer.shooterSubSys.isIntakeEmpty());
 		// time.setNumber(Timer.getMatchTime());
 	}
 

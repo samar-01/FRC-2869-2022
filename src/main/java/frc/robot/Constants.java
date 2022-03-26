@@ -122,6 +122,8 @@ public final class Constants {
 	public static NetworkTableEntry closeEntry;
 	public static NetworkTableEntry closeAngleEntry;
 
+	public static double autodistance = 1.85;
+
 
 	public static double encToDist(double e){
 		return e * 0.1524 * Math.PI / 10;
@@ -132,7 +134,7 @@ public final class Constants {
 	}
 
 	public enum automodes{
-		backupOnly, backupShoot, left2ball, none, ballfind, testrot, fender
+		backupOnly, backupShoot, left2ball, none, ballfind, testrot, fender, fenderpreset, fenderballtrack
 	}
 	
 	// public static SendableChooser<Command> autopicker = new SendableChooser<Command>();
@@ -261,7 +263,7 @@ public final class Constants {
 		// System.out.println("ON SUCCESS");
 		// flashlight.set((5.0/RobotController.getBatteryVoltage()));
 		// flashlight.set(0.4);
-		flashlight.set(1);
+		// flashlight.set(1);
 	}
 
 	public static void offFlash() {

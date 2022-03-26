@@ -22,12 +22,13 @@ public class RotateNoEncoder extends CommandBase {
 	 * Creates the Rotate Command
 	 * 
 	 * @param goRight If set to true then machine rotates right.
-	 * @param cycles cycle
+	 * @param angle angles
 	 */
-	public RotateNoEncoder(boolean goRight, double cycles) {
+	public RotateNoEncoder(boolean goRight, double angle) {
 		this.drive = RobotContainer.drivetrainSubSys;
 		// this.distance = distance;
-		this.numCycles = (int)cycles;
+		angle = (5*angle)/3;
+		this.numCycles = (int)angle;
 		addRequirements(drive);
 		if (goRight) {
 			turnValue = turnspeed;

@@ -26,6 +26,15 @@ public class DriveDistance extends CommandBase {
 		addRequirements(drive);
 	}
 
+	public DriveDistance(double distance, double speed) {
+		this.drive = RobotContainer.drivetrainSubSys;
+		this.speed = speed;
+		// this.distance = encToDist(distance);
+		this.distance = distToEnc(distance);
+		// this.distance = distance;
+		addRequirements(drive);
+	}
+
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
@@ -35,16 +44,20 @@ public class DriveDistance extends CommandBase {
 	}
 
 	boolean done = false;
-
+	double speed = 0.6, tolerance = 3;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		// drive.drivePID();
 		// drive.autoDrive();
+		if (Math.abs(drive.getEncDistance() - distance) < tolerance){
+			done = true;
+		}
 		if (drive.getEncDistance() > distance){
-			drive.drv(-0.6, 0);
+			drive.drv(-speed, 0);
+		} else if (drive.getEncDistance() < distance){
+			drive.drv(speed, 0);
 		} else {
-			drive.stop();
 			done = true;
 		}
 	}

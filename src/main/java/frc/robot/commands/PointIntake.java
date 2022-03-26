@@ -11,11 +11,11 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
 
-public class PointIntakeDrive extends CommandBase {
+public class PointIntake extends CommandBase {
 	DrivetrainSubSys drive;
 	ShooterSubSys shooterSubSys;
 	/** Creates a new PointIntake. */
-	public PointIntakeDrive() {
+	public PointIntake() {
 		this.drive = RobotContainer.drivetrainSubSys;
 		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(drive, shooterSubSys);
@@ -31,20 +31,22 @@ public class PointIntakeDrive extends CommandBase {
 		shooterSubSys.intake();
 		photonResetPipe();
 		status.setString("point driving");
-		c = 0;
 		done = false;
 	}
-	int c = 0;
+	// int c = 0;
 	boolean done = false;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.ballTurnDrive();
-		c++;
-		// if (!shooterSubSys.isIntakeEmpty() ||  c > 30 && shooterSubSys.get775Current() > 25){
-		if (!shooterSubSys.isIntakeEmpty()){// ||  c > 30 && shooterSubSys.get775Current() > 25){
+		// drive.ballTurnDrive();
+		drive.ballTurn();
+		if (pTrack() != Double.POSITIVE_INFINITY && Math.abs(pTrack()) < 1){
 			done = true;
 		}
+		// c++;
+		// if (c > 30 && shooterSubSys.get775Current() > 25){
+		// 	done = true;
+		// }
 		// System.out.println(shooterSubSys.get775Current());
 		// drive.ballTurn();
 

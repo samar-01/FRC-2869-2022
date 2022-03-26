@@ -35,6 +35,10 @@ public class Autonomous extends SequentialCommandGroup {
 				addCommands(new testrot());
 			case fender:
 				addCommands(new fenderhigh());
+			case fenderpreset:
+				addCommands(new fenderpreset());
+			case fenderballtrack:
+				addCommands(new fenderballtrack());
 			default:
 				addCommands(new none());
 		}

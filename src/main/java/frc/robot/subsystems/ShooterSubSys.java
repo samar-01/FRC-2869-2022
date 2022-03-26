@@ -44,6 +44,10 @@ public class ShooterSubSys extends SubsystemBase {
 	private static final PIDController lpid = new PIDController(kp, ki, kd);
 	private static final PIDController rpid = new PIDController(kp, ki, kd);
 
+	public double get775Current(){
+		return left775.getSupplyCurrent()/2.0 + right775.getSupplyCurrent()/2.0;
+	}
+
 	/**
 	 * Sets up the PID Controllers on the Falcon
 	 * @param _talon The Falcon TalonFX object
@@ -157,8 +161,8 @@ public class ShooterSubSys extends SubsystemBase {
 	static DigitalInput intake = new DigitalInput(2);
 
 	public static boolean isIntakeEmpty(){
-		// return intake.get();
-		return true;
+		return intake.get();
+		// return true;
 	}
 
 	public void intake(){
@@ -178,7 +182,8 @@ public class ShooterSubSys extends SubsystemBase {
 		// SmartDashboard.getNumber("vel", calcVel(560, 60));
 
 		//If A is pressed INTAKE
-		if (isIntakeEmpty() && (opxbox.getXButton() || xbox.getAButton())) {
+		// if (isIntakeEmpty() && (opxbox.getXButton() || xbox.getAButton())) {
+		if ((opxbox.getXButton() || xbox.getAButton())) {
 			//Set all motors to the intake speed
 			// SmartDashboard.putBoolean("revup", false);
 			intake();

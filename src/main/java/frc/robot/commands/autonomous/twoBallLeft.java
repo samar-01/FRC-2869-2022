@@ -23,7 +23,7 @@ public class twoBallLeft extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		double angle = 60;
-		angle = (5*angle)/3;
+		// angle = (5*angle)/3;
 		// addCommands(new driveBack(), new LiftAlignShoot(), new DownRotate(angle), new FindBall(), new PointIntakeDrive(), new Rotate(-angle));
 		// addCommands(new driveBack(), new LiftShoot(), new AutoDown(), new RotateNoEncoder(false, (int)angle), new FindBall(), new RotateNoEncoder(true, (int)angle), new LiftAlignShoot(), new AutoDown());
 		addCommands(new driveShoot(), new RotateNoEncoder(false, angle), new FindBall(30), new PointIntakeDrive(), new RotateNoEncoder(true, angle), new AutoLift(), new AutoFindGoal(), new AutoPointGoal(), new AutoShoot(), new AutoDown());

@@ -75,11 +75,13 @@ public class DrivetrainSubSys extends SubsystemBase {
 	// PhotonCamera photoncam = new PhotonCamera("photonvision");
 	
 	void autoTurn(double d){
-		drv(0,clamp(pidturn.calculate(d)/10,-0.5,0.5));
+		drv(0,clamp(pidturn.calculate(d)/10,-autoTurnSpeed,autoTurnSpeed));
 	}
 
+
+	double autoTurnSpeed = 0.4;	
 	void autoTurn(double d, double speed){
-		drv(speed,clamp(pidturn.calculate(d)/10,-0.5,0.5));
+		drv(speed,clamp(pidturn.calculate(d)/10,-autoTurnSpeed,autoTurnSpeed));
 	}
 
 	public void limeTurn(){
@@ -113,11 +115,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 			isBallTurn = true;
 			pidturn.reset();
 		}
-		double track = pTrack();
+		double track = -pTrack();
 		if (track != Double.NEGATIVE_INFINITY){
-			autoTurn(track,0.2);
+			autoTurn(track,0.5);
 			// drv(0,track/10);
-			System.out.println(track);
+			// System.out.println(track);
 		}
 	}
 
@@ -238,6 +240,22 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// spinner.enableContinuousInput(-180, 180);
 	}
 	
+	public void setRot0(){
+		spun = false;
+		// ahrs.reset();
+		pos = ahrs.getYaw();
+		spinTarget = 0;
+		spintime.reset();
+		spintime.start();
+		spinner.reset();
+		// kp = SmartDashboard.getNumber("kp", kp);
+		// ki = SmartDashboard.getNumber("ki", ki);
+		// kd = SmartDashboard.getNumber("kd", kd);
+		spinner.setPID(kp, ki, kd);
+		spinner.setTolerance(2);
+		// spinner.enableContinuousInput(-180, 180);
+	}
+
 	double[] errors = new double[10];
 	int count = 0;
 
@@ -318,6 +336,9 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// System.out.println("RESET");
 	}
 
+	public static void ahrsReset(){
+		ahrs.reset();
+	}
 
 	@Override
 	public void periodic() {
