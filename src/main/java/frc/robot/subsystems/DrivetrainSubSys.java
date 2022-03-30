@@ -164,7 +164,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		} else if (xbox.getLeftBumper()){
 			speed *= 0.8;
 		} else {
-			// speed *= 0.70;
+			// leave speed at full power
 		}
 		drv(speed, xbox.getLeftX()*0.7);
 		
@@ -255,7 +255,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	
 	public void setRot(double angle){
 		spun = false;
-		ahrs.reset(); 
+		ahrs.reset();
 		pos = ahrs.getYaw();
 		spinTarget = pos+angle;
 		spintime.reset();

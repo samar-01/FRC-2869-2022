@@ -33,8 +33,8 @@ public class AutoMid extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		AngleSubSys.init();  //angleSubSys.init();
-		AngleSubSys.resetPID(); //static method		angleSubSys.resetPID();
+		angleSubSys.init();
+		angleSubSys.resetPID();
 		shooterSubSys.stop();
 		angleSubSys.setTargetMid();
 	}

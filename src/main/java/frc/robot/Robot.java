@@ -81,15 +81,15 @@ public class Robot extends TimedRobot {
 		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
 		// auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
 
-		// newautopick.addOption("back", automodes.backupOnly);
 		newautopick.setDefaultOption("fender", automodes.fender);
-		// newautopick.addOption("fender preset", automodes.fenderpreset);
-		// newautopick.addOption("fender find", automodes.fenderballtrack);
-		// newautopick.addOption("backshoot", automodes.backupShoot);
-		// newautopick.addOption("leftball", automodes.left2ball);
-		// newautopick.addOption("none", automodes.none);
-		// newautopick.addOption("ballfind", automodes.ballfind);
-		// newautopick.addOption("testrot", automodes.testrot);
+		newautopick.addOption("back", automodes.backupOnly);
+		newautopick.addOption("fender preset", automodes.fenderpreset);
+		newautopick.addOption("fender find", automodes.fenderballtrack);
+		newautopick.addOption("backshoot", automodes.backupShoot);
+		newautopick.addOption("leftball", automodes.left2ball);
+		newautopick.addOption("none", automodes.none);
+		newautopick.addOption("ballfind", automodes.ballfind);
+		newautopick.addOption("testrot", automodes.testrot);
 
 		auto.add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 
