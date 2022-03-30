@@ -28,6 +28,7 @@ public class CloseHigh extends CommandBase {
 		// shooterSubSys.highClose();
 		shooterSubSys.PIDSpeed(closeVel * 0.8);
 		angleSubSys.setTargetHighClose();
+		System.out.println("closehigh");
 	}
 
 	boolean done = false;

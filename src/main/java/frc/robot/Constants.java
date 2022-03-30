@@ -119,8 +119,17 @@ public final class Constants {
 	public static NetworkTableEntry statusT;
 	public static NetworkTableEntry statusA;
 
+	public static NetworkTableEntry ptrack;
+	public static NetworkTableEntry angletolerance;
+	public static double angletol = 2;
 	public static NetworkTableEntry closeEntry;
 	public static NetworkTableEntry closeAngleEntry;
+	public static NetworkTableEntry powerRevEntry;
+	public static NetworkTableEntry lenc;
+	public static NetworkTableEntry renc;
+	public static double powerRev = 1;
+
+	public static double[] distancedriven = new double[2];
 
 	public static double autodistance = 1.85;
 

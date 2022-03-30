@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.opencv.core.Mat;
@@ -37,15 +38,37 @@ public class DrivetrainSubSys extends SubsystemBase {
 	private static final CANSparkMax right2 = new CANSparkMax(2, MotorType.kBrushless);
 	private static final CANSparkMax left1 = new CANSparkMax(3, MotorType.kBrushless);
 	private static final CANSparkMax left2 = new CANSparkMax(4, MotorType.kBrushless);
-	private static final MotorControllerGroup right = new MotorControllerGroup(right1, right2);
-	private static final MotorControllerGroup left = new MotorControllerGroup(left1, left2);
+	public static final MotorControllerGroup right = new MotorControllerGroup(right1, right2);
+	public static final MotorControllerGroup left = new MotorControllerGroup(left1, left2);
 	private static final DifferentialDrive difDrive = new DifferentialDrive(left, right);
 	private static final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
 	public DrivetrainSubSys() {
 		difDrive.setSafetyEnabled(false);
+
+		final int defenseCurrentLimit = 50;
+		// Added for defense by StyPulse:
+		right1.setSmartCurrentLimit(defenseCurrentLimit);
+		right2.setSmartCurrentLimit(defenseCurrentLimit);
+		left1.setSmartCurrentLimit(defenseCurrentLimit);
+		left2.setSmartCurrentLimit(defenseCurrentLimit);
 	}
 
+
+	public void autobrake(){
+		right1.setIdleMode(IdleMode.kBrake);
+		right2.setIdleMode(IdleMode.kBrake);
+		left1.setIdleMode(IdleMode.kBrake);
+		left2.setIdleMode(IdleMode.kBrake);
+	}
+
+	public void telecoast(){
+		System.out.println("coast");
+		right1.setIdleMode(IdleMode.kCoast);
+		right2.setIdleMode(IdleMode.kCoast);
+		left1.setIdleMode(IdleMode.kCoast);
+		left2.setIdleMode(IdleMode.kCoast);
+	}
 
 	public static void drv(double speed, double turn){
 		difDrive.arcadeDrive(turn, speed);
@@ -82,6 +105,11 @@ public class DrivetrainSubSys extends SubsystemBase {
 	double autoTurnSpeed = 0.4;	
 	void autoTurn(double d, double speed){
 		drv(speed,clamp(pidturn.calculate(d)/10,-autoTurnSpeed,autoTurnSpeed));
+	}
+
+	public double[] getenc(){
+		double[] thing = {left1.getEncoder().getPosition(), right1.getEncoder().getPosition()};
+		return thing;
 	}
 
 	public void limeTurn(){
@@ -129,23 +157,24 @@ public class DrivetrainSubSys extends SubsystemBase {
 	}
 
 	public void drive() {
+		// double speed = Math.pow(xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis(),2);
 		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		if (xbox.getRightBumper()){
-			speed *= 0.7;
-		} else if (xbox.getLeftBumper()){
-			
-		} else {
 			speed *= 0.45;
+		} else if (xbox.getLeftBumper()){
+			speed *= 0.8;
+		} else {
+			// speed *= 0.70;
 		}
 		drv(speed, xbox.getLeftX()*0.7);
 		
-		if (xbox.getYButtonPressed()){
-			resetTurn();
-		}
-		if (xbox.getYButton()){
-			// System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
-			limeTurn();
-		}
+		// if (xbox.getYButtonPressed()){
+		// 	resetTurn();
+		// }
+		// if (xbox.getYButton()){
+		// 	// System.out.println(limeturn.calculate(-LimelightSubSys.getLimeX()));
+		// 	limeTurn();
+		// }
 
 		// if (xbox.getPOV() == 270){
 		// 	photonBlue();
@@ -226,7 +255,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	
 	public void setRot(double angle){
 		spun = false;
-		ahrs.reset();
+		ahrs.reset(); 
 		pos = ahrs.getYaw();
 		spinTarget = pos+angle;
 		spintime.reset();
@@ -242,7 +271,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	
 	public void setRot0(){
 		spun = false;
-		// ahrs.reset();
+		// ahrs.reset(); // TODO check if this is necessary
 		pos = ahrs.getYaw();
 		spinTarget = 0;
 		spintime.reset();

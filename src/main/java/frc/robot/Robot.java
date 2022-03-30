@@ -81,15 +81,15 @@ public class Robot extends TimedRobot {
 		// autoPickerEntry = auto.add("autoselector", driveBack).withWidget(BuiltInWidgets.kComboBoxChooser).withPosition(0, 0).withSize(3, 1).getEntry();
 		// auto.add("auto", autopicker).withPosition(0, 0).withSize(3, 1);
 
-		newautopick.addOption("back", automodes.backupOnly);
+		// newautopick.addOption("back", automodes.backupOnly);
 		newautopick.setDefaultOption("fender", automodes.fender);
-		newautopick.addOption("fender preset", automodes.fenderpreset);
-		newautopick.addOption("fender find", automodes.fenderballtrack);
-		newautopick.addOption("backshoot", automodes.backupShoot);
-		newautopick.addOption("leftball", automodes.left2ball);
-		newautopick.addOption("none", automodes.none);
-		newautopick.addOption("ballfind", automodes.ballfind);
-		newautopick.addOption("testrot", automodes.testrot);
+		// newautopick.addOption("fender preset", automodes.fenderpreset);
+		// newautopick.addOption("fender find", automodes.fenderballtrack);
+		// newautopick.addOption("backshoot", automodes.backupShoot);
+		// newautopick.addOption("leftball", automodes.left2ball);
+		// newautopick.addOption("none", automodes.none);
+		// newautopick.addOption("ballfind", automodes.ballfind);
+		// newautopick.addOption("testrot", automodes.testrot);
 
 		auto.add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 
@@ -98,7 +98,11 @@ public class Robot extends TimedRobot {
 		batVoltageEntryA = auto.add("Voltage", 0).withPosition(1, 1).withSize(1, 1).getEntry();
 		timeA = auto.add("time", 0).withPosition(2, 1).getEntry();
 		statusA = auto.add("status", "init").withPosition(0, 2).withSize(3, 1).getEntry();
-		
+		angletolerance = auto.addPersistent("angle tolerance", angletol).withPosition(0, 3).withSize(3, 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 5)).getEntry();
+		powerRevEntry = auto.addPersistent("power rev", powerRev).withPosition(0, 4).withSize(3, 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
+		lenc = auto.add("lenc", 0).withPosition(3, 0).withSize(1, 1).getEntry();
+		renc = auto.add("renc", 0).withPosition(4, 0).withSize(1, 1).getEntry();
+		ptrack = auto.add("ptrack", 0).withPosition(5, 0).withSize(1, 1).getEntry();
 		// autopicker.setDefaultOption("backup shoot", automodes.backupShoot);
 		// autopicker.addOption("backup only", automodes.backupOnly);
 		// autopicker.addOption("2 ball right", automodes.backupShootTurnRight);
@@ -146,6 +150,10 @@ public class Robot extends TimedRobot {
 		batVoltageEntry.setNumber(RobotController.getBatteryVoltage());
 		time.setNumber(RobotContainer.shooterSubSys.calcVel());
 		ballinEntry.setBoolean(!RobotContainer.shooterSubSys.isIntakeEmpty());
+		lenc.setNumber(RobotContainer.drivetrainSubSys.getenc()[0]);
+		renc.setNumber(RobotContainer.drivetrainSubSys.getenc()[1]);
+		ptrack.setDouble(-pTrack());
+		// System.out.println(-pTrack());
 		// time.setNumber(Timer.getMatchTime());
 	}
 
@@ -179,6 +187,8 @@ public class Robot extends TimedRobot {
 		angleEntry = angleEntryA; // TODO check that angle doesnt go to low in auto
 		time = timeA;
 		status = statusA;
+		
+		RobotContainer.drivetrainSubSys.autobrake();
 		photonResetPipe();
 		Shuffleboard.selectTab("Auto");
 		autorotate = SmartDashboard.getNumber("autorotate", autorotate);
@@ -220,6 +230,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		RobotContainer.drivetrainSubSys.telecoast();
 		batVoltageEntry = batVoltageEntryT;
 		angleEntry = angleEntryT;
 		time = timeT;
@@ -250,12 +261,12 @@ public class Robot extends TimedRobot {
 		// pointDriveButton.whenPressed(new PointIntakeDrive());
 		// closeHigh.whenPressed(new CloseHigh());
 
-		try{
-			HttpCamera ll = new HttpCamera("limelight", "http://limelight.local:5800/stream.mjpeg"); // TODO check this
-			teleop.add("limelight", ll).withPosition(3, 1).withSize(3, 3);
-		} catch (Exception e){
+		// try{
+		// 	HttpCamera ll = new HttpCamera("limelight", "http://limelight.local:5800/stream.mjpeg"); // TODO check this
+		// 	teleop.add("limelight", ll).withPosition(3, 1).withSize(3, 3);
+		// } catch (Exception e){
 
-		}
+		// }
 	}
 
 	public void initLime(){

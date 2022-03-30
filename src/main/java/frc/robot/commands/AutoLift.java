@@ -10,8 +10,9 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
+
 /**
- * lifts and revs
+ *  Lifts arm and revs up shooter motors in autonomous.
  */
 public class AutoLift extends CommandBase {
 

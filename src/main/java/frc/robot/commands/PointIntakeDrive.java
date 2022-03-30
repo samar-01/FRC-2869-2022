@@ -10,7 +10,9 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
-
+/**
+ * moves towards ball until intaked
+ */
 public class PointIntakeDrive extends CommandBase {
 	DrivetrainSubSys drive;
 	ShooterSubSys shooterSubSys;
@@ -23,6 +25,18 @@ public class PointIntakeDrive extends CommandBase {
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
+	public PointIntakeDrive(double s) {
+		this.drive = RobotContainer.drivetrainSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
+		this.speed = s;
+		addRequirements(drive, shooterSubSys);
+		// addRequirements(drive);
+		// Use addRequirements() here to declare subsystem dependencies.
+	}
+
+
+	double leftcount, rightcount;
+	double leftencstart, rightencstart;
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
@@ -33,14 +47,18 @@ public class PointIntakeDrive extends CommandBase {
 		status.setString("point driving");
 		c = 0;
 		done = false;
+		double encs[] = drive.getenc();
+		leftencstart = encs[0];
+		rightencstart = encs[1];
 	}
 	int c = 0;
 	boolean done = false;
+	double speed = 0.5;
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		drive.ballTurnDrive();
-		c++;
+		// c++;
 		// if (!shooterSubSys.isIntakeEmpty() ||  c > 30 && shooterSubSys.get775Current() > 25){
 		if (!shooterSubSys.isIntakeEmpty()){// ||  c > 30 && shooterSubSys.get775Current() > 25){
 			done = true;
@@ -57,6 +75,11 @@ public class PointIntakeDrive extends CommandBase {
 		drive.resetPID();
 		shooterSubSys.stop();
 		offFlash();
+		double encs[] = drive.getenc();
+		leftcount = encs[0];
+		rightcount = encs[1];
+		distancedriven[0] = leftcount - leftencstart;
+		distancedriven[1] = rightcount - rightencstart;
 	}
 	// Returns true when the command should end.
 	@Override

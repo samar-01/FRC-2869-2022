@@ -20,28 +20,30 @@ public class Autonomous extends SequentialCommandGroup {
 
 	/** Creates a new Autonomous. */
 	public Autonomous(automodes a) {
-		switch (a) {
-			case backupOnly:
-				addCommands(new driveBack());
-			case backupShoot:
-				addCommands(new driveShoot());
-			case none:
-				addCommands(new none());
-			case left2ball:
-				addCommands(new twoBallLeft());
-			case ballfind:
-				addCommands(new ballfind());
-			case testrot:
-				addCommands(new testrot());
-			case fender:
-				addCommands(new fenderhigh());
-			case fenderpreset:
-				addCommands(new fenderpreset());
-			case fenderballtrack:
-				addCommands(new fenderballtrack());
-			default:
-				addCommands(new none());
-		}
+		// switch (a) {
+		// 	case backupOnly:
+		// 		addCommands(new driveBack());
+		// 	case backupShoot:
+		// 		addCommands(new driveShoot());
+		// 	case none:
+		// 		addCommands(new none());
+		// 	case left2ball:
+		// 		addCommands(new twoBallLeft());
+		// 	case ballfind:
+		// 		addCommands(new ballfind());
+		// 	case testrot:
+		// 		addCommands(new testrot());
+		// 	case fender:
+		// 		addCommands(new fenderhigh());
+		// 	case fenderpreset:
+		// 		addCommands(new fenderpreset());
+		// 	case fenderballtrack:
+		// 		addCommands(new fenderballtrack());
+		// 	default:
+		// 		addCommands(new none());
+		// }
+		System.out.println("auto stuff init");
+		addCommands(new fenderhigh());
 
 		// if (autopicker.getSelected() == automodes.backupShoot){
 		// 	addCommands(new DriveBackAndCalibClimb(), new LiftAlignShoot(), new AutoDown(RobotContainer.angleSubSys, RobotContainer.shooterSubSys));

@@ -16,7 +16,13 @@ public class AutoMid extends CommandBase {
 	private final AngleSubSys angleSubSys;
 	private final ShooterSubSys shooterSubSys;
 
-	/** Creates a new Angle. */
+	/** 
+	 * 
+	 * Creates a new Angle? 
+	 * 
+	 * 
+	 * 
+	*/
 	public AutoMid() {
 		this.angleSubSys = RobotContainer.angleSubSys;
 		this.shooterSubSys = RobotContainer.shooterSubSys;
@@ -27,8 +33,8 @@ public class AutoMid extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		angleSubSys.init();
-		angleSubSys.resetPID();
+		AngleSubSys.init();  //angleSubSys.init();
+		AngleSubSys.resetPID(); //static method		angleSubSys.resetPID();
 		shooterSubSys.stop();
 		angleSubSys.setTargetMid();
 	}

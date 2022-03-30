@@ -24,6 +24,8 @@ public class AngleSubSys extends SubsystemBase {
 	static final CANSparkMax arm = new CANSparkMax(5, MotorType.kBrushless);
 	static final double ratio = 5 * 4 * 3 * 4;
 	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
+	// TODO: Increase this tolerance value to 5 and see if we still score accurately.
+
 	static PIDController armPID = new PIDController(kp, ki, kd);
 	public static double base = -34, max = 70, mid = 55;
 	public static double target = base, limit = 80;
@@ -35,6 +37,16 @@ public class AngleSubSys extends SubsystemBase {
 		arm.set(0);
 	}
 
+	/**
+	 * Allows other systems to adjust the tolerance & control accuracy of angle.
+	 * When the angle reaches a avlue within t of the desired angle, it should stop.
+	 * @param t is measured in degrees.
+	 */
+	public void setPIDtolerance(double t) {
+		tolerance = t;
+		angletol = t;
+	}
+	
 	public static void resetPID(){
 		armPID.reset();
 		armPID.setPID(kp, ki, kd);
@@ -49,17 +61,25 @@ public class AngleSubSys extends SubsystemBase {
 		}
 	}
 
+	public void setPIDtolerance(){
+		setPIDtolerance(angletolerance.getDouble(1));
+	}
+
 	public void setTargetHigh(){
 		target = max;
+		setPIDtolerance();
 	}
 	public void setTargetHighClose(){
 		target = closeAngle;
+		setPIDtolerance();
 	}
 	public void setTargetMid(){
 		target = mid;
+		setPIDtolerance();
 	}
 	public void setTargetLow(){
 		target = base;
+		setPIDtolerance();
 	}
 
 	public void setTarget(){
