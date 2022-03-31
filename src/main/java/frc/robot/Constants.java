@@ -94,6 +94,13 @@ public final class Constants {
 
 	public static double closeAngle = 77.18;
 	public static double closeVel = 6289.84;
+	public static double turnspeed = 0.7;
+	public static double slowspeed = 0.45;
+	public static double midspeed = 0.8;
+	public static double manClimbSpeed = 0.1;
+	public static enum shooterState{
+		intake, mid, fender, high
+	}
 
 	public static NetworkTableEntry distanceEntry;
 	// public static NetworkTableEntry autorotateEntry;

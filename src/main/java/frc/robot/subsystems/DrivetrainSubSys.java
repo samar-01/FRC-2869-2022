@@ -26,6 +26,7 @@ import org.opencv.core.Mat;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.*;
+import static frc.robot.Inputs.*;
 import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 // not necessary but if something breaks uncomment below
@@ -158,15 +159,15 @@ public class DrivetrainSubSys extends SubsystemBase {
 
 	public void drive() {
 		// double speed = Math.pow(xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis(),2);
-		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
-		if (xbox.getRightBumper()){
-			speed *= 0.45;
-		} else if (xbox.getLeftBumper()){
-			speed *= 0.8;
+		double speed = getSpeed();
+		if (getSlowSpeed()){
+			speed *= slowspeed;
+		} else if (getMidSpeed()){
+			speed *= midspeed;
 		} else {
 			// leave speed at full power
 		}
-		drv(speed, xbox.getLeftX()*0.7);
+		drv(speed, getTurn()*turnspeed);
 		
 		// if (xbox.getYButtonPressed()){
 		// 	resetTurn();
@@ -218,6 +219,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	boolean start = true;
 	public static double target = 0;
 
+	@Deprecated
 	public void autoDrive(){
 		autodrv();
 		// if (xbox.getXButton() && !start){
@@ -233,6 +235,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// }
 	}
 
+	@Deprecated
 	public void autodrv(){
 		// double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
 		// speed *= 0.4;

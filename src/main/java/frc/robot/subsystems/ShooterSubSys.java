@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
+import static frc.robot.Inputs.*;
 
 import java.sql.Time;
 
@@ -154,8 +155,8 @@ public class ShooterSubSys extends SubsystemBase {
 			v = slider775.getDouble(9);
 		} catch (Exception e){
 		}
-		left775.set(TalonSRXControlMode.PercentOutput, -v/RobotController.getBatteryVoltage());
-		right775.set(TalonSRXControlMode.PercentOutput, v/RobotController.getBatteryVoltage());
+		left775.setVoltage(-v);
+		right775.setVoltage(v);
 	}
 
 	static DigitalInput intake = new DigitalInput(2);
@@ -183,13 +184,13 @@ public class ShooterSubSys extends SubsystemBase {
 
 		//If A is pressed INTAKE
 		// if (isIntakeEmpty() && (opxbox.getXButton() || xbox.getAButton())) {
-		if ((opxbox.getXButton() || xbox.getAButton())) {
+		if (getIntake()) {
 			//Set all motors to the intake speed
 			// SmartDashboard.putBoolean("revup", false);
 			intake();
-		} else if (xbox.getXButton()) {
+		} else if (getRev()) {
 			autoRev();
-			if (xbox.getBButton()) {
+			if (getShoot()) {
 				// left775.set(TalonSRXControlMode.PercentOutput, -1);
 				// right775.set(TalonSRXControlMode.PercentOutput, 1);
 				shoot();
@@ -197,21 +198,21 @@ public class ShooterSubSys extends SubsystemBase {
 				// rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getLeftY());}
 			}
 			
-		} else if (opxbox.getRightBumper()){
+		} else if (getForceIn()){
 			left775.set(TalonSRXControlMode.PercentOutput, 1);
 			right775.set(TalonSRXControlMode.PercentOutput, -1);
 			leftfal.set(ControlMode.PercentOutput, 1);
 			rightfal.set(ControlMode.PercentOutput, -1);
-		} else if (opxbox.getLeftBumper()){
+		} else if (getEject()){
 			left775.set(TalonSRXControlMode.PercentOutput, -1);
 			right775.set(TalonSRXControlMode.PercentOutput, 1);
 			leftfal.set(ControlMode.PercentOutput, -1);
 			rightfal.set(ControlMode.PercentOutput, 1);
 		} else {
-			left775.set(TalonSRXControlMode.PercentOutput, xbox.getRightY()*1);
-			right775.set(TalonSRXControlMode.PercentOutput, -xbox.getRightY()*1);
-			leftfal.set(ControlMode.PercentOutput, falconfast * xbox.getRightY());
-			rightfal.set(ControlMode.PercentOutput, -falconfast * xbox.getRightY());
+			left775.set(TalonSRXControlMode.PercentOutput, getManualShooterSpeed());
+			right775.set(TalonSRXControlMode.PercentOutput, -getManualShooterSpeed());
+			leftfal.set(ControlMode.PercentOutput, falconfast * getManualShooterSpeed());
+			rightfal.set(ControlMode.PercentOutput, -falconfast * getManualShooterSpeed());
 		}
 		// leftFalEntry.setNumber(leftfal.getSensorCollection().getIntegratedSensorVelocity());
 		// rightFalEntry.setNumber(rightfal.getSensorCollection().getIntegratedSensorVelocity());
@@ -269,14 +270,14 @@ public class ShooterSubSys extends SubsystemBase {
 		// }
 		// launchpad is 7805
 
-		if (opxbox.getPOV() == 90){
+		if (getLaunchpad()){
 			try {
 				return 7860 * launchvelconstantEntry.getDouble(1);
 			} catch (Exception e){
 				return 7860;
 			}
 			// return 7860;
-		} else if (opxbox.getPOV() == 270){
+		} else if (getFender()){
 			// return closeEntry.getDouble(closeVel);
 			return closeVel;
 		}

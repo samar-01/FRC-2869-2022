@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
+import static frc.robot.Inputs.*;
 
 public class AngleSubSys extends SubsystemBase {
 	/** Creates a new AngleSubSys. */
@@ -83,21 +84,21 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	public void setTarget(){
-		if (opxbox.getAButton()) {
+		if (getHigh()) {
 			setTargetHigh();
-		} else if (opxbox.getYButton()){
+		} else if (getMid()){
 			setTargetMid();
-		} else if (opxbox.getBButton()){
+		} else if (getLow()){
 			setTargetLow();
 		}
 	}
 
 	public void run() {
-		if (opxbox.getStartButton()){
-			arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
+		if (getOpOverride()){
+			arm.set(armlim * (getArmPow()));
 			armPID.reset();
 			target = getAngle();
-		} else if (xbox.getStartButtonReleased()){
+		} else if (getSaveOverride()){
 			arm.getEncoder().setPosition(0);
 		} else {
 			if (getAngle() > limit) {
@@ -107,12 +108,6 @@ public class AngleSubSys extends SubsystemBase {
 				// arm.set(0);
 				target = mid;
 			} else {
-				// if (!opxbox.getAButton() && !opxbox.getYButton() && !opxbox.getBButton()) {
-				// 	arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
-				// 	// arm.set(armlim * (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis()));
-				// 	armPID.reset();
-				// } else {
-				// }
 				setTarget();
 				pidmove();
 			}

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
+import static frc.robot.Inputs.*;
 
 public class ClimberSubSys extends SubsystemBase {
 	CANSparkMax left = new CANSparkMax(6, MotorType.kBrushless);
@@ -25,6 +26,7 @@ public class ClimberSubSys extends SubsystemBase {
 	double target = 0;
 	double speedlim = 0.6;
 	double uplim = 300;
+	double tarhigh = 220;
 	double zero = 10;
 	static boolean init = false;
 
@@ -68,8 +70,12 @@ public class ClimberSubSys extends SubsystemBase {
 	}
 
 	public void moveDown(){
-		set(-1);
+		moveDownNoSwitch();
 		resetOnSwitch();
+	}
+
+	public void moveDownNoSwitch(){
+		set(-1);
 	}
 
 	public boolean isCalib(){
@@ -102,6 +108,11 @@ public class ClimberSubSys extends SubsystemBase {
 	double getPos(CANSparkMax motor){
 		return motor.getEncoder().getPosition();
 	}
+
+	void manualMove(double d){
+		left.set(d);
+		right.set(d);
+	}
  
 	public void run(){
 		// SmartDashboard.putNumber("leftclimb", left.getEncoder().getPosition());
@@ -112,44 +123,37 @@ public class ClimberSubSys extends SubsystemBase {
 		// 	resetEnc();
 		// }
 
-		int xpov = xbox.getPOV();
 		// if (xpov == 270){
 		// 	resetEnc(left, lPID);
 		// } else if (xpov == 90){
 		// 	resetEnc(right, rPID);
 		// }
 
-		if (xpov == 0){
-			target = 220;
+		if (pidClimbUp()){
+			target = tarhigh;
 			pidmove();
-		} else if (xpov == 180){
+		} else if (pidClimbDown()){
 			target = zero;
 			pidmove();
-		} else if (xpov == -1){
-			int pov = opxbox.getPOV();
-			if (pov == -1){
-				set(0);
-			}
-			if (pov == 0){
-				if (opxbox.getStartButton()){
-					left.set(0.1);
-					right.set(0.1);
+		} else {
+			if (climbUp()){
+				if (getOpOverride()){
+					manualMove(manClimbSpeed);
 				} else {
 					moveUp();
 				}
-			}
-			if (pov == 180){
-				if (opxbox.getStartButton()){
-					left.set(-0.1);
-					right.set(-0.1);
+			} else if (climbDown()){
+				if (getOpOverride()){
+					manualMove(-manClimbSpeed);
 				} else {
 					moveDown();
 				}
 			}
-		} else {
-			set(0);
-		}
-
+			else {
+				set(0);
+			}
+	
+		} 
 		// resetOnSwitch();
 	}
 

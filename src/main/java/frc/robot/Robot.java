@@ -25,6 +25,7 @@ import frc.robot.commands.autonomous.*;
 import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Inputs.*;
 
 import java.util.Map;
 
@@ -296,7 +297,7 @@ public class Robot extends TimedRobot {
 		// System.out.println(velconstantEntry.getNumber(0));
 		// System.out.println(ShooterSubSys.isIntakeEmpty());
 
-		if (opxbox.getRightStickButtonPressed()){
+		if (getFlashButtonPressed()){
 			if (getFlash() > 0){
 				offFlash();
 			} else {
@@ -305,7 +306,7 @@ public class Robot extends TimedRobot {
 		}
 
 		if (!RobotContainer.pointIntakeDrive.isScheduled()){
-			if (xbox.getPOV() == 90 && !RobotContainer.pointIntakeDrive.isScheduled()){
+			if (getStartBallTrack() && !RobotContainer.pointIntakeDrive.isScheduled()){
 				autoSchedule(RobotContainer.pointIntakeDrive);
 			} else {
 				autoSchedule(RobotContainer.drivetrain);
@@ -316,21 +317,21 @@ public class Robot extends TimedRobot {
 			RobotContainer.shooter.cancel();
 		}
 
-		if (xbox.getPOV() == 270){
+		if (getCancelBallTrack()){
 			RobotContainer.pointIntakeDrive.cancel();
 		}
 
 		autoSchedule(RobotContainer.climber);
-		if (opxbox.getAButton()){
+		if (getHigh()){
 			// RobotContainer.shooterSubSys.rev();
 			autoSchedule(RobotContainer.autoLift);
-		} else if (opxbox.getBButton()){
+		} else if (getLow()){
 			// RobotContainer.shooterSubSys.rev();
 			autoSchedule(RobotContainer.autoDown);
-		} else if (opxbox.getYButton()){
+		} else if (getMid()){
 			// RobotContainer.shooterSubSys.rev();
 			autoSchedule(RobotContainer.autoMid);
-		} else if (opxbox.getPOV() == 270){
+		} else if (getFender()){
 			// autoSchedule(RobotContainer.closeHigh);
 			// System.out.println("close");
 			// if (close == null){
