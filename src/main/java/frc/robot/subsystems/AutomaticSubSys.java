@@ -9,30 +9,42 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
 
+@Deprecated
 public class AutomaticSubSys extends SubsystemBase {
 	AngleSubSys angleSubSys;
 	DrivetrainSubSys drivetrainSubSys;
 	AutoPointGoal point;
 	AutoLift lift;
+
 	/** Creates a new Automatic. */
-	public AutomaticSubSys(AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys, AutoPointGoal point, AutoLift lift) {
+	public AutomaticSubSys(AngleSubSys angleSubSys, DrivetrainSubSys drivetrainSubSys, AutoPointGoal point,
+			AutoLift lift) {
 		this.angleSubSys = angleSubSys;
 		this.drivetrainSubSys = drivetrainSubSys;
 		this.point = point;
 		this.lift = lift;
 	}
 
-	public void lift(){
+	/**
+	 * Turns on LimeLight, Lifts the arm, and points to the goal
+	 */
+	public void lift() {
 		onLime();
 		// angleSubSys.lift();
 		lift.schedule();
 		point.schedule();
 	}
 
-	public boolean lifted(){
+	/**
+	 * Always returns false
+	 * TODO: Check why this exists
+	 * 
+	 * @return false
+	 */
+	public boolean lifted() {
 		return false;
 	}
-	
+
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
