@@ -39,8 +39,6 @@ public class AutoMid extends CommandBase {
 		angleSubSys.setTargetMid();
 	}
 
-//arsh is epic
-
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {

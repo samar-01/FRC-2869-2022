@@ -53,7 +53,7 @@ public class ClimberSubSys extends SubsystemBase {
 	 * ClimberSubSystem.target and clamps to 0.6 when going down and 1 when going up
 	 * 
 	 * @param motor motor to move
-	 * @param pid   pid controller to use
+	 * @param pid pid controller to use
 	 */
 	void pidmove(CANSparkMax motor, PIDController pid) {
 		double error = target - getPos(motor);
@@ -67,8 +67,10 @@ public class ClimberSubSys extends SubsystemBase {
 		motor.set(power);
 	}
 
-	// TODO: Who is Umesh
 	// Umesh was here :)
+	// Who is Umesh
+	// Why is Umesh
+
 	/**
 	 * Moves both left and right motors using the PID Controllers lPID and rPID
 	 */
@@ -92,15 +94,14 @@ public class ClimberSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * sets the motors to full power
+	 * moves up
 	 */
 	public void moveUp() {
 		set(1);
 	}
 
 	/**
-	 * Sets the motors to full power downwards and resets when the limit switch is
-	 * pressed
+	 * moves down with checking for limit switch
 	 */
 	public void moveDown() {
 		set(-1);

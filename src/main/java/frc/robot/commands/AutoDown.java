@@ -36,8 +36,6 @@ public class AutoDown extends CommandBase {
 		status.setString("angling down");
 	}
 
-//arsh is epic
-
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
