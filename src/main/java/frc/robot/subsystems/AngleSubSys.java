@@ -80,7 +80,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * Sets the target for the angle to AngleSubSystem.max for high goal
+	 * Sets the target for the angle to AngleSubSys.max for high goal
 	 */
 	public void setTargetHigh() {
 		target = max;
@@ -88,7 +88,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * Sets the target for the angle to the ShuffleBoard Value "closeAngle"
+	 * Sets the target for the angle to AngleSubSys.closeAngle
 	 */
 	public void setTargetHighClose() {
 		target = closeAngle;
@@ -96,7 +96,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * Sets the target for the angle to AngleSubSystem.mid for low goal
+	 * Sets the target for the angle to AngleSubSys.mid for low goal
 	 */
 	public void setTargetMid() {
 		target = mid;
@@ -104,7 +104,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * Sets the target for the angle to AngleSubSystem.base to put it all the way
+	 * Sets the target for the angle to AngleSubSys.base to put it all the way
 	 * down
 	 */
 	public void setTargetLow() {
@@ -163,7 +163,7 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
-	 * Moves to AngleSubSystem.target and clamps the power to AngleSubSystem.armlim
+	 * Moves to AngleSubSys.target and clamps the power to AngleSubSys.armlim
 	 */
 	public void pidmove() {
 		double error = target - getAngle();
