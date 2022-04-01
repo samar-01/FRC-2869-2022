@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -15,12 +14,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.opencv.core.Mat;
+// import org.opencv.core.Mat;
 // import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -29,6 +27,12 @@ import static frc.robot.Constants.*;
 import static frc.robot.Inputs.*;
 import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
+
+// TODO implement these
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+
+
 // not necessary but if something breaks uncomment below
 // import frc.robot.commands.Shoot;
 // import frc.robot.subsystems.ShootSubSys;
