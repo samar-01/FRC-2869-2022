@@ -5,18 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.RobotContainer;
-import frc.robot.commands.angle.AutoLift;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import frc.robot.commands.angle.AutoClose;
+import frc.robot.commands.angle.AutoDown;
+
+import static frc.robot.Constants.*;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LiftAlignShoot extends SequentialCommandGroup {
-	/** Creates a new LiftAlignShoot. */
-	public LiftAlignShoot() {
+public class FenderShot extends SequentialCommandGroup {
+	/** Creates a new FenderShot. */
+	public FenderShot() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		
-		addCommands(new AutoLift(), new AutoPointGoal(), new AutoShoot());
+		addCommands(new FenderRev(), new AutoClose(), new Shoot775(), new AutoDown());
 	}
 }

@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.commands.angle.AutoLift;
+
 import static frc.robot.Constants.*;
 
 @Deprecated

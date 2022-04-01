@@ -92,7 +92,7 @@ public final class Constants {
 	public static final AnalogInput ultra = new AnalogInput(2);
 	private static double targetAngle = 0;
 
-	public static double closeAngle = 77.18;
+	public static double base = -34, highGoalAngle = 70, lowGoalAngle = 55, target = base, limit = 80, closeAngle = 77.18; // angles
 	public static double closeVel = 6289.84;
 	public static double turnspeed = 0.7;
 	public static double slowspeed = 0.45;

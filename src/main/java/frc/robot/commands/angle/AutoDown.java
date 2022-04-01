@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.angle;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -11,7 +11,7 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import static frc.robot.Constants.*;
 /**
- * lifts and revs
+ * lifts and stops shooter
  */
 public class AutoDown extends CommandBase {
 
@@ -47,14 +47,13 @@ public class AutoDown extends CommandBase {
 
 	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		angleSubSys.stop();
+	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		if (angleSubSys.isLifted()){
-			angleSubSys.stop();
-		}
 		return angleSubSys.isLifted();
 	}
 }

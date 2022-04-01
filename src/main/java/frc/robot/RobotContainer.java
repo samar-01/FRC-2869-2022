@@ -9,6 +9,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
+import frc.robot.commands.angle.Angle;
+import frc.robot.commands.angle.AutoClose;
+import frc.robot.commands.angle.AutoDown;
+import frc.robot.commands.angle.AutoLift;
+import frc.robot.commands.angle.AutoMid;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 

@@ -28,8 +28,6 @@ public class AngleSubSys extends SubsystemBase {
 	// accurately.
 
 	static PIDController armPID = new PIDController(kp, ki, kd);
-	public static double base = -34, max = 70, mid = 55;
-	public static double target = base, limit = 80;
 	// set target to real target - 10
 	static boolean past = false;
 	static boolean init = false;
@@ -83,7 +81,7 @@ public class AngleSubSys extends SubsystemBase {
 	 * Sets the target for the angle to AngleSubSys.max for high goal
 	 */
 	public void setTargetHigh() {
-		target = max;
+		target = highGoalAngle;
 		setPIDtolerance();
 	}
 
@@ -99,7 +97,7 @@ public class AngleSubSys extends SubsystemBase {
 	 * Sets the target for the angle to AngleSubSys.mid for low goal
 	 */
 	public void setTargetMid() {
-		target = mid;
+		target = lowGoalAngle;
 		setPIDtolerance();
 	}
 
@@ -126,6 +124,14 @@ public class AngleSubSys extends SubsystemBase {
 	}
 
 	/**
+	 * sets angle target
+	 * @param angle angle
+	 */
+	public void setTarget(double angle){
+		target = angle;
+	}
+
+	/**
 	 * Moves the arm based on if in manual control or calls pidMove to move to
 	 * target
 	 */
@@ -141,10 +147,10 @@ public class AngleSubSys extends SubsystemBase {
 		} else {
 			if (getAngle() > limit) {
 				// arm.set(0);
-				target = mid;
+				target = lowGoalAngle;
 			} else if (getAngle() < -36) {
 				// arm.set(0);
-				target = mid;
+				target = lowGoalAngle;
 			} else {
 				// if (!opxbox.getAButton() && !opxbox.getYButton() && !opxbox.getBButton()) {
 				// arm.set(armlim * (opxbox.getRightTriggerAxis() -
@@ -178,7 +184,7 @@ public class AngleSubSys extends SubsystemBase {
 	 * why is there a local variable here?
 	 */
 	public void lift() {
-		double target = max;
+		double target = highGoalAngle;
 		pidmove();
 		// setTargetHigh();
 		// pidmove();
