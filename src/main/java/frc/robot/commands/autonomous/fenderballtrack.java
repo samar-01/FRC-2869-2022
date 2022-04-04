@@ -23,6 +23,7 @@ public class fenderballtrack extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     // addCommands(new CloseHigh(), new AutoDown(), new Drive180(), new ResetGyro(), new PointIntake(), new DriveIntake(), new Drive180());
     // addCommands(new CloseHigh(), new AutoDown(), new ResetGyro(), new Drive180(), new PointIntakeDrive(), new DriveIntake(), new Drive180());
-    addCommands(new CloseHigh(), new Down180(), new PointIntakeDrive(0.5), new DriveBackToTarget(), new Up180(), new CloseHigh(), new AutoDown());
+    // TODO fix this
+    // addCommands(new CloseHigh(), new Down180(), new PointIntakeDrive(0.5), new DriveBackToTarget(), new Up180(), new CloseHigh(), new AutoDown());
   }
 }

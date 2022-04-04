@@ -179,7 +179,7 @@ public class ClimberSubSys extends SubsystemBase {
 		// }
 
 		if (xpov == 0) {
-			target = 220;
+			target = uplim;
 			pidmove();
 		} else if (xpov == 180) {
 			target = zero;

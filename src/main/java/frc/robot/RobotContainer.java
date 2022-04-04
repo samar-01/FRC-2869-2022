@@ -6,14 +6,12 @@ package frc.robot;
 // import frc.robot.commands.ExampleCommand;
 // import frc.robot.subsystems.ExampleSubsystem;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
-import frc.robot.commands.angle.Angle;
-import frc.robot.commands.angle.AutoClose;
-import frc.robot.commands.angle.AutoDown;
-import frc.robot.commands.angle.AutoLift;
-import frc.robot.commands.angle.AutoMid;
+import frc.robot.commands.angle.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -42,6 +40,9 @@ public class RobotContainer {
 	public static final AutoDown autoDown = new AutoDown();
 	public static final AutoMid autoMid = new AutoMid();
 	public static final AutoClose autoClose = new AutoClose();
+	public static FenderShot fenderShot;
+	public static Command donothing;
+	public static final GoToPose gotopos = new GoToPose(new Pose2d(1, 0, Rotation2d.fromDegrees(0)));
 	// public static final CloseHigh closeHigh = new CloseHigh();
 	// public static final Autonomous autonomous = new Autonomous(drivetrainSubSys, angleSubSys, shooterSubSys);
 	// public static final DriveDistance driveBack = new DriveDistance(drivetrainSubSys, -10);

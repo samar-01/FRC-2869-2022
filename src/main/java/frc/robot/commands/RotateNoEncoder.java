@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
+import static frc.robot.Constants.*;
 
 public class RotateNoEncoder extends CommandBase {
 
@@ -17,7 +18,6 @@ public class RotateNoEncoder extends CommandBase {
 	private int cycleCount = 0;
 	boolean done = false;
 	double turnValue;
-	double turnspeed = 0.4;
 	/**
 	 * Creates the Rotate Command
 	 * 
@@ -31,9 +31,9 @@ public class RotateNoEncoder extends CommandBase {
 		this.numCycles = (int)angle;
 		addRequirements(drive);
 		if (goRight) {
-			turnValue = turnspeed;
+			turnValue = autoturnspeed;
 		} else {
-			turnValue = -turnspeed;
+			turnValue = -autoturnspeed;
 		}
 	}
 

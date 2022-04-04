@@ -5,35 +5,45 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubSys;
+import static frc.robot.Constants.*;
 
-public class Drivetrain extends CommandBase {
-	
-	private final DrivetrainSubSys drive;
+import org.opencv.core.Mat;
+public class GoToPose extends CommandBase {
+	DrivetrainSubSys drive;
+	Pose2d tarpos;
 
-	/** Creates a new Drivetrain. */
-	public Drivetrain(DrivetrainSubSys drive) {
-		this.drive = drive;
+	boolean rotated = false;
+
+	/** Creates a new gotoPos. */
+	public GoToPose(Pose2d tarpos) {
+		drive = RobotContainer.drivetrainSubSys;
+		this.tarpos = tarpos;
 		addRequirements(drive);
+		// Use addRequirements() here to declare subsystem dependencies.
 	}
-	
+
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		drive.initSpeedList();
-		drive.resetEncoders();
-		// drive.initOdometry();
-		drive.forceInitOdom();
 
 	}
+
+	boolean done = false;
+
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.drive();
-		// System.out.println(drive.getPose());
-		// drive.autoDrive();
+		if (!rotated){
+			drive.drv(0, clamp((tarpos.getRotation().getDegrees() - drive.getGyroHeading())/20, autoturnspeed, autoturnspeed));
+			if (Math.abs(tarpos.getRotation().getDegrees() - drive.getGyroHeading()) < 3){
+				rotated = true;
+			}
+		} else {
+
+		}
 	}
 
 	// Called once the command ends or is interrupted.
@@ -45,6 +55,6 @@ public class Drivetrain extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return done;
 	}
 }

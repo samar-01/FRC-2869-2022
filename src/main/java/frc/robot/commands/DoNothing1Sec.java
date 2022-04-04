@@ -4,47 +4,43 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubSys;
 
-public class Drivetrain extends CommandBase {
-	
-	private final DrivetrainSubSys drive;
-
-	/** Creates a new Drivetrain. */
-	public Drivetrain(DrivetrainSubSys drive) {
-		this.drive = drive;
-		addRequirements(drive);
+public class DoNothing1Sec extends CommandBase {
+	/** Creates a new DoNothing1Sec. */
+	public DoNothing1Sec() {
+		System.out.print("created do nothing and scheduled is ");
+		addRequirements();
+		this.schedule();
+		System.out.println(this.isScheduled());
 	}
-	
+
+	Timer t = new Timer();
+
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		drive.initSpeedList();
-		drive.resetEncoders();
-		// drive.initOdometry();
-		drive.forceInitOdom();
-
+		t.start();
+		System.out.println("started doing nothing");
 	}
+
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		drive.drive();
-		// System.out.println(drive.getPose());
-		// drive.autoDrive();
+		System.out.println("doing nothing for " + ((double)((int)(t.get()*100)))/100 + " seconds");
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		drive.stop();
+		System.out.println("finished doing nothing");
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return t.hasElapsed(1);
+		// return false;
 	}
 }

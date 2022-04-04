@@ -25,7 +25,12 @@ public class Inputs {
 	}
 
 	public static double getSpeed(){
-		return xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
+		double speed = xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();
+		if (Math.abs(speed) < 0.1){
+			speed = 0;
+			// System.out.println("too slow");
+		}
+		return speed;
 	}
 
 	public static boolean getSlowSpeed(){
@@ -85,6 +90,10 @@ public class Inputs {
 		return opxbox.getPOV() == 270;
 	}
 
+	public static boolean getFenderPressed(){
+		return opxbox.getLeftBumperPressed();
+	}
+
 	public static boolean getLaunchpad(){
 		return opxbox.getPOV() == 90;
 	}
@@ -101,12 +110,16 @@ public class Inputs {
 		return opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis();
 	}
 
+	@Deprecated
 	public static boolean getEject(){
-		return opxbox.getLeftBumper();
+		// return opxbox.getLeftBumper();
+		return false;
 	}
 
+	@Deprecated
 	public static boolean getForceIn(){
-		return opxbox.getRightBumper();
+		// return opxbox.getRightBumper();
+		return false;
 	}
 
 	public static double getManualShooterSpeed(){

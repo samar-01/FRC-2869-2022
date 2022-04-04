@@ -17,7 +17,7 @@ import static frc.robot.Constants.*;
 public class FenderRev extends InstantCommand {
 	ShooterSubSys shooterSubSys;
 	public FenderRev() {
-		this.shooterSubSys = shooterSubSys;
+		this.shooterSubSys = RobotContainer.shooterSubSys;
 		addRequirements(shooterSubSys);
 		// Use addRequirements() here to declare subsystem dependencies.
 	}

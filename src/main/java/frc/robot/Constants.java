@@ -90,14 +90,16 @@ public final class Constants {
 	// public static final JoystickButton closeHigh = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
 	public static final JoystickButton pointDriveButton = new JoystickButton(opxboxjoystick, XboxController.Button.kLeftBumper.value);
 	public static final AnalogInput ultra = new AnalogInput(2);
-	private static double targetAngle = 0;
+	public static double targetAngle = 0;
+	public static final double armlim = 0.6;
+	public static double base = -34, highGoalAngle = 70, lowGoalAngle = 55, target = base, limit = 80, closeAngle = 80; // angles
+	public static final double closeVel = 5900;
+	public static final double turnspeed = 0.7;
+	public static final double slowspeed = 0.45;
+	public static final double midspeed = 0.8;
+	public static final double manClimbSpeed = 0.1;
+	public static final double autoturnspeed = 0.4;
 
-	public static double base = -34, highGoalAngle = 70, lowGoalAngle = 55, target = base, limit = 80, closeAngle = 77.18; // angles
-	public static double closeVel = 6289.84;
-	public static double turnspeed = 0.7;
-	public static double slowspeed = 0.45;
-	public static double midspeed = 0.8;
-	public static double manClimbSpeed = 0.1;
 	public static enum shooterState{
 		intake, mid, fender, high
 	}
@@ -159,26 +161,26 @@ public final class Constants {
 	public static NetworkTableEntry autoPickerEntry;
 	public static Command auto;
 
-	public static final PhotonCamera photon = new PhotonCamera("photonvision");
+	// public static final PhotonCamera photon = new PhotonCamera("photonvision");
 
 	public static void initPhoton(){
-		photonResetPipe();
+		// photonResetPipe();
 	}
 
 	public static void photonBlue(){
-		photon.setPipelineIndex(1);
+		// photon.setPipelineIndex(1);
 	}
 	public static void photonRed(){
-		photon.setPipelineIndex(0);
+		// photon.setPipelineIndex(0);
 	}
 	public static void photonResetPipe(){
-		if (DriverStation.getAlliance() == Alliance.Blue){
-			photonBlue();
-		} else if (DriverStation.getAlliance() == Alliance.Red){
-			photonRed();
-		} else {
-			photon.setPipelineIndex(2);
-		}
+		// if (DriverStation.getAlliance() == Alliance.Blue){
+		// 	photonBlue();
+		// } else if (DriverStation.getAlliance() == Alliance.Red){
+		// 	photonRed();
+		// } else {
+		// 	photon.setPipelineIndex(2);
+		// }
 	}
 
 	/**
@@ -186,15 +188,16 @@ public final class Constants {
 	 * @return best target or null if not found
 	 */
 	static PhotonTrackedTarget pTarget(){
-		PhotonPipelineResult result = photon.getLatestResult();
-		if(result.hasTargets()){
-			for (int i = 0; i < result.targets.size(); i++){
-				if (result.targets.get(i).getPitch() > -15){
-					return result.targets.get(i);
-				}
-			}
-			// return result.getBestTarget();
-		}
+		// PhotonPipelineResult result = photon.getLatestResult();
+		// if(result.hasTargets()){
+		// 	for (int i = 0; i < result.targets.size(); i++){
+		// 		if (result.targets.get(i).getPitch() > -15){
+		// 			return result.targets.get(i);
+		// 		}
+		// 	}
+		// 	// return result.getBestTarget();
+		// }
+
 		return null;
 	}
 
@@ -205,13 +208,13 @@ public final class Constants {
 	public static double pTrack(){
 		// return Double.POSITIVE_INFINITY;
 
-		onFlash();
-		PhotonTrackedTarget target = pTarget();
-		if (target != null){
-			return target.getYaw();
-		} else {
-			return Double.POSITIVE_INFINITY;
-		}
+		// onFlash();
+		// PhotonTrackedTarget target = pTarget();
+		// if (target != null){
+		// 	return target.getYaw();
+		// }
+
+		return Double.POSITIVE_INFINITY;
 	}
 
 	public static void autoSchedule(Command comm){
@@ -317,7 +320,8 @@ public final class Constants {
 		if (true){
 			try{
 				NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+				// NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+				NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2);
 				NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 				
 				NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
@@ -331,10 +335,11 @@ public final class Constants {
 	}
 
 	public static void onLime(){
-		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+		// NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+		offLime();
 	}
 	public static void offLime(){
-		// NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
 	}
 
 

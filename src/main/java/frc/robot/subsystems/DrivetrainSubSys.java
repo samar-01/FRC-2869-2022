@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.controller.PIDController;
@@ -25,12 +26,18 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.*;
 import static frc.robot.Inputs.*;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 
 // TODO implement these
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 
 // not necessary but if something breaks uncomment below
@@ -46,7 +53,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	public static final MotorControllerGroup right = new MotorControllerGroup(right1, right2);
 	public static final MotorControllerGroup left = new MotorControllerGroup(left1, left2);
 	private static final DifferentialDrive difDrive = new DifferentialDrive(left, right);
-	private static final AHRS ahrs = new AHRS(SPI.Port.kMXP);
+	private static final AHRS navx = new AHRS(SPI.Port.kMXP);
 
 	public DrivetrainSubSys() {
 		difDrive.setSafetyEnabled(false);
@@ -60,14 +67,15 @@ public class DrivetrainSubSys extends SubsystemBase {
 	}
 
 
-	public void autobrake(){
+	public void brake(){
+		System.out.println("brake");
 		right1.setIdleMode(IdleMode.kBrake);
 		right2.setIdleMode(IdleMode.kBrake);
 		left1.setIdleMode(IdleMode.kBrake);
 		left2.setIdleMode(IdleMode.kBrake);
 	}
 
-	public void telecoast(){
+	public void coast(){
 		System.out.println("coast");
 		right1.setIdleMode(IdleMode.kCoast);
 		right2.setIdleMode(IdleMode.kCoast);
@@ -161,9 +169,39 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// return false;
 	}
 
+	LinkedList<Double> speedlist;
+
+	public void initSpeedList(){
+		System.out.println("init list");
+		speedlist = new LinkedList<>();
+		for (int i = 0; i < 30; i++){
+			speedlist.add(0.0);
+		}
+	}
+
+	void updateSpeedList(double s){
+		speedlist.removeFirst();
+		speedlist.add(s);
+	}
+
+	double avglastspeeds(){
+		double avg = 0;
+		for (int i = 0; i < speedlist.size(); i++){
+			avg += speedlist.get(i);
+		}
+		avg /= speedlist.size();
+		return avg;
+	}
+
 	public void drive() {
-		// double speed = Math.pow(xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis(),2);
 		double speed = getSpeed();
+		updateSpeedList(speed);
+		if (Math.abs(speed) < 0.25){
+			speed = avglastspeeds();
+			SmartDashboard.putBoolean("smoothing", true);
+		} else {
+			SmartDashboard.putBoolean("smoothing", false);
+		}
 		if (getSlowSpeed()){
 			speed *= slowspeed;
 		} else if (getMidSpeed()){
@@ -262,8 +300,8 @@ public class DrivetrainSubSys extends SubsystemBase {
 	
 	public void setRot(double angle){
 		spun = false;
-		ahrs.reset();
-		pos = ahrs.getYaw();
+		navx.reset();
+		pos = navx.getYaw();
 		spinTarget = pos+angle;
 		spintime.reset();
 		spintime.start();
@@ -279,7 +317,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	public void setRot0(){
 		spun = false;
 		// ahrs.reset(); // TODO check if this is necessary
-		pos = ahrs.getYaw();
+		pos = navx.getYaw();
 		spinTarget = 0;
 		spintime.reset();
 		spintime.start();
@@ -316,7 +354,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 	}
 
 	public void spin(){
-		double livepos = ahrs.getYaw();
+		double livepos = navx.getYaw();
 		if (livepos<0){
 			livepos += 360;
 		}
@@ -332,7 +370,7 @@ public class DrivetrainSubSys extends SubsystemBase {
 		// }
 		turn = spinner.calculate(-error);
 		turn = clamp(turn, -maxspeed, maxspeed);
-		if (ahrs.isConnected()){
+		if (navx.isConnected()){
 			drv(0, turn);
 		} else{
 			spun=true;
@@ -367,18 +405,67 @@ public class DrivetrainSubSys extends SubsystemBase {
 		left2.getEncoder().setPositionConversionFactor(1);
 		right1.getEncoder().setPositionConversionFactor(1);
 		right2.getEncoder().setPositionConversionFactor(1);
-		ahrs.reset();
+		navx.reset();
 		target = getUltra();
 		// System.out.println("RESET");
 	}
 
 	public static void ahrsReset(){
-		ahrs.reset();
+		navx.reset();
 	}
-
+	
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
+		initOdometry();
+		updateOdom();
+	}
+
+	DifferentialDriveOdometry odometry;
+
+	Pose2d pose;
+
+	public double getGyroHeading(){
+		return navx.getAngle();
+	}
+
+	boolean odominit = false;
+	public void initOdometry(){
+		if (!odominit){
+			// Rotation2d rotation2d = new Rotation2d(getGyroHeading());
+			forceInitOdom();
+		}
+	}
+
+	public void forceInitOdom(){
+		// Rotation2d rotation2d = Rotation2d.fromDegrees(getGyroHeading());
+		// odometry = new DifferentialDriveOdometry(rotation2d);
+		odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+	}
+
+	double factor = ((6.0*Math.PI/39.0)/10.71) * (36.0/39.0) * (40.75/39.0);
+
+	public void updateOdom(){
+		// Encoder leftenc = (Encoder) left1.getEncoder();
+		// Encoder rightenc = (Encoder) right1.getEncoder();
+		// System.out.println(getGyroHeading());
+		// Rotation2d angle = Rotation2d.fromDegrees((getGyroHeading()/2.0) * (90.0/133.0) * (90.0/120.0) * (90.0/112.0) * (90.0/109.0));
+		Rotation2d angle = Rotation2d.fromDegrees(-getGyroHeading()*2);
+		// Rotation2d angle = navx.getRotation2d();
+		double leftdis = left1.getEncoder().getPosition()*factor;
+		double rightdis = -right1.getEncoder().getPosition()*factor;
+		pose = odometry.update(angle, leftdis, rightdis);
+		// pose = odometry.update(angle, 0,0);
+		// System.out.println(getGyroHeading());
+		// System.out.println(angle);
+		// System.out.println(pose);
+		// System.out.println(leftdis + "\t" + rightdis);
+		// System.out.println(left1.getEncoder().getPosition() + "\t" + -right1.getEncoder().getPosition());
+		// pose = odometry.update(gyroAngle, leftenc.getDistance(), rightenc.getDistance());
+	}
+
+	public Pose2d getPose(){
+		return pose;
 	}
 
 	double posD;

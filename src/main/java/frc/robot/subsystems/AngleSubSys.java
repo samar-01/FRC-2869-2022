@@ -19,8 +19,7 @@ public class AngleSubSys extends SubsystemBase {
 	/** Creates a new AngleSubSys. */
 	public AngleSubSys() {
 	}
-
-	static final double armlim = 0.4;
+	
 	static final CANSparkMax arm = new CANSparkMax(5, MotorType.kBrushless);
 	static final double ratio = 5 * 4 * 3 * 4;
 	static double kp = 0.04, ki = 0.000, kd = 0.006, tolerance = 1;
@@ -136,15 +135,16 @@ public class AngleSubSys extends SubsystemBase {
 	 * target
 	 */
 	public void run() {
+		if (xbox.getStartButtonReleased()) {
+			arm.getEncoder().setPosition(0);
+		}
 		// If in Manual Control
 		if (opxbox.getStartButton()) {
 			arm.set(armlim * (opxbox.getRightTriggerAxis() - opxbox.getLeftTriggerAxis()));
 			armPID.reset();
 			target = getAngle();
-		} // Once Manual control is released it resets the position to 0
-		else if (xbox.getStartButtonReleased()) {
-			arm.getEncoder().setPosition(0);
-		} else {
+		}
+		else {
 			if (getAngle() > limit) {
 				// arm.set(0);
 				target = lowGoalAngle;

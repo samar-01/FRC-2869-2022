@@ -15,7 +15,7 @@ public class DownBack extends ParallelCommandGroup {
   public DownBack() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoDown(), new DriveDistance(-2.5));
+    addCommands(new AutoDown(), new DriveDistance(-2.5, 0.75));
 
     
   }

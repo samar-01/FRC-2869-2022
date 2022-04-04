@@ -15,9 +15,9 @@ public class fenderpreset extends SequentialCommandGroup {
 	public fenderpreset() {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		double angle = 50;
-		double dist = 1;
+		double angle = 35;
+		double dist = 1.2;
 		// addCommands(new fenderhigh(), new RotateNoEncoder(false, angle), new PointIntake(), new DriveIntake(dist), new DriveIntake(-dist), new RotateNoEncoder(true, angle), new DriveDistance(autodistance));
-		addCommands(new fenderhigh(), new RotateNoEncoder(false, angle), new DriveIntake(dist), new DriveIntake(-dist), new RotateNoEncoder(true, angle), new DriveDistance(autodistance+0.6, 0.75), new fenderhigh());
+		addCommands(new fenderhigh(), new RotateNoEncoder(false, angle), new DriveIntake(dist), new DriveIntake(-dist), new RotateNoEncoder(true, angle+10), new DriveDistance(autodistance+0.6, 0.75), new FenderShot());
 	}
 }
